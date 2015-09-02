@@ -40,6 +40,7 @@ Jason Kwong (@kwongjc)
 
 `$ ngmaster.py <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
+
 **To use custom NG-MAST allele databases:**
 
 1. Create custom database files - POR.tfa, TBPB.tfa, ng_mast.txt  
@@ -51,6 +52,7 @@ Jason Kwong (@kwongjc)
 
 3. Specify the path to that custom database folder:  
    `$ ngmaster.py --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+
 
 **To save sequences of the alleles to a file (eg. for uploading to [http://ng-mast.net/](http://ng-mast.net/)):**
 
