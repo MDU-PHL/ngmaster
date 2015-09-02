@@ -4,23 +4,20 @@
 
 
 
-#Author
+##Author
 
 Jason Kwong (@kwongjc)  
 GitHub: [kwongj](https://github.com/kwongj)
 
 
-#Usage
+##Usage
 
 `$ ngmaster.py -h`
 
 	usage:
-	  ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
+	  ngmaster.py [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
 	
 	In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
-	
-	Ref: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.
-	See also http://www.ng-mast.net/
 	
 	positional arguments:
 	  FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN
@@ -33,7 +30,7 @@ GitHub: [kwongj](https://github.com/kwongj)
 	  --version        show program's version number and exit`
 
 
-#Basic syntax
+##Basic syntax
 
 **To perform *in silico* NG-MAST on FASTA files:**
 
@@ -58,18 +55,18 @@ GitHub: [kwongj](https://github.com/kwongj)
 `$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
 
-#Bugs
+##Bugs
 
 Please submit via the GitHub issues page: [https://github.com/MDU-PHL/ngmaster/issues](https://github.com/MDU-PHL/ngmaster/issues)  
 
 Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Diseases Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk?subject=N. gonorrhoeae homepage).
 
 
-#Software Licence
+##Software Licence
 
 GPLv2: [https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE](https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE)
 
-#References
+##References
 
 * Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
-See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
+* See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
