@@ -1,9 +1,7 @@
-#ngmaster.py
+#ngmaster
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
 
-NG-MAST Ref: Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
-See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
 
 
 #Author
@@ -70,3 +68,8 @@ Note that the NG-MAST databases and website are curated and hosted at the Depart
 #Software Licence
 
 GPLv2: [https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE](https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE)
+
+#References
+
+* Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
+See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
