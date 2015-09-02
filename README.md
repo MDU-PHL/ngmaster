@@ -8,7 +8,8 @@ See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
 
 #Author
 
-Jason Kwong (@kwongjc)
+Jason Kwong (@kwongjc)  
+GitHub: [kwongj](https://github.com/kwongj)
 
 
 #Usage
