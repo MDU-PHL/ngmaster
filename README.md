@@ -2,10 +2,10 @@
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
 
-##Author
+##Authors
 
-Jason Kwong (@kwongjc)  
-GitHub: [kwongj](https://github.com/kwongj)
+* Jason Kwong (@kwongjc)
+* Torsten Seemann (@torstenseemann)
 
 ##Usage
 
@@ -63,7 +63,7 @@ example.fna     10699   6277    4
 * BioPython
 * isPcr
 
-#Installation
+##Installation
 
 The simplest way to install ngmaster and its dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
 ```
