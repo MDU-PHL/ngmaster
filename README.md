@@ -26,13 +26,15 @@ GitHub: [kwongj](https://github.com/kwongj)
 	  --printseq FILE  Specify filename to save allele sequences to (default=off)
 	  --version        show program's version number and exit`
 
-##Basic syntax
+##Quick start
 
-**To perform *in silico* NG-MAST on FASTA files:**
+To perform *in silico* NG-MAST on FASTA files:
 
 `$ ngmaster.py <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-**Test on example included file**
+##Example file
+
+The ngmaster distribution includes an example FASTA file to test on:
 
 ```
 $ ngmaster.py example.fa
@@ -40,7 +42,7 @@ ID      	NG-MAST POR     TBPB
 example.fna     10699   6277    4
 ```
 
-**To use custom NG-MAST allele databases:**
+##Creating a custom allele database
 
 1. Create custom database files: `POR.tfa`, `TBPB.tfa`, `ng_mast.txt`  
    See default `db` directory for examples.  
@@ -55,6 +57,21 @@ example.fna     10699   6277    4
 **To save sequences of the alleles to a file (eg. for uploading to [http://ng-mast.net/](http://ng-mast.net/)):**
 
 `$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+
+##Dependencies
+
+* BioPython
+* isPcr
+
+#Installation
+
+The simplest way to install ngmaster and its dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
+```
+brew tap homebrew/science
+brew tap chapmanb/cbl
+brew tap tseemann/homebrew-bioinformatics-linux
+brew install ngmaster
+```
 
 ##Bugs
 
