@@ -2,63 +2,130 @@
 # Script by Jason Kwong
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 
-# Usage
+# Modules and Functions
 import argparse
 from argparse import RawTextHelpFormatter
-
-parser = argparse.ArgumentParser(
-	formatter_class=RawTextHelpFormatter,
-	description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
-		'\nRef: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.\n'
-		'See also http://www.ng-mast.net/',
-	usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
-parser.add_argument('fasta', metavar='FASTA', nargs='+', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
-parser.add_argument('--db', metavar='DB', help='Specify custom directory containing allele databases\n'
-	'Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
-parser.add_argument('--printseq', metavar='FILE', nargs=1, help='Specify filename to save allele sequences to (default=off)')
-parser.add_argument('--version', action='version', version=
-	'=====================================\n'
-	'%(prog)s v0.1\n'
-	'Updated 1-Sept-2015 by Jason Kwong\n'
-	'Dependencies: isPcr, BLAST, BioPython\n'
-	'=====================================')
-args = parser.parse_args()
-
-# Modules and Functions
 import sys
 import os
 import os.path
 import StringIO
+import urllib
 import subprocess
+import shutil
+import re
+import tempfile
 from subprocess import Popen
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Blast.Applications import NcbiblastnCommandline
 
+# Exit program function
+def progexit(n):
+	sys.exit(n)
+
+# Perform the pure-Python equivalent of in-place `sed` substitution: e.g.,
+# `sed -i -e 's/'${pattern}'/'${repl}' "${filename}"`.
+def sed_inplace(filename, pattern, repl):
+	pattern_compiled = re.compile(pattern)
+	with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_file:
+		with open(filename) as src_file:
+			for line in src_file:
+				tmp_file.write(pattern_compiled.sub(repl, line))
+	shutil.copystat(filename, tmp_file.name)
+	shutil.move(tmp_file.name, filename)
+
+# sed with . matching all characters including newline
+def sed_all(filename, pattern, repl):
+	pattern_compiled = re.compile(pattern, re.DOTALL)
+	with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_file:
+		with open(filename, 'r') as src_file:
+			d = src_file.read()
+			tmp_file.write(pattern_compiled.sub(repl, d))
+	shutil.copystat(filename, tmp_file.name)
+	shutil.move(tmp_file.name, filename)
+
+# Format database
+def format(file):
+	sed_all(file, '^.*<textarea name="concatenation".*?>', '')
+	sed_all(file, '<\/textarea>.*$', '')
+	sed_inplace(file, '&gt;', '>')
+
+# Usage
+parser = argparse.ArgumentParser(
+	formatter_class=RawTextHelpFormatter,
+	description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+		'\nRef: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.\n'
+		'See also http://www.ng-mast.net/',
+	usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
+parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
+parser.add_argument('--db', metavar='DB', help='Specify custom directory containing allele databases\n'
+	'Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
+parser.add_argument('--printseq', metavar='FILE', nargs=1, help='Specify filename to save allele sequences to (default=off)')
+parser.add_argument('--updatedb', action='store_true', default=False, help='Update allele database from <www.ng-mast.net>')
+parser.add_argument('--version', action='version', version=
+	'=====================================\n'
+	'%(prog)s v0.2\n'
+	'Updated 30-Apr-2016 by Jason Kwong\n'
+	'Dependencies: isPcr, BLAST, BioPython\n'
+	'=====================================')
+args = parser.parse_args()
+
 # Path to database files
 if args.db:
 	DBpath = str(args.db).rstrip('/')
 else:
 	DBpath = os.path.dirname(os.path.realpath(sys.argv[0])) + "/db"
+if not os.path.exists(DBpath):
+    os.makedirs(DBpath)
 
 porDB = DBpath + '/POR.tfa'
 tbpbDB = DBpath + '/TBPB.tfa'
 alleleDB = DBpath + '/ng_mast.txt'
+tempFILE = DBpath + '/temp'
 
-def progexit(n):
-	sys.exit(n)
+# Update DB
+if args.updatedb:
+	print "Updating DB files ... "
+	# Update POR DB
+	dbFILE = urllib.URLopener()
+	dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=POR", tempFILE)
+	format(tempFILE)
+	os.rename(tempFILE, porDB)
+	print porDB + ' ... Done.'
+	# Update TBPB DB
+	dbFILE = urllib.URLopener()
+	dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=TBPB", tempFILE)
+	format(tempFILE)
+	os.rename(tempFILE, tbpbDB)
+	print tbpbDB + ' ... Done.'
+	# Update allele DB
+	dbFILE = urllib.URLopener()
+	dbFILE.retrieve("http://www.ng-mast.net/sql/st_comma.asp", tempFILE)
+	sed_inplace(tempFILE, ',', '\t')
+	sed_inplace(tempFILE, '<br>', '\n')
+	with open(alleleDB, 'w') as f:
+		f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
+		with open(tempFILE, 'r') as t:
+			for line in t:
+				f.write(line)
+	os.remove(tempFILE)
+	print alleleDB + ' ... Done.'
+	progexit(0)
 
-# Need to fix - running isPcr without options produces error code
 # Check isPcr installed and running correctly
-#def progcheck(isPcr):
-#	devnull = open(os.devnull, 'w')
-#	checkdep = subprocess.Popen(['isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
-#	output, err = checkdep.communicate()
-#	if checkdep.returncode != 0:
-#		print 'ERROR: Check isPcr is installed correctly.'
-#		progexit(1)
-#progcheck('isPcr')
+devnull = open(os.devnull, 'w')
+checkdep = subprocess.Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
+output, err = checkdep.communicate()
+if checkdep.returncode != 0:
+	print 'ERROR: Check isPcr is installed correctly and in $PATH.'
+	progexit(1)
+
+# Check if positional arguments
+if not args.fasta:
+	print "ERROR: too few arguments"
+	parser.print_help()
+	sys.exit(1)
 
 # Import allele profiles as dictionary
 NGMAST = {}
@@ -76,8 +143,8 @@ with open(alleleDB) as f:
 primerDB = [['por', 'CAAGAAGACCTCGGCAA', 'CCGACAACCACTTGGT'], ['tbpB', 'CGTTGTCGGCAGCGCGAAAAC', 'TTCATCGGTGCGCTCGCCTTG']]
 NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
 
-# Run Jim Kent's isPcr to identify amplicon
 # Check queries are in FASTA format
+# Run Jim Kent's isPcr to identify amplicon
 alleleSEQS = []
 print 'ID' + '\t' + 'NG-MAST' + '\t' + 'POR' + '\t' + 'TBPB'
 for f in args.fasta:
@@ -131,7 +198,7 @@ for f in args.fasta:
 									lines = line.split('\t')
 									if lines[3] == '490':
 										porRESULT = lines[1]
-										por = porRESULT.split('-')[1]
+										por = porRESULT.split('R')[1]
 									elif not por:
 										por = 'new'
 						elif not por:
@@ -163,7 +230,7 @@ for f in args.fasta:
 									lines = line.split('\t')
 									if lines[3] == '390':
 										tbpbRESULT = lines[1]
-										tbpb = tbpbRESULT.split('-')[1]
+										tbpb = tbpbRESULT.split('PB')[1]
 									elif not tbpb:
 										tbpb = 'new'
 						elif not tbpb:
