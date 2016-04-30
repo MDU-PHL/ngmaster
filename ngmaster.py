@@ -1,6 +1,9 @@
 #!/usr/bin/env python
-# Script by Jason Kwong
+# Script by Jason Kwong & Torsten Seemann
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+
+# Use modern print function from python 3.x
+from __future__ import print_function
 
 # Modules and Functions
 import argparse
@@ -21,9 +24,14 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Blast.Applications import NcbiblastnCommandline
 
-# Exit program function
-def progexit(n):
-	sys.exit(n)
+# Log a message to stderr
+def msg(*args, **kwargs):
+	print(*args, file=sys.stderr, **kwargs)
+
+# Log an error to stderr and quit with non-zero error code
+def err(*args, **kwargs):
+	msg(*args, **kwargs)
+	sys.exit(1);
 
 # Perform the pure-Python equivalent of in-place `sed` substitution: e.g.,
 # `sed -i -e 's/'${pattern}'/'${repl}' "${filename}"`.
@@ -88,22 +96,22 @@ tempFILE = DBpath + '/temp'
 
 # Update DB
 if args.updatedb:
-	print 'WARNING: Updating DB will overwrite existing DB files.'
+	msg('WARNING: Updating DB will overwrite existing DB files.')
 	yn = raw_input('Continue? [y/n]: ')
 	if yn == 'y':
-		print "Updating DB files ... "
+		msg("Updating DB files ... ")
 		# Update POR DB
 		dbFILE = urllib.URLopener()
 		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=POR", tempFILE)
 		format(tempFILE)
 		os.rename(tempFILE, porDB)
-		print porDB + ' ... Done.'
+		msg(porDB + ' ... Done.')
 		# Update TBPB DB
 		dbFILE = urllib.URLopener()
 		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=TBPB", tempFILE)
 		format(tempFILE)
 		os.rename(tempFILE, tbpbDB)
-		print tbpbDB + ' ... Done.'
+		msg(tbpbDB + ' ... Done.')
 		# Update allele DB
 		dbFILE = urllib.URLopener()
 		dbFILE.retrieve("http://www.ng-mast.net/sql/st_comma.asp", tempFILE)
@@ -115,29 +123,27 @@ if args.updatedb:
 				for line in t:
 					f.write(line)
 		os.remove(tempFILE)
-		print alleleDB + ' ... Done.'
-	progexit(0)
+		msg(alleleDB + ' ... Done.')
+	sys.exit(0)
 
 # Check isPcr installed and running correctly
 devnull = open(os.devnull, 'w')
 checkdep = subprocess.Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
-output, err = checkdep.communicate()
+output, errcode = checkdep.communicate()
 if checkdep.returncode != 0:
-	print 'ERROR: Check isPcr is installed correctly and in $PATH.'
-	progexit(1)
+	err('ERROR: Check isPcr is installed correctly and in $PATH.')
 
 # Run test example
 if args.test:
 	testSEQ = os.path.dirname(os.path.realpath(sys.argv[0])) + "/test/test.fa"
-	print 'Running ngmaster.py on test example (NG-MAST 10699) ...'
-	print '$ ngmaster.py test/test.fa'
+	msg('Running ngmaster.py on test example (NG-MAST 10699) ...')
+	msg('$ ngmaster.py test/test.fa')
 	args.fasta = [testSEQ]
 
 # Check if positional arguments
 if not args.fasta:
-	print "ERROR: too few arguments"
 	parser.print_help()
-	sys.exit(1)
+	err("ERROR: too few arguments")
 
 # Import allele profiles as dictionary
 NGMAST = {}
@@ -158,14 +164,14 @@ NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
 # Check queries are in FASTA format
 # Run Jim Kent's isPcr to identify amplicon
 alleleSEQS = []
-print 'ID' + '\t' + 'NG-MAST' + '\t' + 'POR' + '\t' + 'TBPB'
+print('ID' + '\t' + 'NG-MAST' + '\t' + 'POR' + '\t' + 'TBPB')
 for f in args.fasta:
 	if os.path.isfile(f) == False:
-		print 'ERROR: Cannot find "%(f)s". Check file exists.' % globals()
+		msg( 'ERROR: Cannot find "%(f)s". Check file exists.' % globals() )
 		continue
 	s = open(f, 'r')
 	if s.read(1) != '>':
-		print 'ERROR: "%(f)s" does not appear to be in FASTA format.' % globals()
+		msg( 'ERROR: "%(f)s" does not appear to be in FASTA format.' % globals() )
 		continue
 	s.close()
 
@@ -259,7 +265,7 @@ for f in args.fasta:
 
 	# If multiple hits with trimmed sequence (eg. duplicated genes, multiple starting key motifs etc.) print multiple results
 	if len(porCOUNT) > 2 or len(tbpbCOUNT) > 2:
-		print f + '\t' + 'multiple' + '\t' + str(porCOUNT) + '\t' + str(tbpbCOUNT)
+		print( f + '\t' + 'multiple' + '\t' + str(porCOUNT) + '\t' + str(tbpbCOUNT) )
 	else:
 	# Report if starting key motifs present
 		if not porCOUNT:
@@ -275,13 +281,13 @@ for f in args.fasta:
 		else:
 			type = "-"
 		if not args.test:
-			print f + '\t' + type + '\t' + por + '\t' + tbpb
+			print( f + '\t' + type + '\t' + por + '\t' + tbpb )
 		else:
-			print 'test.fa' + '\t' + type + '\t' + por + '\t' + tbpb
+			print( 'test.fa' + '\t' + type + '\t' + por + '\t' + tbpb )
 			if type != '10699':
-				print 'ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb'
+				msg('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
 			else:
-				print '... Test successful.'
+				msg('... Test successful.')
 
 # Print allele sequences to file
 if args.printseq:
@@ -289,4 +295,3 @@ if args.printseq:
 	with open(allelesOUT, "w") as output:
 		SeqIO.write(alleleSEQS, output, 'fasta')
 
-progexit(0)
