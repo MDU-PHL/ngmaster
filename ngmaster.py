@@ -64,6 +64,7 @@ parser.add_argument('--db', metavar='DB', help='Specify custom directory contain
 	'Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
 parser.add_argument('--printseq', metavar='FILE', nargs=1, help='Specify filename to save allele sequences to (default=off)')
 parser.add_argument('--updatedb', action='store_true', default=False, help='Update allele database from <www.ng-mast.net>')
+parser.add_argument('--test', action='store_true', default=False, help='Run test example')
 parser.add_argument('--version', action='version', version=
 	'=====================================\n'
 	'%(prog)s v0.2\n'
@@ -124,6 +125,13 @@ output, err = checkdep.communicate()
 if checkdep.returncode != 0:
 	print 'ERROR: Check isPcr is installed correctly and in $PATH.'
 	progexit(1)
+
+# Run test example
+if args.test:
+	testSEQ = os.path.dirname(os.path.realpath(sys.argv[0])) + "/test/test.fa"
+	print 'Running ngmaster.py on test example (NG-MAST 10699) ...'
+	print '$ ngmaster.py test/test.fa'
+	args.fasta = [testSEQ]
 
 # Check if positional arguments
 if not args.fasta:
@@ -266,7 +274,14 @@ for f in args.fasta:
 			type = NGMAST[portbpb]
 		else:
 			type = "-"
-		print f + '\t' + type + '\t' + por + '\t' + tbpb
+		if not args.test:
+			print f + '\t' + type + '\t' + por + '\t' + tbpb
+		else:
+			print 'test.fa' + '\t' + type + '\t' + por + '\t' + tbpb
+			if type != '10699':
+				print 'ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb'
+			else:
+				print '... Test successful.'
 
 # Print allele sequences to file
 if args.printseq:

@@ -57,9 +57,20 @@ brew install ngmaster
 The ngmaster distribution includes an example FASTA file to test on:
 
 ```
-$ ngmaster.py example.fa
-ID      	NG-MAST POR     TBPB
-example.fna     10699   6277    4
+$ ngmaster.py test/test.fa
+ID		NG-MAST POR     TBPB
+test.fa	10699	6277    4
+```
+
+Alternatively, ngmaster can be tested by using the ```--test``` option:
+
+```
+$ ngmaster.py --test
+Running ngmaster.py on test example (NG-MAST 10699) ...
+$ ngmaster.py test/test.fa
+ID		NG-MAST	POR	TBPB
+test.fa	10699	6277	4
+... Test successful.
 ```
 
 ##Updating the allele databases
