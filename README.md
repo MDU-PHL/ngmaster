@@ -7,14 +7,32 @@
 * Jason Kwong (@kwongjc)
 * Torsten Seemann (@torstenseemann)
 
+##Dependencies
+
+* BioPython
+* isPcr
+
+##Installation
+
+The simplest way to install ngmaster and its dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
+```
+brew tap homebrew/science
+brew tap chapmanb/cbl
+brew tap tseemann/homebrew-bioinformatics-linux
+brew install ngmaster
+```
+
 ##Usage
 
-        $ ngmaster.py -h
+	$ ngmaster.py -h
         
-	usage:
+	usage: 
 	  ngmaster.py [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
 	
 	In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+	
+	Ref: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.
+	See also http://www.ng-mast.net/
 	
 	positional arguments:
 	  FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN
@@ -24,11 +42,13 @@
 	  --db DB          Specify custom directory containing allele databases
 	                   Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
 	  --printseq FILE  Specify filename to save allele sequences to (default=off)
-	  --version        show program's version number and exit`
+ 	  --updatedb       Update allele database from <www.ng-mast.net>
+	  --version        show program's version number and exit
+
 
 ##Quick start
 
-To perform *in silico* NG-MAST on FASTA files:
+**To perform *in silico* NG-MAST on FASTA files:**
 
 `$ ngmaster.py <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
@@ -41,6 +61,20 @@ $ ngmaster.py example.fa
 ID      	NG-MAST POR     TBPB
 example.fna     10699   6277    4
 ```
+
+##Updating the allele databases
+
+**To update the allele databases from http://www.ng-mast.net :**  
+*Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
+
+	$ ngmaster.py --updatedb
+
+**To update the allele databases into a different folder (ie. not the /db folder in the ngmaster directory):**
+
+	$ ngmaster.py --updatedb --db path/to/folder
+
+This will download the database files into the folder ```path/to/folder```.
+This can then be specified when running ngmaster using the ```--db  path/to/folder``` option.
 
 ##Creating a custom allele database
 
@@ -57,21 +91,6 @@ example.fna     10699   6277    4
 **To save sequences of the alleles to a file (eg. for uploading to [http://ng-mast.net/](http://ng-mast.net/)):**
 
 `$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
-
-##Dependencies
-
-* BioPython
-* isPcr
-
-##Installation
-
-The simplest way to install ngmaster and its dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
-```
-brew tap homebrew/science
-brew tap chapmanb/cbl
-brew tap tseemann/homebrew-bioinformatics-linux
-brew install ngmaster
-```
 
 ##Bugs
 
