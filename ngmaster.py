@@ -14,6 +14,7 @@ import subprocess
 import shutil
 import re
 import tempfile
+from sys import argv
 from subprocess import Popen
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -86,31 +87,34 @@ tempFILE = DBpath + '/temp'
 
 # Update DB
 if args.updatedb:
-	print "Updating DB files ... "
-	# Update POR DB
-	dbFILE = urllib.URLopener()
-	dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=POR", tempFILE)
-	format(tempFILE)
-	os.rename(tempFILE, porDB)
-	print porDB + ' ... Done.'
-	# Update TBPB DB
-	dbFILE = urllib.URLopener()
-	dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=TBPB", tempFILE)
-	format(tempFILE)
-	os.rename(tempFILE, tbpbDB)
-	print tbpbDB + ' ... Done.'
-	# Update allele DB
-	dbFILE = urllib.URLopener()
-	dbFILE.retrieve("http://www.ng-mast.net/sql/st_comma.asp", tempFILE)
-	sed_inplace(tempFILE, ',', '\t')
-	sed_inplace(tempFILE, '<br>', '\n')
-	with open(alleleDB, 'w') as f:
-		f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
-		with open(tempFILE, 'r') as t:
-			for line in t:
-				f.write(line)
-	os.remove(tempFILE)
-	print alleleDB + ' ... Done.'
+	print 'WARNING: Updating DB will overwrite existing DB files.'
+	yn = raw_input('Continue? [y/n]: ')
+	if yn == 'y':
+		print "Updating DB files ... "
+		# Update POR DB
+		dbFILE = urllib.URLopener()
+		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=POR", tempFILE)
+		format(tempFILE)
+		os.rename(tempFILE, porDB)
+		print porDB + ' ... Done.'
+		# Update TBPB DB
+		dbFILE = urllib.URLopener()
+		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=TBPB", tempFILE)
+		format(tempFILE)
+		os.rename(tempFILE, tbpbDB)
+		print tbpbDB + ' ... Done.'
+		# Update allele DB
+		dbFILE = urllib.URLopener()
+		dbFILE.retrieve("http://www.ng-mast.net/sql/st_comma.asp", tempFILE)
+		sed_inplace(tempFILE, ',', '\t')
+		sed_inplace(tempFILE, '<br>', '\n')
+		with open(alleleDB, 'w') as f:
+			f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
+			with open(tempFILE, 'r') as t:
+				for line in t:
+					f.write(line)
+		os.remove(tempFILE)
+		print alleleDB + ' ... Done.'
 	progexit(0)
 
 # Check isPcr installed and running correctly

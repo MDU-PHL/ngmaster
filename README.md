@@ -88,7 +88,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 3. Specify the path to that custom database folder:  
    `$ ngmaster.py --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-**To save sequences of the alleles to a file (eg. for uploading to [http://ng-mast.net/](http://ng-mast.net/)):**
+**To save sequences of the alleles to a file (eg. for uploading to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
 
 `$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
@@ -105,4 +105,4 @@ Note that the NG-MAST databases and website are curated and hosted at the Depart
 ##References
 
 * Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
-* See also [http://www.ng-mast.net/](http://www.ng-mast.net/).
+* See also [http://www.ng-mast.net](http://www.ng-mast.net/).
