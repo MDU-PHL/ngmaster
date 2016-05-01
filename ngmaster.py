@@ -22,7 +22,6 @@ from subprocess import Popen
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Blast.Applications import NcbiblastnCommandline
 
 # Log a message to stderr
 def msg(*args, **kwargs):
@@ -60,6 +59,22 @@ def format(file):
 	sed_all(file, '<\/textarea>.*$', '')
 	sed_inplace(file, '&gt;', '>')
 
+# Import allele database as dictionary
+def fasta_to_dict(db):
+	dict = {}
+	dbFILE = open((db), 'rU')
+	for allele in SeqIO.parse(dbFILE, 'fasta'):
+		dict[str(allele.seq)] = (allele.id)
+		dict[str(allele.seq.reverse_complement())] = (allele.id)
+	return dict
+
+# Set target lengths for isPcr amplicons and trimmed sequences
+porAMPLEN = 737
+porTRIMLEN = 490
+tbpbAMPLEN = 580
+tbpbTRIMLEN = 390
+
+
 # Usage
 parser = argparse.ArgumentParser(
 	formatter_class=RawTextHelpFormatter,
@@ -75,9 +90,9 @@ parser.add_argument('--updatedb', action='store_true', default=False, help='Upda
 parser.add_argument('--test', action='store_true', default=False, help='Run test example')
 parser.add_argument('--version', action='version', version=
 	'=====================================\n'
-	'%(prog)s v0.2\n'
-	'Updated 30-Apr-2016 by Jason Kwong\n'
-	'Dependencies: isPcr, BLAST, BioPython\n'
+	'%(prog)s v0.3\n'
+	'Updated 1-May-2016 by Jason Kwong\n'
+	'Dependencies: isPcr, BioPython\n'
 	'=====================================')
 args = parser.parse_args()
 
@@ -157,6 +172,10 @@ with open(alleleDB) as f:
 			alleles = str(porALLELE) + '-' + str(tbpbALLELE)
 			NGMAST[alleles] = ST
 
+# Import allele databases
+porDICT = fasta_to_dict(porDB)
+tbpbDICT = fasta_to_dict(tbpbDB)
+
 # Set up primer database
 primerDB = [['por', 'CAAGAAGACCTCGGCAA', 'CCGACAACCACTTGGT'], ['tbpB', 'CGTTGTCGGCAGCGCGAAAAC', 'TTCATCGGTGCGCTCGCCTTG']]
 NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
@@ -194,65 +213,48 @@ for f in args.fasta:
 		ampID = product[1]
 		ampLEN = product[2]
 		if ampID == "por":
-			if int(ampLEN[:-2]) > 637 and int(ampLEN[:-2]) < 837:	# Check por amplicon length
+			if int(ampLEN[:-2]) > (porAMPLEN-100) and int(ampLEN[:-2]) < (porAMPLEN+100):	# Check por amplicon length
 				porSEQ = amplicon.seq.upper()
 				start = porSEQ.find('TTGAA')
-				if start != -1:										# Check for starting key motif
-					newporSEQ = str(porSEQ[start:(start+490)])		# Trim sequence from starting key motif
-					if len(newporSEQ) == 490:
+				if start != -1:											# Check for starting key motif
+					newporSEQ = str(porSEQ[start:(start+porTRIMLEN)])	# Trim sequence from starting key motif
+					if len(newporSEQ) == porTRIMLEN:
 						if 'por' not in porCOUNT:
 							porCOUNT.append('por')
 						# Add sequences to print later
 						porSEQR = Seq(newporSEQ)
 						porRECR = SeqRecord(porSEQR, id=f, description='POR')
 						alleleSEQS.append(porRECR)
-						# BLAST trimmed sequence against database
-						porBLAST = NcbiblastnCommandline(query='-', subject=porDB, evalue='0.001', perc_identity='100', outfmt='"6 qseqid sseqid pident length"')
-						stdout, stderr = porBLAST(stdin=porRECR.format('fasta'))
-						if stdout:
-							BLASTout = stdout.split('\n')
-							for line in BLASTout:
-								if line.strip():
-									lines = line.split('\t')
-									if lines[3] == '490':
-										porRESULT = lines[1]
-										por = porRESULT.split('R')[1]
-									elif not por:
-										por = 'new'
-						elif not por:
+						# Search trimmed sequence against database dictionary
+						try:
+							porRESULT = (porDICT[str(porSEQR)])
+							por = porRESULT.split('R')[1]
+						except KeyError:
 							por = 'new'
+							continue
 						porCOUNT.append(por)
 					else:
 						porKEY.append('no_key')
-
 		if ampID == "tbpB":
-			if int(ampLEN[:-2]) > 480 and int(ampLEN[:-2]) < 680:	# Check tbpB amplicon length
+			if int(ampLEN[:-2]) > (tbpbAMPLEN-100) and int(ampLEN[:-2]) < (tbpbAMPLEN+100):	# Check tbpB amplicon length
 				tbpbSEQ = amplicon.seq.upper()
 				start = tbpbSEQ.find('CGTCTGAA')
-				if start != -1:										# Check for starting key motif
-					newtbpbSEQ = str(tbpbSEQ[start:(start+390)])	# Trim sequence from starting key motif
-					if len(newtbpbSEQ) == 390:
+				if start != -1:												# Check for starting key motif
+					newtbpbSEQ = str(tbpbSEQ[start:(start+tbpbTRIMLEN)])	# Trim sequence from starting key motif
+					if len(newtbpbSEQ) == tbpbTRIMLEN:
 						if 'tbpB' not in tbpbCOUNT:
 							tbpbCOUNT.append('tbpB')
-						# Add sequences to print later
+							# Add sequences to print later
 						tbpbSEQR = Seq(newtbpbSEQ)
 						tbpbRECR = SeqRecord(tbpbSEQR, id=f, description='TBPB')
 						alleleSEQS.append(tbpbRECR)
-						# BLAST trimmed sequence against database
-						tbpbBLAST = NcbiblastnCommandline(query='-', subject=tbpbDB, evalue='0.001', perc_identity='100', outfmt='"6 qseqid sseqid pident length"')
-						stdout, stderr = tbpbBLAST(stdin=tbpbRECR.format('fasta'))
-						if stdout:
-							BLASTout = stdout.split('\n')
-							for line in BLASTout:
-								if line.strip():
-									lines = line.split('\t')
-									if lines[3] == '390':
-										tbpbRESULT = lines[1]
-										tbpb = tbpbRESULT.split('PB')[1]
-									elif not tbpb:
-										tbpb = 'new'
-						elif not tbpb:
+						# Search trimmed sequence against database dictionary
+						try:
+							tbpbRESULT = (tbpbDICT[str(tbpbSEQR)])
+							tbpb = tbpbRESULT.split('PB')[1]
+						except KeyError:
 							tbpb = 'new'
+							continue
 						tbpbCOUNT.append(tbpb)
 					else:
 						tbpbKEY.append('no_key')
@@ -285,7 +287,7 @@ for f in args.fasta:
 		else:
 			print( 'test.fa' + '\t' + type + '\t' + por + '\t' + tbpb )
 			if type != '10699':
-				msg('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
+				err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
 			else:
 				msg('... Test successful.')
 
