@@ -41,6 +41,7 @@ brew install ngmaster
 	  -h, --help       show this help message and exit
 	  --db DB          Specify custom directory containing allele databases
 	                   Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
+	  --csv			   Output comma-separated format (CSV) rather than tab-separated
 	  --printseq FILE  Specify filename to save allele sequences to (default=off)
  	  --updatedb       Update allele database from <www.ng-mast.net>
 	  --test		   Run test example
@@ -106,6 +107,14 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 **To save sequences of the alleles to a file (eg. for uploading to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
 
 `$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+
+##Citation
+
+Please cite as:
+
+Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
+*NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)*
+GitHub: https://github.com/MDU-PHL/ngmaster
 
 ##Bugs
 

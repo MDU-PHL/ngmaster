@@ -94,7 +94,11 @@ parser.add_argument('--version', action='version', version=
 	'%(prog)s v0.3\n'
 	'Updated 1-May-2016 by Jason Kwong\n'
 	'Dependencies: isPcr, BioPython\n'
-	'=====================================')
+	'=====================================\n'
+	'Please cite as:\n'
+    'Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
+    'NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+    'GitHub: https://github.com/MDU-PHL/ngmaster\n')
 args = parser.parse_args()
 
 # Path to database files
