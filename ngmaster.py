@@ -83,12 +83,12 @@ parser = argparse.ArgumentParser(
 		'See also http://www.ng-mast.net/',
 	usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
 parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
-parser.add_argument('--db', metavar='DB', help='Specify custom directory containing allele databases\n'
-	'Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
-parser.add_argument('--csv', action='store_true', default=False, help='Output comma-separated format (CSV) rather than tab-separated')
-parser.add_argument('--printseq', metavar='FILE', nargs=1, help='Specify filename to save allele sequences to (default=off)')
-parser.add_argument('--updatedb', action='store_true', default=False, help='Update allele database from <www.ng-mast.net>')
-parser.add_argument('--test', action='store_true', default=False, help='Run test example')
+parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
+	'directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
+parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
+parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
+parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
+parser.add_argument('--test', action='store_true', default=False, help='run test example')
 parser.add_argument('--version', action='version', version=
 	'=====================================\n'
 	'%(prog)s v0.3\n'

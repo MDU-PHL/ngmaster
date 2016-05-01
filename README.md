@@ -39,12 +39,12 @@ brew install ngmaster
 	
 	optional arguments:
 	  -h, --help       show this help message and exit
-	  --db DB          Specify custom directory containing allele databases
-	                   Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
-	  --csv			   Output comma-separated format (CSV) rather than tab-separated
-	  --printseq FILE  Specify filename to save allele sequences to (default=off)
- 	  --updatedb       Update allele database from <www.ng-mast.net>
-	  --test		   Run test example
+	  --db DB          specify custom directory containing allele databases
+	                   directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
+	  --csv			   output comma-separated format (CSV) rather than tab-separated
+	  --printseq FILE  specify filename to save allele sequences to (default=off)
+ 	  --updatedb       update allele database from <www.ng-mast.net>
+	  --test		   run test example
 	  --version        show program's version number and exit
 
 
@@ -112,9 +112,9 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 Please cite as:
 
-Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
-*NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)*
-GitHub: https://github.com/MDU-PHL/ngmaster
+Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.  
+*NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)*  
+GitHub: https://github.com/MDU-PHL/ngmaster  
 
 ##Bugs
 
