@@ -85,6 +85,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
 parser.add_argument('--db', metavar='DB', help='Specify custom directory containing allele databases\n'
 	'Directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
+parser.add_argument('--csv', action='store_true', default=False, help='Output comma-separated format (CSV) rather than tab-separated')
 parser.add_argument('--printseq', metavar='FILE', nargs=1, help='Specify filename to save allele sequences to (default=off)')
 parser.add_argument('--updatedb', action='store_true', default=False, help='Update allele database from <www.ng-mast.net>')
 parser.add_argument('--test', action='store_true', default=False, help='Run test example')
@@ -148,6 +149,12 @@ output, errcode = checkdep.communicate()
 if checkdep.returncode != 0:
 	err('ERROR: Check isPcr is installed correctly and in $PATH.')
 
+# Set separator
+if args.csv:
+	SEP = ','
+else:
+	SEP = '\t'
+
 # Run test example
 if args.test:
 	testSEQ = os.path.dirname(os.path.realpath(sys.argv[0])) + "/test/test.fa"
@@ -183,7 +190,7 @@ NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
 # Check queries are in FASTA format
 # Run Jim Kent's isPcr to identify amplicon
 alleleSEQS = []
-print('ID' + '\t' + 'NG-MAST' + '\t' + 'POR' + '\t' + 'TBPB')
+print('ID' + SEP + 'NG-MAST' + SEP + 'POR' + SEP + 'TBPB')
 for f in args.fasta:
 	if os.path.isfile(f) == False:
 		msg( 'ERROR: Cannot find "%(f)s". Check file exists.' % globals() )
@@ -267,7 +274,7 @@ for f in args.fasta:
 
 	# If multiple hits with trimmed sequence (eg. duplicated genes, multiple starting key motifs etc.) print multiple results
 	if len(porCOUNT) > 2 or len(tbpbCOUNT) > 2:
-		print( f + '\t' + 'multiple' + '\t' + str(porCOUNT) + '\t' + str(tbpbCOUNT) )
+		print( f + SEP + 'multiple' + SEP + str(porCOUNT) + SEP + str(tbpbCOUNT) )
 	else:
 	# Report if starting key motifs present
 		if not porCOUNT:
@@ -283,9 +290,9 @@ for f in args.fasta:
 		else:
 			type = "-"
 		if not args.test:
-			print( f + '\t' + type + '\t' + por + '\t' + tbpb )
+			print( f + SEP + type + SEP + por + SEP + tbpb )
 		else:
-			print( 'test.fa' + '\t' + type + '\t' + por + '\t' + tbpb )
+			print( 'test.fa' + SEP + type + SEP + por + SEP + tbpb )
 			if type != '10699':
 				err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
 			else:
