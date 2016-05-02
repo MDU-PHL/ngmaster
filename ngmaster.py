@@ -12,7 +12,8 @@ import sys
 import os
 import os.path
 import StringIO
-import urllib
+import urllib2
+from urllib2 import urlopen, HTTPError, URLError
 import subprocess
 import shutil
 import re
@@ -114,6 +115,10 @@ tbpbDB = DBpath + '/TBPB.tfa'
 alleleDB = DBpath + '/ng_mast.txt'
 tempFILE = DBpath + '/temp'
 
+porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
+tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
+alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
+
 # Update DB
 if args.updatedb:
 	msg('WARNING: Updating DB will overwrite existing DB files.')
@@ -121,29 +126,57 @@ if args.updatedb:
 	if yn == 'y':
 		msg("Updating DB files ... ")
 		# Update POR DB
-		dbFILE = urllib.URLopener()
-		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=POR", tempFILE)
-		format(tempFILE)
-		os.rename(tempFILE, porDB)
-		msg(porDB + ' ... Done.')
+		try:
+			FILE = urllib2.urlopen(porURL)
+			with open(tempFILE, 'w') as f:
+				f.write(FILE.read())
+			format(tempFILE)
+			os.rename(porDB, porDB+'.old')
+			os.rename(tempFILE, porDB)
+			msg(porDB + ' ... Done.')
+		except HTTPError, e:
+			err('ERROR: Unable to download %s - HTTP: %s' % (porURL, e.reason))
+		except URLError, e:
+			err('ERROR: Unable to download %s - URL: %s' % (porURL, e.reason))
+		except IOError, e:
+			err('ERROR: Unable to download %s - I/O: %s' % (porURL, e.strerror))
 		# Update TBPB DB
-		dbFILE = urllib.URLopener()
-		dbFILE.retrieve("http://www.ng-mast.net/sql/fasta.asp?allele=TBPB", tempFILE)
-		format(tempFILE)
-		os.rename(tempFILE, tbpbDB)
-		msg(tbpbDB + ' ... Done.')
+		try:
+			FILE = urllib2.urlopen(tbpbURL)
+			with open(tempFILE, 'w') as f:
+				f.write(FILE.read())
+			format(tempFILE)
+			os.rename(tbpbDB, tbpbDB+'.old')
+			os.rename(tempFILE, tbpbDB)
+			msg(tbpbDB + ' ... Done.')
+		except HTTPError, e:
+			err('ERROR: Unable to download %s - HTTP: %s' % (tbpbURL, e.reason))
+		except URLError, e:
+			err('ERROR: Unable to download %s - URL: %s' % (tbpbURL, e.reason))
+		except IOError, e:
+			err('ERROR: Unable to download %s - I/O: %s' % (tbpbURL, e.strerror))
 		# Update allele DB
-		dbFILE = urllib.URLopener()
-		dbFILE.retrieve("http://www.ng-mast.net/sql/st_comma.asp", tempFILE)
-		sed_inplace(tempFILE, ',', '\t')
-		sed_inplace(tempFILE, '<br>', '\n')
-		with open(alleleDB, 'w') as f:
-			f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
-			with open(tempFILE, 'r') as t:
-				for line in t:
-					f.write(line)
-		os.remove(tempFILE)
-		msg(alleleDB + ' ... Done.')
+		try:
+			FILE = urllib2.urlopen(alleleURL)
+			with open(tempFILE, 'w') as f:
+				f.write(FILE.read())
+			sed_inplace(tempFILE, ',', '\t')
+			sed_inplace(tempFILE, '<br>', '\n')
+			os.rename(alleleDB, alleleDB+'.old')
+			with open(alleleDB, 'w') as f:
+				f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
+				with open(tempFILE, 'r') as t:
+					for line in t:
+						f.write(line)
+			msg(alleleDB + ' ... Done.')
+		except HTTPError, e:
+			err('ERROR: Unable to download %s - HTTP: %s' % (alleleURL, e.reason))
+		except URLError, e:
+			err('ERROR: Unable to download %s - URL: %s' % (alleleURL, e.reason))
+		except IOError, e:
+			err('ERROR: Unable to download %s - I/O: %s' % (alleleURL, e.strerror))
+		if os.path.isfile(tempFILE) == True:
+			os.remove(tempFILE)
 	sys.exit(0)
 
 # Check isPcr installed and running correctly

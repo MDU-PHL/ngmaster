@@ -85,6 +85,8 @@ test.fa	10699	6277	4
 
 	$ ngmaster.py --updatedb
 
+A copy of the old database is saved in the database folder just in case, but is overwritten with each subsequent ```--updatedb```.
+
 **To update the allele databases into a different folder (ie. not the /db folder in the ngmaster directory):**
 
 	$ ngmaster.py --updatedb --db path/to/folder
