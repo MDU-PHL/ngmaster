@@ -230,8 +230,6 @@ for f in args.fasta:
 				if start != -1:											# Check for starting key motif
 					newporSEQ = str(porSEQ[start:(start+porTRIMLEN)])	# Trim sequence from starting key motif
 					if len(newporSEQ) == porTRIMLEN:
-						if 'por' not in porCOUNT:
-							porCOUNT.append('por')
 						# Add sequences to print later
 						porSEQR = Seq(newporSEQ)
 						porRECR = SeqRecord(porSEQR, id=f, description='POR')
@@ -243,7 +241,8 @@ for f in args.fasta:
 						except KeyError:
 							por = 'new'
 							continue
-						porCOUNT.append(por)
+						if por not in porCOUNT:
+							porCOUNT.append(por)
 					else:
 						porKEY.append('no_key')
 		if ampID == "tbpB":
@@ -253,8 +252,6 @@ for f in args.fasta:
 				if start != -1:												# Check for starting key motif
 					newtbpbSEQ = str(tbpbSEQ[start:(start+tbpbTRIMLEN)])	# Trim sequence from starting key motif
 					if len(newtbpbSEQ) == tbpbTRIMLEN:
-						if 'tbpB' not in tbpbCOUNT:
-							tbpbCOUNT.append('tbpB')
 							# Add sequences to print later
 						tbpbSEQR = Seq(newtbpbSEQ)
 						tbpbRECR = SeqRecord(tbpbSEQR, id=f, description='TBPB')
@@ -266,7 +263,8 @@ for f in args.fasta:
 						except KeyError:
 							tbpb = 'new'
 							continue
-						tbpbCOUNT.append(tbpb)
+						if tbpb not in tbpbCOUNT:
+							tbpbCOUNT.append(tbpb)
 					else:
 						tbpbKEY.append('no_key')
 	alleleSEQ.close()
@@ -277,7 +275,7 @@ for f in args.fasta:
 		tbpb = '-'
 
 	# If multiple hits with trimmed sequence (eg. duplicated genes, multiple starting key motifs etc.) print multiple results
-	if len(porCOUNT) > 2 or len(tbpbCOUNT) > 2:
+	if len(porCOUNT) > 1 or len(tbpbCOUNT) > 1:
 		print( f + SEP + 'multiple' + SEP + str(porCOUNT) + SEP + str(tbpbCOUNT) )
 	else:
 	# Report if starting key motifs present
