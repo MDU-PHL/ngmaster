@@ -207,11 +207,11 @@ for f in args.fasta:
 
 	# Setup lists in case there are multiple hits
 	por = None
-	porCOUNT = []
-	porKEY = []
+	porCOUNT = set()
+	porKEY = set()
 	tbpb = None
-	tbpbCOUNT = []
-	tbpbKEY = []
+	tbpbCOUNT = set()
+	tbpbKEY = set()
 	# Run isPcr by Jim Kent
 	proc = subprocess.Popen(['isPcr', f, 'stdin', 'stdout', '-tileSize=6', '-minPerfect=5', '-stepSize=3', '-maxSize=900'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	PCRout = proc.communicate(input=NGprimers)[0]
@@ -242,9 +242,9 @@ for f in args.fasta:
 							por = 'new'
 							continue
 						if por not in porCOUNT:
-							porCOUNT.append(por)
-					else:
-						porKEY.append('no_key')
+							porCOUNT.add(por)
+				else:
+					porKEY.add('no_key')
 		if ampID == "tbpB":
 			if int(ampLEN[:-2]) > (tbpbAMPLEN-100) and int(ampLEN[:-2]) < (tbpbAMPLEN+100):	# Check tbpB amplicon length
 				tbpbSEQ = amplicon.seq.upper()
@@ -264,9 +264,9 @@ for f in args.fasta:
 							tbpb = 'new'
 							continue
 						if tbpb not in tbpbCOUNT:
-							tbpbCOUNT.append(tbpb)
-					else:
-						tbpbKEY.append('no_key')
+							tbpbCOUNT.add(tbpb)
+				else:
+					tbpbKEY.add('no_key')
 	alleleSEQ.close()
 
 	if not por:
