@@ -276,7 +276,7 @@ for f in args.fasta:
 
 	# If multiple hits with trimmed sequence (eg. duplicated genes, multiple starting key motifs etc.) print multiple results
 	if len(porCOUNT) > 1 or len(tbpbCOUNT) > 1:
-		print( f + SEP + 'multiple' + SEP + str(porCOUNT) + SEP + str(tbpbCOUNT) )
+		print( f + SEP + 'multiple' + SEP + '/'.join(porCOUNT) + SEP + '/'.join(tbpbCOUNT) )
 	else:
 	# Report if starting key motifs present
 		if not porCOUNT:
