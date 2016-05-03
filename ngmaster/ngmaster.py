@@ -52,7 +52,7 @@ def main():
 		'=====================================\n'
 		'%(prog)s v0.3\n'
 		'Updated 1-May-2016 by Jason Kwong\n'
-		'Dependencies: isPcr, BioPython\n'
+		'Dependencies: Python 2.7.x, isPcr, BioPython\n'
 		'=====================================\n'
 		'Please cite as:\n'
 	    'Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
@@ -243,7 +243,7 @@ def main():
 					if start != -1:												# Check for starting key motif
 						newtbpbSEQ = str(tbpbSEQ[start:(start+tbpbTRIMLEN)])	# Trim sequence from starting key motif
 						if len(newtbpbSEQ) == tbpbTRIMLEN:
-								# Add sequences to print later
+							# Add sequences to print later
 							tbpbSEQR = Seq(newtbpbSEQ)
 							tbpbRECR = SeqRecord(tbpbSEQR, id=f, description='TBPB')
 							alleleSEQS.append(tbpbRECR)
