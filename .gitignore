@@ -1,0 +1,3 @@
+ngmaster.egg-info/*
+venv/*
+*.pyc
