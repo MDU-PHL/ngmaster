@@ -9,8 +9,9 @@
 
 ##Dependencies
 
-* BioPython
-* isPcr
+* [Python 2.7.x](https://www.python.org/)
+* [BioPython](http://biopython.org/)
+* [isPcr v33](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
 
 ##Installation
 
@@ -59,9 +60,11 @@ test.fa	10699	6277	4
 	  ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
 	
 	In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
-	
-	Ref: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.
-	See also http://www.ng-mast.net/
+
+	Please cite as:
+	  Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
+	  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+	  GitHub: https://github.com/MDU-PHL/ngmaster
 	
 	positional arguments:
 	  FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN

@@ -38,8 +38,10 @@ def main():
 	parser = argparse.ArgumentParser(
 		formatter_class=RawTextHelpFormatter,
 		description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
-			'\nRef: Martin et al. J Infect Dis, 2004 Apr 15;189(8):1497-1505.\n'
-			'See also http://www.ng-mast.net/',
+			'\nPlease cite as:\n'
+			'Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
+			'NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+			'GitHub: https://github.com/MDU-PHL/ngmaster\n',
 		usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
 	parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
 	parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
@@ -51,13 +53,9 @@ def main():
 	parser.add_argument('--version', action='version', version=
 		'=====================================\n'
 		'%(prog)s v0.3\n'
-		'Updated 1-May-2016 by Jason Kwong\n'
+		'Updated 4-May-2016\n'
 		'Dependencies: Python 2.7.x, isPcr, BioPython\n'
-		'=====================================\n'
-		'Please cite as:\n'
-	    'Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
-	    'NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
-	    'GitHub: https://github.com/MDU-PHL/ngmaster\n')
+		'=====================================\n')
 	args = parser.parse_args()
 
 	# Path to database files
