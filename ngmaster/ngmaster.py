@@ -39,9 +39,9 @@ def main():
 		formatter_class=RawTextHelpFormatter,
 		description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
 			'\nPlease cite as:\n'
-			'Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
-			'NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
-			'GitHub: https://github.com/MDU-PHL/ngmaster\n',
+			'  Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
+			'  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+			'  GitHub: https://github.com/MDU-PHL/ngmaster\n',
 		usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
 	parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
 	parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
