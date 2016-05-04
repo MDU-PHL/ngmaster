@@ -5,6 +5,7 @@
 ##Authors
 
 * Jason Kwong (@kwongjc)
+* Anders Goncalves da Silva
 * Torsten Seemann (@torstenseemann)
 
 ##Dependencies
@@ -17,30 +18,30 @@
 
 The easiest way of installing `ngmaster` is using `pip`:
 
-    pip install --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip install --user git+https://github.com/MDU-PHL/ngmaster.git
     
 The `--user` option will install the package locally, rather than in the global `python` directory. 
 
 Thus, by default, this will install the package in `$HOME/.local/`, and the executable in `$HOME/.local/bin/`. To install the executable in a custom location (e.g., `$HOME/bin`), use the following:
 
-    pip install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
 To upgrade to a newer version: 
 
-    pip install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
 The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
 ```
-brew tap homebrew/science
-brew tap chapmanb/cbl
-brew tap tseemann/homebrew-bioinformatics-linux
+$ brew tap homebrew/science
+$ brew tap chapmanb/cbl
+$ brew tap tseemann/homebrew-bioinformatics-linux
 ```
 
 ### To test installation
 
 Once installed, you can run the following to ensure `ngmaster` is successfully working:
 
-    ngmaster --test
+    $ ngmaster --test
 
 If everything works, you will see the following:
 
