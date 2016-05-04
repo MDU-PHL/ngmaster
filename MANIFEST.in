@@ -1,2 +1,2 @@
-recursive-include db
-recursive-include test
+graft ngmaster/db
+graft ngmaster/test
