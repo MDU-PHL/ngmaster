@@ -159,7 +159,7 @@ def main():
 	if args.test:
 		testSEQ = resource_filename(__name__, "/test/test.fa")
 		msg('Running ngmaster.py on test example (NG-MAST 10699) ...')
-		msg('$ ngmaster.py test/test.fa')
+		msg('$ ngmaster.py '+testSEQ)
 		args.fasta = [testSEQ]
 
 	# Check if positional arguments
