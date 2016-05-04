@@ -63,15 +63,22 @@ def main():
 	# Path to database files
 	if args.db:
 		DBpath = str(args.db).rstrip('/')
+		if not os.path.exists(DBpath):
+		    os.makedirs(DBpath)
 	else:
 		DBpath = resource_filename(__name__, 'db')
-	if not os.path.exists(DBpath):
-	    os.makedirs(DBpath)
 
 	porDB = DBpath + '/POR.tfa'
 	tbpbDB = DBpath + '/TBPB.tfa'
 	alleleDB = DBpath + '/ng_mast.txt'
 	tempFILE = DBpath + '/temp'
+
+	if not os.path.isfile(porDB):
+		err('ERROR: Cannot locate database: %s' % porDB)
+	if not os.path.isfile(tbpbDB):
+		err('ERROR: Cannot locate database: %s' % tbpbDB)
+	if not os.path.isfile(alleleDB):
+		err('ERROR: Cannot locate database: %s' % alleleDB)
 
 	porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
 	tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
