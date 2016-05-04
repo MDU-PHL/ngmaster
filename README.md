@@ -14,20 +14,49 @@
 
 ##Installation
 
-The simplest way to install ngmaster and its dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
+The easiest way of installing `ngmaster` is using `pip`:
+
+    pip install --user git+https://github.com/MDU-PHL/ngmaster.git
+    
+The `--user` option will install the package locally, rather than in the global `python` directory. 
+
+Thus, by default, this will install the package in `$HOME/.local/`, and the executable in `$HOME/.local/bin/`. To install the executable in a custom location (e.g., `$HOME/bin`), use the following:
+
+    pip install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+
+To upgrade to a newer version: 
+
+    pip install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+
+The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
 ```
 brew tap homebrew/science
 brew tap chapmanb/cbl
 brew tap tseemann/homebrew-bioinformatics-linux
-brew install ngmaster
+```
+
+### To test installation
+
+Once installed, you can run the following to ensure `ngmaster` is successfully working:
+
+    ngmaster --test
+
+If everything works, you will see the following:
+
+```
+Running ngmaster.py on test example (NG-MAST 10699) ...
+$ ngmaster.py test/test.fa
+ID	NG-MAST	POR	TBPB
+test.fa	10699	6277	4
+... Test successful.
 ```
 
 ##Usage
 
-	$ ngmaster.py -h
+	$ ngmaster -h
         
 	usage: 
-	  ngmaster.py [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
+	  ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
 	
 	In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 	
@@ -52,31 +81,7 @@ brew install ngmaster
 
 **To perform *in silico* NG-MAST on FASTA files:**
 
-`$ ngmaster.py <fasta1> <fasta2> <fasta3> ... <fastaN>`
-
-##Example file
-
-The ngmaster distribution includes an example FASTA file to test on:
-
-```
-$ ngmaster.py test/test.fa
-ID		NG-MAST POR     TBPB
-test.fa	10699	6277    4
-```
-
-Alternatively, ngmaster can be tested by using the ```--test``` option:
-
-```
-$ ngmaster.py --test
-```
-should produce:
-```
-Running ngmaster.py on test example (NG-MAST 10699) ...
-$ ngmaster.py test/test.fa
-ID		NG-MAST	POR	TBPB
-test.fa	10699	6277	4
-... Test successful.
-```
+`$ ngmaster <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
 ##Updating the allele databases
 
@@ -104,11 +109,11 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 2. Place the custom database files in a folder.
 
 3. Specify the path to that custom database folder:  
-   `$ ngmaster.py --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+   `$ ngmaster --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
 **To save sequences of the alleles to a file (eg. for uploading to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
 
-`$ ngmaster.py --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+`$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
 ##Citation
 
