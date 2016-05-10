@@ -61,8 +61,6 @@ def main():
 	# Path to database files
 	if args.db:
 		DBpath = str(args.db).rstrip('/')
-		if not os.path.exists(DBpath):
-		    os.makedirs(DBpath)
 	else:
 		DBpath = resource_filename(__name__, 'db')
 
@@ -70,13 +68,6 @@ def main():
 	tbpbDB = DBpath + '/TBPB.tfa'
 	alleleDB = DBpath + '/ng_mast.txt'
 	tempFILE = DBpath + '/temp'
-
-	if not os.path.isfile(porDB):
-		err('ERROR: Cannot locate database: %s' % porDB)
-	if not os.path.isfile(tbpbDB):
-		err('ERROR: Cannot locate database: %s' % tbpbDB)
-	if not os.path.isfile(alleleDB):
-		err('ERROR: Cannot locate database: %s' % alleleDB)
 
 	porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
 	tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
@@ -90,34 +81,38 @@ def main():
 			msg("Updating DB files ... ")
 			# Update POR DB
 			try:
+				if not os.path.exists(DBpath):
+				    os.makedirs(DBpath)
 				FILE = urllib2.urlopen(porURL)
 				with open(tempFILE, 'w') as f:
 					f.write(FILE.read())
 				format(tempFILE)
-				os.rename(porDB, porDB+'.old')
+				if os.path.isfile(porDB):
+					os.rename(porDB, porDB+'.old')
 				os.rename(tempFILE, porDB)
 				msg(porDB + ' ... Done.')
 			except HTTPError, e:
-				err('ERROR: Unable to download %s - HTTP: %s' % (porURL, e.reason))
+				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(porURL, e.reason))
 			except URLError, e:
-				err('ERROR: Unable to download %s - URL: %s' % (porURL, e.reason))
+				err('ERROR: Unable to download "{}" - URL: "{}"'.format(porURL, e.reason))
 			except IOError, e:
-				err('ERROR: Unable to download %s - I/O: %s' % (porURL, e.strerror))
+				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(porURL, e.strerror))
 			# Update TBPB DB
 			try:
 				FILE = urllib2.urlopen(tbpbURL)
 				with open(tempFILE, 'w') as f:
 					f.write(FILE.read())
 				format(tempFILE)
-				os.rename(tbpbDB, tbpbDB+'.old')
+				if os.path.isfile(tbpbDB):
+					os.rename(tbpbDB, tbpbDB+'.old')
 				os.rename(tempFILE, tbpbDB)
 				msg(tbpbDB + ' ... Done.')
 			except HTTPError, e:
-				err('ERROR: Unable to download %s - HTTP: %s' % (tbpbURL, e.reason))
+				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(tbpbURL, e.reason))
 			except URLError, e:
-				err('ERROR: Unable to download %s - URL: %s' % (tbpbURL, e.reason))
+				err('ERROR: Unable to download "{}" - URL: "{}"'.format(tbpbURL, e.reason))
 			except IOError, e:
-				err('ERROR: Unable to download %s - I/O: %s' % (tbpbURL, e.strerror))
+				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(tbpbURL, e.strerror))
 			# Update allele DB
 			try:
 				FILE = urllib2.urlopen(alleleURL)
@@ -125,7 +120,8 @@ def main():
 					f.write(FILE.read())
 				sed_inplace(tempFILE, ',', '\t')
 				sed_inplace(tempFILE, '<br>', '\n')
-				os.rename(alleleDB, alleleDB+'.old')
+				if os.path.isfile(alleleDB):
+					os.rename(alleleDB, alleleDB+'.old')
 				with open(alleleDB, 'w') as f:
 					f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
 					with open(tempFILE, 'r') as t:
@@ -133,14 +129,22 @@ def main():
 							f.write(line)
 				msg(alleleDB + ' ... Done.')
 			except HTTPError, e:
-				err('ERROR: Unable to download %s - HTTP: %s' % (alleleURL, e.reason))
+				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(alleleURL, e.reason))
 			except URLError, e:
-				err('ERROR: Unable to download %s - URL: %s' % (alleleURL, e.reason))
+				err('ERROR: Unable to download "{}" - URL: "{}"'.format(alleleURL, e.reason))
 			except IOError, e:
-				err('ERROR: Unable to download %s - I/O: %s' % (alleleURL, e.strerror))
+				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(alleleURL, e.strerror))
 			if os.path.isfile(tempFILE) == True:
 				os.remove(tempFILE)
 		sys.exit(0)
+
+	# Check if database can be located
+	if not os.path.isfile(porDB):
+		err('ERROR: Cannot locate database: "{}"'.format(porDB))
+	if not os.path.isfile(tbpbDB):
+		err('ERROR: Cannot locate database: "{}"'.format(tbpbDB))
+	if not os.path.isfile(alleleDB):
+		err('ERROR: Cannot locate database: "{}"'.format(alleleDB))
 
 	# Check isPcr installed and running correctly
 	devnull = open(os.devnull, 'w')
@@ -193,11 +197,11 @@ def main():
 	print('ID' + SEP + 'NG-MAST' + SEP + 'POR' + SEP + 'TBPB')
 	for f in args.fasta:
 		if os.path.isfile(f) == False:
-			msg( 'ERROR: Cannot find "%(f)s". Check file exists.' % globals() )
+			msg( 'ERROR: Cannot find "{}". Check file exists.'.format(f) )
 			continue
 		s = open(f, 'r')
 		if s.read(1) != '>':
-			msg( 'ERROR: "%(f)s" does not appear to be in FASTA format.' % globals() )
+			msg( 'ERROR: "{}" does not appear to be in FASTA format.'.format(f) )
 			continue
 		s.close()
 
@@ -244,8 +248,9 @@ def main():
 			if ampID == "tbpB":
 				if int(ampLEN[:-2]) > (tbpbAMPLEN-100) and int(ampLEN[:-2]) < (tbpbAMPLEN+100):	# Check tbpB amplicon length
 					tbpbSEQ = amplicon.seq.upper()
-					start = tbpbSEQ.find('CGTCTGAA')
-					if start != -1:												# Check for starting key motif
+					match = re.search('CGTCTG[AG]A',str(tbpbSEQ))				# Allow single mismatch in key motif
+					if match:													# Check for starting key motif
+						start = match.start()
 						newtbpbSEQ = str(tbpbSEQ[start:(start+tbpbTRIMLEN)])	# Trim sequence from starting key motif
 						if len(newtbpbSEQ) == tbpbTRIMLEN:
 							# Add sequences to print later
