@@ -97,6 +97,8 @@ def main():
 				err('ERROR: Unable to download "{}" - URL: "{}"'.format(porURL, e.reason))
 			except IOError, e:
 				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(porURL, e.strerror))
+			if os.path.isfile(tempFILE) == True:
+				os.remove(tempFILE)
 			# Update TBPB DB
 			try:
 				FILE = urllib2.urlopen(tbpbURL)
@@ -113,6 +115,8 @@ def main():
 				err('ERROR: Unable to download "{}" - URL: "{}"'.format(tbpbURL, e.reason))
 			except IOError, e:
 				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(tbpbURL, e.strerror))
+			if os.path.isfile(tempFILE) == True:
+				os.remove(tempFILE)
 			# Update allele DB
 			try:
 				FILE = urllib2.urlopen(alleleURL)
