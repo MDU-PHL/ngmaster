@@ -87,6 +87,23 @@ test.fa	10699	6277	4
 
 `$ ngmaster <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
+The NG-MAST result and allele numbers are printed in tab-separated format to `stdout`.
+* If an allele is not found (ie. unable to located with primers), the allele result is "`–`".
+* If an allele is found (ie. located with primers), but the conserved region containing the starting key motif required for sequence trimming cannot be located, the allele result is "`no_key`".
+* If an allele is found (ie. located with primers), but the trimmed sequence is novel, and not in the current database, the allele result is "`new`".
+
+**To save results to a tab-separated text file, redirect `stdout`:**
+
+`$ ngmaster <fasta1> <fasta2> <fasta3> ... <fastaN>  > results.txt`
+
+**To display results in comma-separated format, use the `--csv` option:**
+
+`$ ngmaster --csv <fasta1> <fasta2> <fasta3> ... <fastaN>`
+
+**To save sequences of the alleles to a file (eg. for uploading "new" sequences to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
+
+`$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+
 ##Updating the allele databases
 
 **To update the allele databases from http://www.ng-mast.net :**  
@@ -115,10 +132,6 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 3. Specify the path to that custom database folder:  
    `$ ngmaster --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-**To save sequences of the alleles to a file (eg. for uploading to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
-
-`$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
-
 ##Citation
 
 Please cite as:
@@ -129,9 +142,9 @@ GitHub: https://github.com/MDU-PHL/ngmaster
 
 ##Bugs
 
-Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues)  
+Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
-Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Diseases Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk?subject=N. gonorrhoeae homepage).
+Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Disease Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk?subject=N. gonorrhoeae homepage).
 
 ##Software Licence
 
