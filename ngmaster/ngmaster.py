@@ -33,6 +33,11 @@ porTRIMLEN = 490
 tbpbAMPLEN = 580
 tbpbTRIMLEN = 390
 
+# database urls 
+porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
+tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
+alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
+
 def main():
 	# Usage
 	parser = argparse.ArgumentParser(
@@ -69,10 +74,6 @@ def main():
 	alleleDB = DBpath + '/ng_mast.txt'
 	tempFILE = DBpath + '/temp'
 
-	porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
-	tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
-	alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
-
 	# Update DB
 	if args.updatedb:
 		msg('WARNING: Updating DB will overwrite existing DB files.')
@@ -80,66 +81,11 @@ def main():
 		if yn == 'y':
 			msg("Updating DB files ... ")
 			# Update POR DB
-			try:
-				if not os.path.exists(DBpath):
-				    os.makedirs(DBpath)
-				FILE = urllib2.urlopen(porURL)
-				with open(tempFILE, 'w') as f:
-					f.write(FILE.read())
-				format(tempFILE)
-				if os.path.isfile(porDB):
-					os.rename(porDB, porDB+'.old')
-				os.rename(tempFILE, porDB)
-				msg(porDB + ' ... Done.')
-			except HTTPError, e:
-				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(porURL, e.reason))
-			except URLError, e:
-				err('ERROR: Unable to download "{}" - URL: "{}"'.format(porURL, e.reason))
-			except IOError, e:
-				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(porURL, e.strerror))
-			if os.path.isfile(tempFILE) == True:
-				os.remove(tempFILE)
+			update_db( DBpath, porDB, porURL )
 			# Update TBPB DB
-			try:
-				FILE = urllib2.urlopen(tbpbURL)
-				with open(tempFILE, 'w') as f:
-					f.write(FILE.read())
-				format(tempFILE)
-				if os.path.isfile(tbpbDB):
-					os.rename(tbpbDB, tbpbDB+'.old')
-				os.rename(tempFILE, tbpbDB)
-				msg(tbpbDB + ' ... Done.')
-			except HTTPError, e:
-				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(tbpbURL, e.reason))
-			except URLError, e:
-				err('ERROR: Unable to download "{}" - URL: "{}"'.format(tbpbURL, e.reason))
-			except IOError, e:
-				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(tbpbURL, e.strerror))
-			if os.path.isfile(tempFILE) == True:
-				os.remove(tempFILE)
+			update_db( DBpath, tbpbDB, tbpbURL )
 			# Update allele DB
-			try:
-				FILE = urllib2.urlopen(alleleURL)
-				with open(tempFILE, 'w') as f:
-					f.write(FILE.read())
-				sed_inplace(tempFILE, ',', '\t')
-				sed_inplace(tempFILE, '<br>', '\n')
-				if os.path.isfile(alleleDB):
-					os.rename(alleleDB, alleleDB+'.old')
-				with open(alleleDB, 'w') as f:
-					f.write('ST' + '\t' + 'POR' + '\t' + 'TBPB' + '\n')
-					with open(tempFILE, 'r') as t:
-						for line in t:
-							f.write(line)
-				msg(alleleDB + ' ... Done.')
-			except HTTPError, e:
-				err('ERROR: Unable to download "{}" - HTTP: "{}"'.format(alleleURL, e.reason))
-			except URLError, e:
-				err('ERROR: Unable to download "{}" - URL: "{}"'.format(alleleURL, e.reason))
-			except IOError, e:
-				err('ERROR: Unable to download "{}" - I/O: "{}"'.format(alleleURL, e.strerror))
-			if os.path.isfile(tempFILE) == True:
-				os.remove(tempFILE)
+			update_db( DBpath, alleleDB, alleleURL, allele_db = True )
 		sys.exit(0)
 
 	# Check if database can be located
@@ -180,7 +126,7 @@ def main():
 	with open(alleleDB) as f:
 		for line in f:
 			if line.strip():
-				lines = line.split('\t')
+				lines = line.split(',')
 				ST = lines[0]
 				porALLELE = lines[1].rstrip('\n')
 				tbpbALLELE = lines[2].rstrip('\n')

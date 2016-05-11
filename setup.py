@@ -27,6 +27,8 @@ setup(name='ngmaster',
       install_requires=[
           'argparse',
           'BioPython',
+          'bs4',
+          'requests',
       ],
       test_suite='nose.collector',
       tests_require=[],
