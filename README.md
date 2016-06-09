@@ -139,7 +139,9 @@ A preprint of the paper can be found on bioRxiv:
 
 Please cite as:
 
-Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T. **NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae.** *bioRxiv* 057760; doi: http://dx.doi.org/10.1101/057760  
+Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.  
+***NGMASTER*: *in silico* multi-antigen sequence typing for *Neisseria gonorrhoeae*.**  
+*bioRxiv* 057760; doi: http://dx.doi.org/10.1101/057760  
 
 ##Bugs
 
