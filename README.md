@@ -5,7 +5,7 @@
 ##Authors
 
 * Jason Kwong (@kwongjc)
-* Anders Goncalves da Silva
+* Anders Gonçalves da Silva
 * Torsten Seemann (@torstenseemann)
 
 ##Dependencies
@@ -134,11 +134,12 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 ##Citation
 
+A preprint of the paper can be found on bioRxiv:  
+[http://biorxiv.org/content/early/2016/06/08/057760](http://biorxiv.org/content/early/2016/06/08/057760)
+
 Please cite as:
 
-Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.  
-*NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)*  
-GitHub: https://github.com/MDU-PHL/ngmaster  
+Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T. **NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae.** *bioRxiv* 057760; doi: http://dx.doi.org/10.1101/057760  
 
 ##Bugs
 
