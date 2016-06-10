@@ -134,8 +134,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 ##Citation
 
-A preprint of the paper can be found on bioRxiv:  
-[http://biorxiv.org/content/early/2016/06/08/057760](http://biorxiv.org/content/early/2016/06/08/057760)
+A preprint of the paper can be found on [bioRxiv](http://dx.doi.org/10.1101/057760).  
 
 Please cite as:
 
