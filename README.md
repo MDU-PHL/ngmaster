@@ -30,7 +30,7 @@ To upgrade to a newer version:
 
     $ pip install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
-The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system.
+The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system. Users who have difficulty installing isPcr from source (eg. Mac OS) may have more success with Brew:
 ```
 $ brew tap homebrew/science
 $ brew tap chapmanb/cbl
