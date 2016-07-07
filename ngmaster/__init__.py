@@ -34,12 +34,6 @@ def err(*args, **kwargs):
 	msg(*args, **kwargs)
 	sys.exit(1);
 
-# Format database
-def format(file):
-	sed_all(file, '^.*<textarea name="concatenation".*?>', '')
-	sed_all(file, '<\/textarea>.*$', '')
-	sed_inplace(file, '&gt;', '>')
-
 # Import allele database as dictionary
 def fasta_to_dict(db):
 	dict = {}
