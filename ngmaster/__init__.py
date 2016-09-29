@@ -62,7 +62,7 @@ def update_db(db_folder, db_file, db_url, allele_db = False):
 	#download and process db information
 	try:
 		if os.path.isfile(db_file):
-			os.rename(db_file, db_file+'.old')
+			shutil.copy(db_file, db_file+'.old')
 		page = requests.get(db_url)
 		if not allele_db:
 			# all alleles are in a single tag <textarea>, and lines are
