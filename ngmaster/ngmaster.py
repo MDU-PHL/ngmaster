@@ -57,8 +57,8 @@ def main():
 	parser.add_argument('--test', action='store_true', default=False, help='run test example')
 	parser.add_argument('--version', action='version', version=
 		'=====================================\n'
-		'%(prog)s v0.3\n'
-		'Updated 4-May-2016\n'
+		'%(prog)s v0.4\n'
+		'Updated 17-Jan-2017\n'
 		'Dependencies: Python 2.7.x, isPcr, BioPython\n'
 		'=====================================\n')
 	args = parser.parse_args()
