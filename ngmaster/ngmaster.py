@@ -190,7 +190,6 @@ def main():
 								por = porRESULT.split('R')[1]
 							except KeyError:
 								por = 'new'
-								continue
 							if por not in porCOUNT:
 								porCOUNT.add(por)
 					else:
@@ -213,7 +212,6 @@ def main():
 								tbpb = tbpbRESULT.split('PB')[1]
 							except KeyError:
 								tbpb = 'new'
-								continue
 							if tbpb not in tbpbCOUNT:
 								tbpbCOUNT.add(tbpb)
 					else:
