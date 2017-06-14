@@ -1,20 +1,20 @@
-#ngmaster
+# ngmaster
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
 
-##Authors
+## Authors
 
 * Jason Kwong (@kwongjc)
 * Anders Gonçalves da Silva
 * Torsten Seemann (@torstenseemann)
 
-##Dependencies
+## Dependencies
 
 * [Python 2.7.x](https://www.python.org/)
 * [BioPython](http://biopython.org/)
 * [isPcr v33](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
 
-##Installation
+## Installation
 
 The easiest way of installing `ngmaster` is using `pip`:
 
@@ -53,7 +53,7 @@ test.fa	10699	6277	4
 ... Test successful.
 ```
 
-##Usage
+## Usage
 
 	$ ngmaster -h
         
@@ -81,7 +81,7 @@ test.fa	10699	6277	4
 	  --version        show program's version number and exit
 
 
-##Quick start
+## Quick start
 
 **To perform *in silico* NG-MAST on FASTA files:**
 
@@ -104,7 +104,7 @@ The NG-MAST result and allele numbers are printed in tab-separated format to `st
 
 `$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-##Updating the allele databases
+## Updating the allele databases
 
 **To update the allele databases from http://www.ng-mast.net :**  
 *Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
@@ -120,7 +120,7 @@ A copy of the old database is saved just in case, but is overwritten with each s
 This will download the database files into the folder ```path/to/folder```.
 This can then be specified when running ngmaster using the ```--db  path/to/folder``` option.
 
-##Creating a custom allele database
+## Creating a custom allele database
 
 1. Create custom database files: `POR.tfa`, `TBPB.tfa`, `ng_mast.txt`  
    See default `db` directory for examples.  
@@ -132,7 +132,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 3. Specify the path to that custom database folder:  
    `$ ngmaster --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-##Citation
+## Citation
 
 Please cite as:
 
@@ -140,17 +140,17 @@ Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP an
 ***NGMASTER*: *in silico* multi-antigen sequence typing for *Neisseria gonorrhoeae*.**  
 *Microbial Genomics* 2016; doi: 10.1099/mgen.0.000076 
 
-##Bugs
+## Bugs
 
 Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
-Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Disease Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk?subject=N. gonorrhoeae homepage).
+Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Disease Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk).
 
-##Software Licence
+## Software Licence
 
 [GPLv2](https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE)
 
-##References
+## References
 
 * Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
 * See also [http://www.ng-mast.net](http://www.ng-mast.net/).

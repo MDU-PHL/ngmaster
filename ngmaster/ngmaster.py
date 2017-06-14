@@ -44,8 +44,9 @@ def main():
 		formatter_class=RawTextHelpFormatter,
 		description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
 			'\nPlease cite as:\n'
-			'  Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.\n'
-			'  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+			'  Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.\n'
+			'  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae.\n'
+			'  Microbial Genomics 2016; doi: 10.1099/mgen.0.000076\n'
 			'  GitHub: https://github.com/MDU-PHL/ngmaster\n',
 		usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
 	parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
@@ -55,12 +56,7 @@ def main():
 	parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
 	parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
 	parser.add_argument('--test', action='store_true', default=False, help='run test example')
-	parser.add_argument('--version', action='version', version=
-		'=====================================\n'
-		'%(prog)s v0.4\n'
-		'Updated 17-Jan-2017\n'
-		'Dependencies: Python 2.7.x, isPcr, BioPython\n'
-		'=====================================\n')
+	parser.add_argument('--version', action='version', version='%(prog)s v0.4')
 	args = parser.parse_args()
 
 	# Path to database files
@@ -112,7 +108,7 @@ def main():
 	# Run test example
 	if args.test:
 		testSEQ = resource_filename(__name__, "/test/test.fa")
-		msg('Running ngmaster.py on test example (NG-MAST 10699) ...')
+		msg('\033[94mRunning ngmaster.py on test example (NG-MAST 10699) ...\033[0m')
 		msg('$ ngmaster.py '+testSEQ)
 		args.fasta = [testSEQ]
 
@@ -247,7 +243,7 @@ def main():
 				if type != '10699':
 					err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
 				else:
-					msg('... Test successful.')
+					msg('\033[92m... Test successful.\033[0m')
 
 	# Print allele sequences to file
 	if args.printseq:
