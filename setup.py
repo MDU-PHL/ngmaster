@@ -7,13 +7,13 @@ def readme():
 
 
 setup(name='ngmaster',
-      version='0.4',
+      version='0.5',
       description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)',
       long_description=readme(),
       classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: GPLv2',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
         'Intended Audience :: Science/Research',

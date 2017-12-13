@@ -10,7 +10,7 @@
 
 ## Dependencies
 
-* [Python 2.7.x](https://www.python.org/)
+* [Python >= 3.6](https://www.python.org/)
 * [BioPython](http://biopython.org/)
 * [isPcr v33](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
 
@@ -18,17 +18,17 @@
 
 The easiest way of installing `ngmaster` is using `pip`:
 
-    $ pip install --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip3 install --user git+https://github.com/MDU-PHL/ngmaster.git
     
 The `--user` option will install the package locally, rather than in the global `python` directory. 
 
 Thus, by default, this will install the package in `$HOME/.local/`, and the executable in `$HOME/.local/bin/`. To install the executable in a custom location (e.g., `$HOME/bin`), use the following:
 
-    $ pip install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip3 install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
 To upgrade to a newer version: 
 
-    $ pip install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
+    $ pip3 install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
 The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system. Users who have difficulty installing isPcr from source (eg. Mac OS) may have more success with Brew:
 ```
@@ -48,37 +48,37 @@ If everything works, you will see the following:
 ```
 Running ngmaster.py on test example (NG-MAST 10699) ...
 $ ngmaster.py test/test.fa
-ID	NG-MAST	POR	TBPB
-test.fa	10699	6277	4
+ID    NG-MAST    POR    TBPB
+test.fa    10699    6277    4
 ... Test successful.
 ```
 
 ## Usage
 
-	$ ngmaster -h
+    $ ngmaster -h
         
-	usage: 
-	  ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
-	
-	In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+    usage: 
+      ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
+    
+    In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 
-	Please cite as:
-	  Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
-	  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
-	  GitHub: https://github.com/MDU-PHL/ngmaster
-	
-	positional arguments:
-	  FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN
-	
-	optional arguments:
-	  -h, --help       show this help message and exit
-	  --db DB          specify custom directory containing allele databases
-	                   directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
-	  --csv			   output comma-separated format (CSV) rather than tab-separated
-	  --printseq FILE  specify filename to save allele sequences to (default=off)
- 	  --updatedb       update allele database from <www.ng-mast.net>
-	  --test		   run test example
-	  --version        show program's version number and exit
+    Please cite as:
+      Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
+      NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+      GitHub: https://github.com/MDU-PHL/ngmaster
+    
+    positional arguments:
+      FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN
+    
+    optional arguments:
+      -h, --help       show this help message and exit
+      --db DB          specify custom directory containing allele databases
+                       directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
+      --csv               output comma-separated format (CSV) rather than tab-separated
+      --printseq FILE  specify filename to save allele sequences to (default=off)
+       --updatedb       update allele database from <www.ng-mast.net>
+      --test           run test example
+      --version        show program's version number and exit
 
 
 ## Quick start
@@ -109,13 +109,13 @@ The NG-MAST result and allele numbers are printed in tab-separated format to `st
 **To update the allele databases from http://www.ng-mast.net :**  
 *Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
 
-	$ ngmaster.py --updatedb
+    $ ngmaster.py --updatedb
 
 A copy of the old database is saved just in case, but is overwritten with each subsequent   ```--updatedb```.
 
 **To update the allele databases into a different folder (ie. not the /db folder in the ngmaster directory):**
 
-	$ ngmaster.py --updatedb --db path/to/folder
+    $ ngmaster.py --updatedb --db path/to/folder
 
 This will download the database files into the folder ```path/to/folder```.
 This can then be specified when running ngmaster using the ```--db  path/to/folder``` option.
