@@ -57,7 +57,7 @@ def main():
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
-    parser.add_argument('--version', action='version', version='%(prog)s v0.4')
+    parser.add_argument('--version', action='version', version='%(prog)s v0.5')
     args = parser.parse_args()
 
     # Path to database files
