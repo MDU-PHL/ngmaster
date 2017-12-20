@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Script by Jason Kwong & Torsten Seemann
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 
@@ -34,7 +33,7 @@ porTRIMLEN = 490
 tbpbAMPLEN = 580
 tbpbTRIMLEN = 390
 
-# database urls 
+# database urls
 porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
 tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
 alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
