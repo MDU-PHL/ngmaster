@@ -5,7 +5,8 @@
 ## Authors
 
 * Jason Kwong (@kwongjc)
-* Anders Gonçalves da Silva
+* Anders Gonçalves da Silva (@drandersgs)
+* Mark Schultz
 * Torsten Seemann (@torstenseemann)
 
 ## Dependencies
@@ -19,22 +20,22 @@
 The easiest way of installing `ngmaster` is using `pip`:
 
     $ pip3 install --user git+https://github.com/MDU-PHL/ngmaster.git
-    
-The `--user` option will install the package locally, rather than in the global `python` directory. 
+
+The `--user` option will install the package locally, rather than in the global `python` directory.
 
 Thus, by default, this will install the package in `$HOME/.local/`, and the executable in `$HOME/.local/bin/`. To install the executable in a custom location (e.g., `$HOME/bin`), use the following:
 
     $ pip3 install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
-To upgrade to a newer version: 
+To upgrade to a newer version:
 
     $ pip3 install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
 The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system. Users who have difficulty installing isPcr from source (eg. Mac OS) may have more success with Brew:
 ```
 $ brew tap homebrew/science
-$ brew tap chapmanb/cbl
 $ brew tap tseemann/homebrew-bioinformatics-linux
+$ brew install ispcr
 ```
 
 ### To test installation
@@ -56,20 +57,20 @@ test.fa    10699    6277    4
 ## Usage
 
     $ ngmaster -h
-        
-    usage: 
+
+    usage:
       ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
-    
+
     In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 
     Please cite as:
       Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
       NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
       GitHub: https://github.com/MDU-PHL/ngmaster
-    
+
     positional arguments:
       FASTA            input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN
-    
+
     optional arguments:
       -h, --help       show this help message and exit
       --db DB          specify custom directory containing allele databases
@@ -137,8 +138,8 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 Please cite as:
 
 Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.  
-***NGMASTER*: *in silico* multi-antigen sequence typing for *Neisseria gonorrhoeae*.**  
-*Microbial Genomics* 2016; doi: 10.1099/mgen.0.000076 
+* **NGMASTER*: *in silico* multi-antigen sequence typing for *Neisseria gonorrhoeae*.**  
+*Microbial Genomics* 2016; doi: 10.1099/mgen.0.000076
 
 ## Bugs
 
