@@ -74,7 +74,7 @@ def main():
     # Update DB
     if args.updatedb:
         msg('WARNING: Updating DB will overwrite existing DB files.')
-        if not args.asssumeyes:
+        if not args.assumeyes:
             yn = input('Continue? [y/n]: ')
         else:
             yn = 'y'
