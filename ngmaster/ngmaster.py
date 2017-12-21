@@ -55,6 +55,7 @@ def main():
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
+    parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
     parser.add_argument('--version', action='version', version='%(prog)s v0.5')
     args = parser.parse_args()
@@ -73,7 +74,10 @@ def main():
     # Update DB
     if args.updatedb:
         msg('WARNING: Updating DB will overwrite existing DB files.')
-        yn = eval(input('Continue? [y/n]: '))
+        if not args.asssumeyes:
+            yn = input('Continue? [y/n]: ')
+        else:
+            yn = 'y'
         if yn == 'y':
             msg("Updating DB files ... ")
             # Update POR DB
@@ -254,3 +258,6 @@ def main():
         allelesOUT = "".join(args.printseq)
         with open(allelesOUT, "w") as output:
             SeqIO.write(alleleSEQS, output, 'fasta')
+
+if __name__ == "__main__":
+    main()
