@@ -6,14 +6,14 @@
 
 * Jason Kwong (@kwongjc)
 * Anders Gonçalves da Silva (@drandersgs)
-* Mark Schultz
+* Mark Schultz (@schultzm)
 * Torsten Seemann (@torstenseemann)
 
 ## Dependencies
 
 * [Python >= 3.6](https://www.python.org/)
 * [BioPython](http://biopython.org/)
-* [isPcr >=v33x2](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
+* [isPcr >= v33x2](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
 
 ## Installation
 
@@ -31,11 +31,11 @@ To upgrade to a newer version:
 
     $ pip3 install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
 
-The simplest way to install dependencies is to use the Brew (Mac OS X) or LinuxBrew (Linux) system. Users who have difficulty installing isPcr from source (eg. Mac OS) may have more success with Brew:
+The simplest way to install dependencies is to use the Brew (MacOS) or
+LinuxBrew (Linux) system.  Users who have difficulty installing isPcr from
+source (eg. MacOS) may have more success with Brew:
 ```
-$ brew tap homebrew/science
-$ brew tap tseemann/homebrew-bioinformatics-linux
-$ brew install ispcr
+$ brew install brewsci/bio/ispcr
 ```
 
 ### To test installation
@@ -145,7 +145,10 @@ Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP an
 
 Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
-Note that the NG-MAST databases and website are curated and hosted at the Department of Infectious Disease Epidemiology, Imperial College London. For issues with the NG-MAST databases, please contact the [NG-MAST curator](mailto:d.aanensen@imperial.ac.uk).
+Note that the NG-MAST databases and website are curated and hosted at the
+Department of Infectious Disease Epidemiology, Imperial College London.  For
+issues with the NG-MAST databases, please contact the [NG-MAST
+curator](mailto:d.aanensen@imperial.ac.uk).
 
 ## Software Licence
 
