@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='ngmaster',
-      version='0.5',
+      version='0.5.1',
       description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)',
       long_description=readme(),
       classifiers=[
