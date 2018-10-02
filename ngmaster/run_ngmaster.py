@@ -167,7 +167,7 @@ def main():
 
         # Run isPcr by Jim Kent
         cmd = f'echo "{NGprimers}"'
-        cmd2 = f'isPcr {f} stdin stdout -tileSize=6 -minPerfect=5 -stepSize=3 -maxSize=900'
+        cmd2 = f'isPcr "{f}" stdin stdout -tileSize=6 -minPerfect=5 -stepSize=3 -maxSize=900'
         import shlex
         proc0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
         proc = subprocess.Popen(shlex.split(cmd2), stdin=proc0.stdout, stdout=subprocess.PIPE)
