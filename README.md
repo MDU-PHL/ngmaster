@@ -135,11 +135,12 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 ## Citation
 
-Please cite as:
-
 Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.  
-* **NGMASTER*: *in silico* multi-antigen sequence typing for *Neisseria gonorrhoeae*.**  
-*Microbial Genomics* 2016; doi: 10.1099/mgen.0.000076
+_NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae_
+**Microbial Genomics**
+2016 Aug 25;2(8):e000076.
+[PMID:28348871](https://www.ncbi.nlm.nih.gov/pubmed/28348871)
+[DOI:10.1099/mgen.0.000076](https://doi.org/10.1099/mgen.0.000076)
 
 ## Bugs
 
