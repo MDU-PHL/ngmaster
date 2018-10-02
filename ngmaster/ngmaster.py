@@ -57,7 +57,8 @@ def main():
     parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
-    parser.add_argument('--version', action='version', version='%(prog)s v0.5')
+    ver = resource_filename(__name__, 'version')
+    parser.add_argument('--version', action='version', version='%(prog)s %(ver)s')
     args = parser.parse_args()
 
     # Path to database files
