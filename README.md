@@ -1,13 +1,10 @@
+[![Build Status](https://travis-ci.org/MDU-PHL/ngmaster.svg?branch=master)](https://travis-ci.org/MDU-PHL/ngmaster)
+[![License: GPLv2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+![Python 3](https://img.shields.io/badge/Language-Python3-steelblue.svg)
+
 # ngmaster
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
-
-## Authors
-
-* Jason Kwong (@kwongjc)
-* Anders Gonçalves da Silva (@drandersgs)
-* Mark Schultz (@schultzm)
-* Torsten Seemann (@torstenseemann)
 
 ## Dependencies
 
@@ -139,13 +136,15 @@ Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP an
 _NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae_
 **Microbial Genomics**
 2016 Aug 25;2(8):e000076.
-[PMID:28348871](https://www.ncbi.nlm.nih.gov/pubmed/28348871)
-[DOI:10.1099/mgen.0.000076](https://doi.org/10.1099/mgen.0.000076)
+PMID:[28348871](https://www.ncbi.nlm.nih.gov/pubmed/28348871)
+DOI:[10.1099/mgen.0.000076](https://doi.org/10.1099/mgen.0.000076)
 
 ## Bugs
 
+### Software
 Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
+### Database
 Note that the NG-MAST databases and website are curated and hosted at the
 Department of Infectious Disease Epidemiology, Imperial College London.  For
 issues with the NG-MAST databases, please contact the [NG-MAST
@@ -159,3 +158,10 @@ curator](mailto:d.aanensen@imperial.ac.uk).
 
 * Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
 * See also [http://www.ng-mast.net](http://www.ng-mast.net/).
+
+## Authors
+
+* Jason Kwong (@kwongjc)
+* Anders Gonçalves da Silva (@drandersgs)
+* Mark Schultz (@schultzm)
+* Torsten Seemann (@torstenseemann)
