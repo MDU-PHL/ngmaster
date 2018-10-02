@@ -5,9 +5,10 @@
 
 
 # import ngmaster functions
-from . import *
-
 import ngmaster
+from ngmaster import *
+
+#import ngmaster
 import argparse
 from argparse import RawTextHelpFormatter
 import sys
@@ -42,6 +43,7 @@ alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
 def main():
     # Usage
     parser = argparse.ArgumentParser(
+        prog="ngmaster",
         formatter_class=RawTextHelpFormatter,
         description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
             '\nPlease cite as:\n'
@@ -58,8 +60,7 @@ def main():
     parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
-    ver = ngmaster.__version__
-    parser.add_argument('--version', action='version', version='%(prog)s '+ver)
+    parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
     args = parser.parse_args()
 
     # Path to database files

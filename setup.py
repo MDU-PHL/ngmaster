@@ -36,7 +36,7 @@ setup(name='ngmaster',
       test_suite='nose.collector',
       tests_require=[],
       entry_points={
-          'console_scripts': ['ngmaster=ngmaster.ngmaster:main'],
+          'console_scripts': ['ngmaster=ngmaster.run_ngmaster:main'],
       },
       include_package_data=True,
       zip_safe=False)
