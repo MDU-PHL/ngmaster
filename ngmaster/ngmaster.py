@@ -7,6 +7,7 @@
 # import ngmaster functions
 from . import *
 
+import ngmaster
 import argparse
 from argparse import RawTextHelpFormatter
 import sys
