@@ -12,6 +12,7 @@ setup(name='ngmaster',
       version=__version__,
       description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)',
       long_description=readme(),
+      long_description_content_type='text/markdown',
       classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
