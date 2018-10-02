@@ -6,7 +6,7 @@
 
 # import ngmaster functions
 import ngmaster
-from ngmaster import *
+from ngmaster.utils import *
 
 #import ngmaster
 import argparse
