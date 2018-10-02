@@ -1,5 +1,7 @@
 from setuptools import setup
 
+from ngmaster import __version__
+
 
 def readme():
     with open('README.md', encoding='utf-8') as f:
@@ -7,7 +9,7 @@ def readme():
 
 
 setup(name='ngmaster',
-      version='0.5.2',
+      version=__version__,
       description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)',
       long_description=readme(),
       classifiers=[
