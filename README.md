@@ -8,7 +8,7 @@
 
 ## Synopis
 ```
-% ngmaster.py gono.fa
+% ngmaster gono.fa
 ID         NG-MAST    POR    TBPB
 gono.fa    10699      6277   4
 ```
