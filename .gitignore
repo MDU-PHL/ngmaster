@@ -2,3 +2,4 @@ ngmaster.egg-info/*
 venv/*
 *.pyc
 ngmaster.egg-info
+.DS_Store
