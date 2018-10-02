@@ -8,6 +8,7 @@ install:
   - pip install .
   - wget https://github.com/denglab/SeqSero/raw/1f84a6c7abd22c43227ce9fa0dfbda87a9f02449/libs/isPcr
   - chmod +x isPcr
+  - export PATH="$PWD:$PATH"
 
 # command to run tests
 script:
