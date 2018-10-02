@@ -6,6 +6,13 @@
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
 
+## Synopis
+```
+% ngmaster.py gono.fa
+ID         NG-MAST    POR    TBPB
+gono.fa    10699      6277   4
+```
+
 ## Dependencies
 
 * [Python >= 3.6](https://www.python.org/)
@@ -14,28 +21,20 @@
 
 ## Installation
 
-The easiest way of installing `ngmaster` is using `pip`:
-
-    $ pip3 install --user git+https://github.com/MDU-PHL/ngmaster.git
-
-The `--user` option will install the package locally, rather than in the global `python` directory.
-
-Thus, by default, this will install the package in `$HOME/.local/`, and the executable in `$HOME/.local/bin/`. To install the executable in a custom location (e.g., `$HOME/bin`), use the following:
-
-    $ pip3 install --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
-
-To upgrade to a newer version:
-
-    $ pip3 install --upgrade --install-option="--install-scripts=$HOME/bin" --user git+https://github.com/MDU-PHL/ngmaster.git
-
-The simplest way to install dependencies is to use the Brew (MacOS) or
-LinuxBrew (Linux) system.  Users who have difficulty installing isPcr from
-source (eg. MacOS) may have more success with Brew:
+### PiPy
 ```
-$ brew install brewsci/bio/ispcr
+pip3 install ngmaster
+```
+### Brew
+```
+brew install brewsci/bio/ngmaster  # COMING SOON
+```
+### Conda
+```
+conda install -c bioconda -c conda-forge ngmaster  # COMING SOON
 ```
 
-### To test installation
+## Test
 
 Once installed, you can run the following to ensure `ngmaster` is successfully working:
 
