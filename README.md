@@ -178,3 +178,18 @@ The same can be done for `minor` and `major` numbers.
 
 This will automatically commit and tag the commit with the new version number.
 It will also update the necessary location in the file.
+
+## Pushing to pypi
+
+**Must be uploaded to maintainer's account.**
+
+```
+bumpversion --new-version <new.version.number> <patch|minor|major>
+git push
+# create distribution
+python3 setup.py sdist bdist_wheel
+# upload to test pypi to see if everything works
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+# upload to pypi
+twine upload dist/*
+```
