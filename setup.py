@@ -35,6 +35,11 @@ setup(name='ngmaster',
       ],
       test_suite='nose.collector',
       tests_require=[],
+      extra_require={
+          'dev': [
+              'bumpversion'
+          ]
+      },
       entry_points={
           'console_scripts': ['ngmaster=ngmaster.run_ngmaster:main'],
       },

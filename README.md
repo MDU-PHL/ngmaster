@@ -164,3 +164,17 @@ curator](mailto:d.aanensen@imperial.ac.uk).
 * Anders Gonçalves da Silva (@drandersgs)
 * Mark Schultz (@schultzm)
 * Torsten Seemann (@torstenseemann)
+
+## Development
+
+When incrementing version (i.e., minor patch), run the following:
+
+```
+bumpversion --verbose --dry-run --new-version <major.minor.patch> patch
+bumpversion --new-version <new.version.number> patch
+```
+
+The same can be done for `minor` and `major` numbers.
+
+This will automatically commit and tag the commit with the new version number.
+It will also update the necessary location in the file.
