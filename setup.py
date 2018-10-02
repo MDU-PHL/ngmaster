@@ -24,9 +24,10 @@ setup(name='ngmaster',
       author_email='kwongj@gmail.com',
       license='GPLv2',
       packages=['ngmaster'],
+      python_requires='>=3.6'.
       install_requires=[
           'argparse',
-          'BioPython',
+          'biopython',
           'bs4',
           'requests',
       ],
