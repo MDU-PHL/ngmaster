@@ -132,7 +132,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 ## Citation
 
 Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.  
-_NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae_
+*NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae*
 **Microbial Genomics**
 2016 Aug 25;2(8):e000076.
 PMID:[28348871](https://www.ncbi.nlm.nih.gov/pubmed/28348871)
@@ -188,6 +188,8 @@ bumpversion --new-version <new.version.number> <patch|minor|major>
 git push
 # create distribution
 python3 setup.py sdist bdist_wheel
+# run some checkes
+twine check dist/*
 # upload to test pypi to see if everything works
 twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 # upload to pypi
