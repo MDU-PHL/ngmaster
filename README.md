@@ -27,11 +27,11 @@ pip3 install ngmaster
 ```
 ### Brew
 ```
-brew install brewsci/bio/ngmaster  # COMING SOON
+brew install brewsci/bio/ngmaster
 ```
 ### Conda
 ```
-conda install -c bioconda -c conda-forge ngmaster  # COMING SOON
+conda install -c bioconda ngmaster  # COMING SOON
 ```
 
 ## Test
