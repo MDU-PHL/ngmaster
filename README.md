@@ -21,17 +21,17 @@ gono.fa    10699      6277   4
 
 ## Installation
 
-### PiPy
+#### PiPy
 ```
 pip3 install ngmaster
 ```
-### Brew
+#### Brew
 ```
 brew install brewsci/bio/ngmaster
 ```
-### Conda
+#### Conda
 ```
-conda install -c bioconda ngmaster  # COMING SOON
+conda install -c conda-forge -c bioconda -c defaults ngmaster  # COMING SOON
 ```
 
 ## Test
