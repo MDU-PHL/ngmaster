@@ -6,7 +6,7 @@
 
 *In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
 
-## Synopis
+## Synopsis
 ```
 % ngmaster gono.fa
 ID         NG-MAST    POR    TBPB
