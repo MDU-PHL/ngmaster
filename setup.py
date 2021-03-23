@@ -29,7 +29,6 @@ setup(name='ngmaster',
       author='Jason Kwong',
       author_email='kwongj@gmail.com',
       license='GPLv3',
-      license_file=("LICENSE"),
       packages=['ngmaster'],
       python_requires='>=3.6',
       install_requires=[
