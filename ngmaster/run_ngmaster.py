@@ -35,10 +35,28 @@ porTRIMLEN = 490
 tbpbAMPLEN = 580
 tbpbTRIMLEN = 390
 
-# database urls
-porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
-tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
-alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
+# Use REST URLs from PubMLST instead of www.ng-mast.net URLs, which are not updated any more
+porURL = "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta"
+# FIXME >POR1 vs. >NG-MAST_porB_1
+
+tbpbURL = "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta"
+# FIXME >TBPB1 vs. >NG-MAST_tbpB_1
+
+alleleURL = "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv"
+# FIXME
+#old format
+# ST,POR,TBPB
+# 1,1,24
+# 2,2,16
+# 3,2,5
+
+# PubMLST format
+# ST  NG-MAST_porB    NG-MAST_tbpB
+# 1   1   24
+# 2   2   16
+# 3   2   5
+# 4   3   4
+
 
 def main():
     # Usage
