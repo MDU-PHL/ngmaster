@@ -1,9 +1,6 @@
 # Script by Jason Kwong & Torsten Seemann
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
 
-# Use modern print function from python 3.x
-
-
 # import ngmaster functions
 import ngmaster
 from ngmaster.utils import *
