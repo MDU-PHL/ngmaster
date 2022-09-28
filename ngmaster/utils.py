@@ -57,44 +57,23 @@ def update_db(db_folder, db_file, db_url, allele_db = False):
     try:
         if os.path.isfile(db_file):
             shutil.copy(db_file, db_file+'.old')
-        page = requests.get(db_url).text
-        if not allele_db:
-            
-            #Change PubMLST format to ngmaster format
-            page = page.replace('>NG-MAST_','>')
-            page = page.replace('_','')
-            page = page.upper()
-            page = page.replace('PORB','POR')
-            
-            '''
-            AJS: old www.ng-mast.net code, remove after testing PubMLST implementation
-            # all alleles are in a single tag <textarea>, and lines are
-            # separated by '\r\n'
-            # the first line will decode the tag area, splitting on the
-            # separator, creating a list'
-            # the second line joins the elements of the list to create
-            # a single string for saving to file.
-            soup = BeautifulSoup(page.text, "html.parser")
-            new_db = soup.select("textarea")[0].text.split("\r\n")
-            new_db = '\n'.join(new_db[0:-1]) 
-            # the -1 is to remove the last empty field
-            '''
-        else:
-            page = page.replace('NG-MAST_','')
-            page = page.upper()
-            page = page.replace('\t',',')
 
-            '''
-            AJS: old www.ng-mast.net code, remove after testing PubMLST implementation
-            # page is just a comma separated text file, with <br> tags
-            # for newlines
-            # need to translate the </br> tags to newline character, and then
-            # the text comes out ready to save to file
-            new_db = page.text.split("<br>")
-            new_db = '\n'.join(new_db)
-            '''
+        try:
+            pubmlst = requests.get(db_url).text
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+        #Change PubMLST format to ngmaster format
+        pubmlst = pubmlst.replace('NG-MAST_','')
+        pubmlst = pubmlst.replace('_','')
+        pubmlst = pubmlst.upper()
+        pubmlst = pubmlst.replace('PORB','POR')
+        pubmlst = pubmlst.replace('\t',',')
+        new_db = pubmlst
+
     except:
         err("Unable to download/process URL:'{}'".format(db_url))
+
     # save new db to db_file
     try:
         f = open(db_file,'w')
@@ -102,4 +81,5 @@ def update_db(db_folder, db_file, db_url, allele_db = False):
         f.close()
     except:
         err("Could not save db file: '{}'".format(db_file))
+        
     msg(db_file + ' ... Done.')
