@@ -104,7 +104,7 @@ The NG-MAST result and allele numbers are printed in tab-separated format to `st
 
 ## Updating the allele databases
 
-**To update the allele databases from http://www.ng-mast.net :**  
+**To update the allele databases from https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/ :**  
 *Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
 
     $ ngmaster.py --updatedb
@@ -165,6 +165,7 @@ curator](mailto:d.aanensen@imperial.ac.uk).
 * Anders Gonçalves da Silva (@drandersgs)
 * Mark Schultz (@schultzm)
 * Torsten Seemann (@torstenseemann)
+* Andreas Stroehlein (@stroehleina)
 
 ## Development
 

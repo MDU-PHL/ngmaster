@@ -5,7 +5,7 @@
 import ngmaster
 from ngmaster.utils import *
 
-#import ngmaster
+#imports
 import argparse
 from argparse import RawTextHelpFormatter
 import sys
@@ -26,6 +26,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from pkg_resources import resource_string, resource_filename
 
+# FIXME AJS replace by BLAST
 # Set target lengths for isPcr amplicons and trimmed sequences
 porAMPLEN = 737
 porTRIMLEN = 490
@@ -54,7 +55,7 @@ def main():
         'directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
-    parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
+    parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
     parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
@@ -96,6 +97,7 @@ def main():
     if not os.path.isfile(alleleDB):
         err('ERROR: Cannot locate database: "{}"'.format(alleleDB))
 
+    # FIXME AJS replace by BLAST
     # Check isPcr installed and running correctly
     devnull = open(os.devnull, 'w')
     checkdep = subprocess.Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
@@ -136,6 +138,7 @@ def main():
     porDICT = fasta_to_dict(porDB)
     tbpbDICT = fasta_to_dict(tbpbDB)
 
+    # FIXME AJS replace by BLAST
     # Set up primer database
     primerDB = [['por', 'CAAGAAGACCTCGGCAA', 'CCGACAACCACTTGGT'], ['tbpB', 'CGTTGTCGGCAGCGCGAAAAC', 'TTCATCGGTGCGCTCGCCTTG']]
     NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
@@ -162,7 +165,9 @@ def main():
         tbpbCOUNT = set()
         tbpbKEY = set()
 
+        # FIXME AJS replace by BLAST
         # Run isPcr by Jim Kent
+        # TODO check need for subprocess.Popen
         cmd = f'echo "{NGprimers}"'
         cmd2 = f'isPcr "{f}" stdin stdout -tileSize=6 -minPerfect=5 -stepSize=3 -maxSize=900'
         import shlex
@@ -172,6 +177,7 @@ def main():
         alleleSEQ = io.StringIO()
         alleleSEQ.write(PCRout)
         alleleSEQ.seek(0)
+
         # Check amplicon length and starting key motif
         for amplicon in SeqIO.parse(alleleSEQ, "fasta"):
             product = amplicon.description.split()
