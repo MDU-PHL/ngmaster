@@ -1,30 +1,34 @@
 # Script by Jason Kwong & Torsten Seemann
+# Re-factored and extended (NG-STAR) by Andreas Stroehlein
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+# and Neisseria gonorrhoeae Sequence Typing for Antimicrobial Resistance (NG-STAR)
 
 # import ngmaster functions
 import ngmaster
 from ngmaster.utils import *
 
 #imports
-import argparse
-from argparse import RawTextHelpFormatter
+from argparse import ArgumentParser, RawTextHelpFormatter
 import sys
 import os
 import os.path
-import io
-import urllib.request, urllib.error, urllib.parse
-from urllib.request import urlopen
-from urllib.error import HTTPError, URLError
+from io import StringIO
 import subprocess
-import shutil
-import re
-import tempfile
-from sys import argv
 from subprocess import Popen
+import shlex
+import re
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from pkg_resources import resource_string, resource_filename
+from pkg_resources import resource_filename
+
+# import shutil
+# import urllib.request, urllib.error, urllib.parse
+# from urllib.request import urlopen
+# from urllib.error import HTTPError, URLError
+# import tempfile
+# from sys import argv
+# from pkg_resources import resource_string, resource_filename
 
 # FIXME AJS replace by BLAST
 # Set target lengths for isPcr amplicons and trimmed sequences
@@ -40,7 +44,7 @@ alleleURL = "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/pro
 
 def main():
     # Usage
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         prog="ngmaster",
         formatter_class=RawTextHelpFormatter,
         description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
@@ -70,7 +74,8 @@ def main():
     porDB = DBpath + '/POR.tfa'
     tbpbDB = DBpath + '/TBPB.tfa'
     alleleDB = DBpath + '/ng_mast.txt'
-    tempFILE = DBpath + '/temp'
+    # REMOVE AJS
+    # tempFILE = DBpath + '/temp'
 
     # Update DB
     if args.updatedb:
@@ -100,7 +105,7 @@ def main():
     # FIXME AJS replace by BLAST
     # Check isPcr installed and running correctly
     devnull = open(os.devnull, 'w')
-    checkdep = subprocess.Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
+    checkdep = Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
     output, errcode = checkdep.communicate()
     if checkdep.returncode != 0:
         err('ERROR: Check isPcr is installed correctly and in $PATH.')
@@ -121,7 +126,7 @@ def main():
     # Check if positional arguments
     if not args.fasta:
         parser.print_help()
-        err("ERROR: too few arguments")
+        err("ERROR: No FASTA file provided")
 
     # Import allele profiles as dictionary
     NGMAST = {}
@@ -134,6 +139,7 @@ def main():
                 tbpbALLELE = lines[2].rstrip('\n')
                 alleles = str(porALLELE) + '-' + str(tbpbALLELE)
                 NGMAST[alleles] = ST
+
     # Import allele databases
     porDICT = fasta_to_dict(porDB)
     tbpbDICT = fasta_to_dict(tbpbDB)
@@ -144,9 +150,8 @@ def main():
     NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
 
     # Check queries are in FASTA format
-    # Run Jim Kent's isPcr to identify amplicon
     alleleSEQS = []
-    print(('ID' + SEP + 'NG-MAST' + SEP + 'POR' + SEP + 'TBPB'))
+    print(('ID' + SEP + 'NG-MAST' + SEP + 'POR' + SEP + 'TBPB')) # AJS FIXME add additional columns for NG-STAR here
     for f in args.fasta:
         if os.path.isfile(f) == False:
             msg( 'ERROR: Cannot find "{}". Check file exists.'.format(f) )
@@ -157,7 +162,8 @@ def main():
             continue
         s.close()
 
-        # Setup lists in case there are multiple hits
+        # Setup Sets in case there are multiple hits
+        # FIXME AJS check if this is required
         por = None
         porCOUNT = set()
         porKEY = set()
@@ -169,24 +175,35 @@ def main():
         # Run isPcr by Jim Kent
         # TODO check need for subprocess.Popen
         cmd = f'echo "{NGprimers}"'
+        # TODO check how this exactly works and output format
         cmd2 = f'isPcr "{f}" stdin stdout -tileSize=6 -minPerfect=5 -stepSize=3 -maxSize=900'
-        import shlex
-        proc0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
-        proc = subprocess.Popen(shlex.split(cmd2), stdin=proc0.stdout, stdout=subprocess.PIPE)
+        proc0 = Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+        proc = Popen(shlex.split(cmd2), stdin=proc0.stdout, stdout=subprocess.PIPE)
+        # TODO how does this work
         PCRout = proc.communicate()[0].decode('UTF-8')
-        alleleSEQ = io.StringIO()
-        alleleSEQ.write(PCRout)
+        alleleSEQ = StringIO(PCRout)
         alleleSEQ.seek(0)
+        # alleleSEQ = io.StringIO()
+        # alleleSEQ.write(PCRout)
 
         # Check amplicon length and starting key motif
+        # INFO parsing fasta which is the isPcr output
+        # parse returns a SeqRecord object
+        # SeqRecord object used in Biopython to hold a sequence (as a Seq object) with identifiers (ID and name),
+        # description and optionally annotation and sub-features.
+        # dir(record) [..., 'annotations', 'dbxrefs', 'description', 'features', 'format', 'id', 'letter_annotations', 'name', 'seq']
+
         for amplicon in SeqIO.parse(alleleSEQ, "fasta"):
-            product = amplicon.description.split()
+            product = amplicon.description.split() 
             ampID = product[1]
             ampLEN = product[2]
-            if ampID == "por":
-                if int(ampLEN[:-2]) > (porAMPLEN-100) and int(ampLEN[:-2]) < (porAMPLEN+100):    # Check por amplicon length
-                    porSEQ = amplicon.seq.upper()
-                    start = porSEQ.find('TTGAA')
+
+            # INFO POR
+            if ampID == "por": # This string comes from primerDB
+                if int(ampLEN[:-2]) > (porAMPLEN-100) and int(ampLEN[:-2]) < (porAMPLEN+100):    # Check for amplicon length
+                    porSEQ = amplicon.seq.upper() # returns a Seq object
+                    # INFO Seq object has a number of methods which act just like those of a Python string
+                    start = porSEQ.find('TTGAA') # Returns -1 if it doesn't find a match and position of first match otherwise?
                     if start != -1:                                            # Check for starting key motif
                         newporSEQ = str(porSEQ[start:(start+porTRIMLEN)])    # Trim sequence from starting key motif
                         if len(newporSEQ) == porTRIMLEN:
@@ -196,14 +213,16 @@ def main():
                             alleleSEQS.append(porRECR)
                             # Search trimmed sequence against database dictionary
                             try:
-                                porRESULT = (porDICT[str(porSEQR)])
-                                por = porRESULT.split('R')[1]
+                                porRESULT = (porDICT[str(porSEQR)]) # TODO Set?
+                                por = porRESULT.split('R')[1] # Split on R to drop 'POR' and retain sequence?
                             except KeyError:
                                 por = 'new'
                             if por not in porCOUNT:
                                 porCOUNT.add(por)
                     else:
                         porKEY.add('no_key')
+
+            # INFO TBPB
             if ampID == "tbpB":
                 if int(ampLEN[:-2]) > (tbpbAMPLEN-100) and int(ampLEN[:-2]) < (tbpbAMPLEN+100):    # Check tbpB amplicon length
                     tbpbSEQ = amplicon.seq.upper()
@@ -228,6 +247,8 @@ def main():
                         tbpbKEY.add('no_key')
         alleleSEQ.close()
 
+        # INFO END HERE
+
         if not por:
             por = '-'
         if not tbpb:
@@ -247,14 +268,15 @@ def main():
             portbpb = str(por) + '-' + str(tbpb)
         # Print results to screen
             if portbpb in NGMAST:
-                type = NGMAST[portbpb]
+                # AJS changed type variable to stype
+                stype = NGMAST[portbpb]
             else:
-                type = "-"
+                stype = "-"
             if not args.test:
-                print(( f + SEP + type + SEP + por + SEP + tbpb ))
+                print(( f + SEP + stype + SEP + por + SEP + tbpb ))
             else:
-                print(( 'test.fa' + SEP + type + SEP + por + SEP + tbpb ))
-                if type != '10699':
+                print(( 'test.fa' + SEP + stype + SEP + por + SEP + tbpb ))
+                if stype != '10699':
                     err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
                 else:
                     msg('\033[92m... Test successful.\033[0m')

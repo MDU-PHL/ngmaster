@@ -6,20 +6,6 @@ import shutil
 from Bio import SeqIO
 import requests
 
-# FIXME remove redundant imports after testing
-# import argparse
-# from argparse import RawTextHelpFormatter
-# import io
-# import urllib.request, urllib.error, urllib.parse
-# from urllib.request import urlopen
-# from urllib.error import HTTPError, URLError
-# import subprocess
-# import re
-# from sys import argv
-# from subprocess import Popen
-# from Bio.Seq import Seq
-# from Bio.SeqRecord import SeqRecord
-
 # Log a message to stderr
 def msg(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
