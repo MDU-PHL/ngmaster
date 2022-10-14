@@ -21,18 +21,17 @@ from Bio.SeqRecord import SeqRecord
 from pkg_resources import resource_filename
 
 # Define REST API URLs from PubMLST
-# FIXME remove allele_db if you don't end up using it
-ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta", "allele_db": False}
-ngm_tbpb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta", "allele_db": False}
-ngm_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv", "allele_db": True}
-ngs_pena = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NEIS1753/alleles_fasta", "allele_db": False} 
-ngs_mtrr = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/'mtrR/alleles_fasta", "allele_db": False}
-ngs_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_porB/alleles_fasta", "allele_db": False}
-ngs_pona = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_ponA/alleles_fasta", "allele_db": False}
-ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_gyrA/alleles_fasta", "allele_db": False}
-ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta", "allele_db": False}
-ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta", "allele_db": False}
-ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv", "allele_db": True}
+ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta"}
+ngm_tbpb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta"}
+ngm_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv"}
+ngs_pena = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NEIS1753/alleles_fasta"} 
+ngs_mtrr = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/'mtrR/alleles_fasta"}
+ngs_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_porB/alleles_fasta"}
+ngs_pona = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_ponA/alleles_fasta"}
+ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_gyrA/alleles_fasta"}
+ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta"}
+ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta"}
+ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv"}
 
 
 def main():
@@ -103,7 +102,6 @@ def main():
         checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
         mlstpath = checkdep.stdout.strip()
         mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
-        msg("script path ", mkblastdbpath)  
     except CalledProcessError as e:
         err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
         raise SystemExit(e)
@@ -128,7 +126,6 @@ def main():
 
 
     # Translation table to match NG-STAR and NG-MAST results
-    # msg("Matching NG-STAR porB alleles with NG-MAST porB alleles ... ")
     ttable = match_porb(ngm_porb['db'], ngs_porb['db'])
 
     # Read in NGSTAR profile table for conversion
@@ -165,11 +162,6 @@ def main():
                 # allele_dct = {}
                 reclist = rec.split("\t")
                 fname, st = reclist[0], reclist[2]
-
-                # for index, allele in enumerate(alleles):
-                #     allele_dct[allele]=reclist[index+3]
-                #     # msg(type(allele_dct))
-
                 alleles = reclist[3:]
 
                 # Add this record to output dict with filename as key

@@ -18,15 +18,11 @@ class MlstRecord:
         self.scheme = scheme
         self.st = st
         self.alleles = alleles
-        # self.porb = ["-"]
-        # msg("self.alleles is of type ", str(type(self.alleles))) # a list
+
         if self.scheme == 'ngstar':
             self.porb = self.alleles[2]
         else:
             self.porb = self.alleles[0]
-
-        # msg("self.porb ", self.porb)
-
 
         # self.simil = "" # similar "~"
         # self.part = "" # partial "?"
@@ -102,7 +98,6 @@ def update_db(db_folder, db):
         pubmlst = pubmlst.replace('\'mtrR','mtrR')
         new_db = pubmlst
 
-
     except:
         err("Unable to download/process URL:'{}'".format(db['url']))
 
@@ -123,11 +118,9 @@ def make_mlst_db(DBpath, mkblastdbpath):
     '''
 
     if os.path.exists(mkblastdbpath):
-        # msg('mlst installed (' + mlstpath.decode('utf-8').strip() + ') and mlst-make_blast_db (' + mkblastdbpath + ') found.')
-        #copied make-blast-db == cpmbdb
-        # cpmbdb = resource_filename(__name__, 'scripts/') + 'mlst-make_blast_db'
+
         cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
-        #msg(cpmbdb)
+
         try:
             shutil.copy(mkblastdbpath, cpmbdb)
         except:
@@ -141,67 +134,67 @@ def make_mlst_db(DBpath, mkblastdbpath):
     else:
         err('ERROR: Could not find mlst-make_blast_db script in ' + mkblastdbpath + '. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
 
-# FIXME download comments for each allele
-# #!/usr/bin/python3
+                                    # FIXME download comments for each allele
+                                    # #!/usr/bin/python3
 
-# TODO you have never gone through the sequence files one by one?
+                                    # TODO you have never gone through the sequence files one by one?
 
-# TODO match these to 'clean' names
-# NG_porB 
-# NG_ponA
-# NG_parC
-# NG_gyrA
-# NG_23S
-# NEIS1753
-# 'mtrR
+                                    # TODO match these to 'clean' names
+                                    # NG_porB 
+                                    # NG_ponA
+                                    # NG_parC
+                                    # NG_gyrA
+                                    # NG_23S
+                                    # NEIS1753
+                                    # 'mtrR
 
-# porB 
-# ponA
-# parC
-# gyrA
-# 23S
-# penA
-# mtrR
+                                    # porB 
+                                    # ponA
+                                    # parC
+                                    # gyrA
+                                    # 23S
+                                    # penA
+                                    # mtrR
 
-#  # ls *.fa | 
-#  # while read line; do head $line | 
-#  # fa2tab | 
-#  # awk -F"\t" '{split($1,a,"_"); printf a[1]; for(i=2; i< length(a); i++){printf "_"a[i]}; print "\t"a[length(a)]"\t"$0}'; done |
-#  # sed 's/^>//1' |
+                                    #  # ls *.fa | 
+                                    #  # while read line; do head $line | 
+                                    #  # fa2tab | 
+                                    #  # awk -F"\t" '{split($1,a,"_"); printf a[1]; for(i=2; i< length(a); i++){printf "_"a[i]}; print "\t"a[length(a)]"\t"$0}'; done |
+                                    #  # sed 's/^>//1' |
 
-# NG_ponA 1       >NG_ponA_1      AAAAACAACGGCGGGCGTTGGGCGGTGGTTCAAGAGCCGTTGCCGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
-# NG_ponA 2       >NG_ponA_2      AAAAACAACGGCGGGCGTTGGGCGGGGGTTCAAGAGCCGTTGCTGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
-# [...]
+                                    # NG_ponA 1       >NG_ponA_1      AAAAACAACGGCGGGCGTTGGGCGGTGGTTCAAGAGCCGTTGCCGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
+                                    # NG_ponA 2       >NG_ponA_2      AAAAACAACGGCGGGCGTTGGGCGGGGGTTCAAGAGCCGTTGCTGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
+                                    # [...]
 
-# import sys
-# import json
-# import requests
+                                    # import sys
+                                    # import json
+                                    # import requests
 
-# for line in sys.stdin:
-#    # NG_gyrA 1       >NG_gyrA_1      CTGTACGCGAT
-#    INFO locus (column 1)
-#    INFO allele_id (column 2)
-#    locus, allele_id, fasta_header, sequence = line.rstrip().split("\t")
-#    recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + locus + '/alleles/' + allele_id
-#    pubmlst = ""
+                                    # for line in sys.stdin:
+                                    #    # NG_gyrA 1       >NG_gyrA_1      CTGTACGCGAT
+                                    #    INFO locus (column 1)
+                                    #    INFO allele_id (column 2)
+                                    #    locus, allele_id, fasta_header, sequence = line.rstrip().split("\t")
+                                    #    recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + locus + '/alleles/' + allele_id
+                                    #    pubmlst = ""
 
-#    try:
-#       pubmlst = requests.get(recordurl).text
-#    except requests.exceptions.RequestException as e:
-#       raise SystemExit(e)
+                                    #    try:
+                                    #       pubmlst = requests.get(recordurl).text
+                                    #    except requests.exceptions.RequestException as e:
+                                    #       raise SystemExit(e)
 
-#    pub_dict = json.loads(pubmlst)
-#    comments = ""
+                                    #    pub_dict = json.loads(pubmlst)
+                                    #    comments = ""
 
-#    try:
-#       comments = pub_dict["comments"]
-#    except KeyError as e:
-#       comments = ""
+                                    #    try:
+                                    #       comments = pub_dict["comments"]
+                                    #    except KeyError as e:
+                                    #       comments = ""
 
-#    output = '\t'.join([locus, allele_id, sequence, str(len(sequence)), comments])
+                                    #    output = '\t'.join([locus, allele_id, sequence, str(len(sequence)), comments])
 
-#    # get this into same format as PubMLST online UI output
-#    # output = record
+                                    #    # get this into same format as PubMLST online UI output
+                                    #    # output = record
 
 
 
