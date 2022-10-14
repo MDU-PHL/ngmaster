@@ -17,27 +17,33 @@ class MlstRecord:
         self.scheme = scheme
         self.st = st
         self.alleles = alleles
-        self.porb = ["-"]
-        self.simil = "" # similar "~"
-        self.part = "" # partial "?"
+        # self.porb = ["-"]
+        # msg("self.alleles is of type ", str(type(self.alleles))) # a list
+        if self.scheme == 'ngstar':
+            self.porb = self.alleles[2]
+        else:
+            self.porb = self.alleles[0]
+
+        # msg("self.porb ", self.porb)
+
+
+        # self.simil = "" # similar "~"
+        # self.part = "" # partial "?"
 
         # FIXME how to handle multi allele porB?
         # INFO if there is a multi hit then the approx hits won't be present
         # INFO if there are approximate hits then no multi hits will be present
         # TODO make self.porb a list (so we can do multi match to ngmast via ttable)
         # INFO for all other alleles this is not needed
-        if re.match('~', self.alleles["porB"]):
-            self.porb = [self.alleles["porB"][1:]]
-            self.simil = "~"
-        if re.search('?$', self.alleles["porB"]):
-            self.porb = [self.alleles["porB"][:-1]]
-            self.part = "?"
-        if re.search(',', self.alleles["porB"]):
-            self.porb = self.alleles["porB"].split(',')
-        
-        
-        # for allele in alleles:
 
+        if re.match('~', self.porb):
+            self.porb = self.porb[1:]
+            self.simil = "~"
+        if re.search(r'\?$', self.porb):
+            self.porb = self.porb[:-1]
+            self.part = "?"
+        if re.search(',', self.porb):
+            self.porb = self.porb.split(',')
 
         # TODO account for "^~", "?$" and multi alleles (comma separated list)
         # n       exact intact allele                     100%        100%
@@ -48,8 +54,6 @@ class MlstRecord:
 
     def get_record(self, sep):
 
-        # FIXME how to deal with dual STs (NGSTAR vs NGMAST) when creating combined Object
-        # TODO do not move alleles into STs or vice versa, can self.st just be a dict similar to self.alleles?
         record = sep.join([self.fname, self.scheme, self.st] + [a for a in self.alleles])
         return record
 
@@ -207,6 +211,8 @@ def match_porb(ngmast_porb, ngstar_porb):
     ngstar_porb: Path to ngstar porB fasta file
     Returns a dict with ngmast porB IDs as keys and NGSTAR porB IDs as values: ttable
     '''
+    # msg(ngmast_porb)
+    # msg(ngstar_porb)
 
     if os.path.isfile(ngmast_porb) and os.path.isfile(ngstar_porb):
         ttable = {}
@@ -250,7 +256,7 @@ def read_ngstar(ngsfile):
 
 def convert_ngstar(ngstable, mlstngstar):
     
-    alleles = tuple(mlstngstar.alleles.values())
+    alleles = tuple(mlstngstar.alleles)
     st = ngstable.get(alleles, "")
 
     converted = MlstRecord(mlstngstar.fname, mlstngstar.scheme, st, mlstngstar.alleles)
@@ -271,15 +277,20 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
 
     combined_res = []
     # check that keys for both dicts are the same
-    if {ngmast_res.keys()} == {ngstar_res.keys()}:
+    if ngmast_res.keys() == ngstar_res.keys():
         for file in ngmast_res:
 
-            ngstar_res[file].alleles["porb"] = ttable[ngmast_res[file].porb]
+            ngstar_res[file].alleles[2] = ttable[ngmast_res[file].porb]
             conv_ngs = convert_ngstar(ngstartbl, ngstar_res[file])
+
+            # check = [a for a in ngmast_res[file].alleles] + [a for a in conv_ngs.alleles]
+            # msg(check)
+            # msg(type(check))
 
             ngmastar = MlstRecord(ngmast_res[file].fname,
                 "ngmaSTar",
                 ngmast_res[file].st + "/" + conv_ngs.st,
+                # FIXME a list when otherwise it is a dict ['porB', 'tbpB', 'penA', 'mtrR', 'porB', 'ponA', 'gyrA', 'parC', '23S']
                 [a for a in ngmast_res[file].alleles] + [a for a in conv_ngs.alleles]
             )
 

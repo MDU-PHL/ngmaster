@@ -72,17 +72,17 @@ def main():
     else:
         DBpath = resource_filename(__name__, 'db')
 
-    ngm_porb['db'] = DBpath + 'pubmlst/ngmast/porB.tfa'
-    ngm_tbpb['db'] = DBpath + 'pubmlst/ngmast/tbpB.tfa'
-    ngm_profiles['db'] = DBpath + 'pubmlst/ngmast/ngmast.txt'
-    ngs_pena['db'] = DBpath + 'pubmlst/ngstar/penA.tfa'
-    ngs_mtrr['db'] = DBpath + 'pubmlst/ngstar/mtrR.tfa'
-    ngs_porb['db'] = DBpath + 'pubmlst/ngstar/porB.tfa'
-    ngs_pona['db'] = DBpath + 'pubmlst/ngstar/ponA.tfa'
-    ngs_gyra['db'] = DBpath + 'pubmlst/ngstar/gyrA.tfa'
-    ngs_parc['db'] = DBpath + 'pubmlst/ngstar/parC.tfa'
-    ngs_23S['db'] = DBpath + 'pubmlst/ngstar/23S.tfa'
-    ngs_profiles['db'] = DBpath + 'pubmlst/ngstar/ngstar.txt'
+    ngm_porb['db'] = DBpath + '/pubmlst/ngmast/porB.tfa'
+    ngm_tbpb['db'] = DBpath + '/pubmlst/ngmast/tbpB.tfa'
+    ngm_profiles['db'] = DBpath + '/pubmlst/ngmast/ngmast.txt'
+    ngs_pena['db'] = DBpath + '/pubmlst/ngstar/penA.tfa'
+    ngs_mtrr['db'] = DBpath + '/pubmlst/ngstar/mtrR.tfa'
+    ngs_porb['db'] = DBpath + '/pubmlst/ngstar/porB.tfa'
+    ngs_pona['db'] = DBpath + '/pubmlst/ngstar/ponA.tfa'
+    ngs_gyra['db'] = DBpath + '/pubmlst/ngstar/gyrA.tfa'
+    ngs_parc['db'] = DBpath + '/pubmlst/ngstar/parC.tfa'
+    ngs_23S['db'] = DBpath + '/pubmlst/ngstar/23S.tfa'
+    ngs_profiles['db'] = DBpath + '/pubmlst/ngstar/ngstar.txt'
 
     db_list = [
     ngm_porb,
@@ -122,12 +122,12 @@ def main():
                 if not os.path.isfile(db['db']):
                     err('ERROR: Cannot locate database: "{}"'.format(db['db']))
             msg("Creating mlst BLAST database ... ")
-                make_mlst_db(DBpath, cpmbdb)
+            make_mlst_db(DBpath, cpmbdb)
         sys.exit(0)
 
 
     # Translation table to match NG-STAR and NG-MAST results
-    msg("Matching NG-STAR porB alleles with NG-MAST porB alleles ... ")
+    # msg("Matching NG-STAR porB alleles with NG-MAST porB alleles ... ")
     ttable = match_porb(ngm_porb['db'], ngs_porb['db'])
 
     # Read in NGSTAR profile table for conversion
@@ -149,11 +149,10 @@ def main():
 ################################################
     
     output = {"ngmast" : {}, "ngstar" : {}}
-    fargs = " ".join(args.fasta)
     for scheme in output:
 
         try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath, '--scheme', scheme, fargs],  capture_output=True, check=True, text=True)
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--scheme', scheme] + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
             # A list of allele names
@@ -162,15 +161,18 @@ def main():
             # INFO NGMAST: FILE    SCHEME  ST  porB    tbpB
 
             for rec in rlist[1:]: # drop header
-                allele_dct = {}
+                # allele_dct = {}
                 reclist = rec.split("\t")
                 fname, st = reclist[0], reclist[2]
 
-                for index, allele in enumerate(alleles)
-                    allele_dct[allele]=reclist[index+3]
+                # for index, allele in enumerate(alleles):
+                #     allele_dct[allele]=reclist[index+3]
+                #     # msg(type(allele_dct))
+
+                alleles = reclist[3:]
 
                 # Add this record to output dict with filename as key
-                output[scheme][fname] = MlstRecord(fname,scheme,st,allele_dct)
+                output[scheme][fname] = MlstRecord(fname,scheme,st,alleles)
 
         except CalledProcessError as e:
             raise SystemExit(e)
