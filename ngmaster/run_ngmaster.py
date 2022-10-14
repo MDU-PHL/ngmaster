@@ -21,17 +21,17 @@ from Bio.SeqRecord import SeqRecord
 from pkg_resources import resource_filename
 
 # Define REST API URLs from PubMLST
-ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta"}
-ngm_tbpb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta"}
-ngm_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv"}
-ngs_pena = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NEIS1753/alleles_fasta"} 
-ngs_mtrr = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/'mtrR/alleles_fasta"}
-ngs_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_porB/alleles_fasta"}
-ngs_pona = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_ponA/alleles_fasta"}
-ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_gyrA/alleles_fasta"}
-ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta"}
-ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta"}
-ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv"}
+ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta", "comments":""}
+ngm_tbpb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta", "comments":""}
+ngm_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv", "comments":""}
+ngs_pena = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NEIS1753/alleles_fasta", "comments":"NEIS1753"} 
+ngs_mtrr = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/'mtrR/alleles_fasta", "comments":"\'mtrR"}
+ngs_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_porB/alleles_fasta", "comments":"NG_porB"}
+ngs_pona = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_ponA/alleles_fasta", "comments":"NG_ponA"}
+ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_gyrA/alleles_fasta", "comments":"NG_gyrA"}
+ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta", "comments":"NG_parC"}
+ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta", "comments":"NG_23S"}
+ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv", "comments":""}
 
 
 def main():
@@ -54,10 +54,13 @@ def main():
     parser.add_argument('--updatedb', action='store_true', default=False, help='update NGMAST and NGSTAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
+    parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments in output')
     parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
     args = parser.parse_args()
     # TODO make --minid and --mincov available from mlst
     # TODO make sure --db works as expected for running mlst (should be ok)
+    # FIXME --printseq, this one is hard because mlst does not have an option to find the matched sequences. So all we could do is return the ones from PubMLST
+    # This could be integrated with outputting a batch file for NG-STAR website?
 
     # Set separator
     if args.csv:
@@ -117,13 +120,14 @@ def main():
         if yn == 'y':
             msg("Updating DB files ... ")
             for db in db_list:
-                update_db( DBpath, db)
+                update_db(DBpath, db)
                 if not os.path.isfile(db['db']):
                     err('ERROR: Cannot locate database: "{}"'.format(db['db']))
+                    raise SystemExit(e)
+            download_comments(DBpath, db_list)
             msg("Creating mlst BLAST database ... ")
             make_mlst_db(DBpath, mkblastdbpath)
         sys.exit(0)
-
 
     # Translation table to match NG-STAR and NG-MAST results
     ttable = match_porb(ngm_porb['db'], ngs_porb['db'])
@@ -131,18 +135,17 @@ def main():
     # Read in NGSTAR profile table for conversion
     ngstartbl = read_ngstar(ngs_profiles['db'])
 
-    # Check if positional arguments
-    if not args.fasta:
-        parser.print_help()
-        err("ERROR: No FASTA file provided")
-
     # Run test example
     # FIXME create NG-STAR test file
     if args.test:
         testSEQ = resource_filename(__name__, "/test/test.fa")
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 10699 / NG-STAR XXXX) ...\033[0m')
-        msg('$ ngmaster.py '+testSEQ)
         args.fasta = [testSEQ]
+
+    # Check if positional arguments
+    if not args.fasta:
+        parser.print_help()
+        err("ERROR: No FASTA file provided")
 
 ################################################
     
@@ -173,6 +176,11 @@ def main():
         
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
+
+
+    # FIXME call commments
+    # FIXME load_ngstar_comments(DBpath)
+    # if args.comments:
 
 ################################################
 

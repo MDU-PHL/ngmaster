@@ -16,9 +16,9 @@ gono.fa    10699      6277   4
 
 ## Dependencies
 
-* [Python >= 3.6](https://www.python.org/)
+* [Python >= 3.7](https://www.python.org/)
 * [BioPython](http://biopython.org/)
-* [isPcr >= v33x2](http://hgwdev.cse.ucsc.edu/~kent/src/) by Jim Kent
+* [mlst](https://github.com/tseemann/mlst)
 
 ## Installation
 

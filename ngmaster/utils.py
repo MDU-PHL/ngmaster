@@ -7,6 +7,7 @@ import re
 from Bio import SeqIO
 import subprocess
 import requests
+import json
 from pkg_resources import resource_filename
 
 class MlstRecord:
@@ -74,7 +75,7 @@ def update_db(db_folder, db):
     '''
 
     #check if db folder exists and try to create it if not
-    for dir in ["/blast","/pubmlst","/pubmlst/ngmast","/pubmlst/ngmast"]:
+    for dir in ["/blast","/pubmlst","/pubmlst/ngmast","/pubmlst/ngstar"]:
         try:
             if not os.path.exists(db_folder):
                 os.makedirs(db_folder)
@@ -101,11 +102,57 @@ def update_db(db_folder, db):
     except:
         err("Unable to download/process URL:'{}'".format(db['url']))
 
-    # save new db to db['db']
     with open(db['db'],'w') as f:
         f.write(new_db)
         
     msg(db['db'] + ' ... Done.')
+
+
+def download_comments(DBpath, db_list)
+    '''
+    Function to download the comments for individual NG-STAR alleles
+    '''
+
+    comms_file = []
+
+    for db in db_list:
+        if db["comments"]:
+            for seq in SeqIO.parse(db['db'], "fasta"):
+
+            locus, allele = str(seq.id).split("_") 
+            recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + db["comments"] + '/alleles/' + allele
+
+            try:
+                comms = requests.get(recordurl).text
+            except requests.exceptions.RequestException as e:
+                raise SystemExit(e)
+
+            comm_dict = json.loads(comms)
+            allele_comm = comm_dict.get("comments", "")
+
+            comms_file.append[locus, allele, allele_comm]
+
+    with open(DBpath + "/pubmlst/ngstar/allele_comments.tsv",'w') as f:
+        for line in comms_file:
+            f.writeline("\t".join(line))
+
+def load_ngstar_comments(DBpath):
+    '''
+    Function that returns a list of comment dicts when --comments is set
+    '''
+
+    with open(DBpath + "/pubmlst/ngstar/allele_comments.tsv",'r') as f:
+        d_comms = {"penA":{}, "mtrR":{}, "porB":{}, "ponA":{}, "gyrA":{}, "parC":{}, "23S":{}}
+
+        for line in f:
+            cols = line.rstrip().split("\t")
+            d_comms[cols[0]][cols[1]]=cols[2]
+
+        for a in ["penA"    "mtrR"    "porB"    "ponA"    "gyrA"    "parC"    "23S"]
+            ngstar_comments.append[d_comms[a]]        
+    
+    return ngstar_comments
+
 
 # Create mlst database
 def make_mlst_db(DBpath, mkblastdbpath):
@@ -133,69 +180,6 @@ def make_mlst_db(DBpath, mkblastdbpath):
             
     else:
         err('ERROR: Could not find mlst-make_blast_db script in ' + mkblastdbpath + '. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
-
-                                    # FIXME download comments for each allele
-                                    # #!/usr/bin/python3
-
-                                    # TODO you have never gone through the sequence files one by one?
-
-                                    # TODO match these to 'clean' names
-                                    # NG_porB 
-                                    # NG_ponA
-                                    # NG_parC
-                                    # NG_gyrA
-                                    # NG_23S
-                                    # NEIS1753
-                                    # 'mtrR
-
-                                    # porB 
-                                    # ponA
-                                    # parC
-                                    # gyrA
-                                    # 23S
-                                    # penA
-                                    # mtrR
-
-                                    #  # ls *.fa | 
-                                    #  # while read line; do head $line | 
-                                    #  # fa2tab | 
-                                    #  # awk -F"\t" '{split($1,a,"_"); printf a[1]; for(i=2; i< length(a); i++){printf "_"a[i]}; print "\t"a[length(a)]"\t"$0}'; done |
-                                    #  # sed 's/^>//1' |
-
-                                    # NG_ponA 1       >NG_ponA_1      AAAAACAACGGCGGGCGTTGGGCGGTGGTTCAAGAGCCGTTGCCGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
-                                    # NG_ponA 2       >NG_ponA_2      AAAAACAACGGCGGGCGTTGGGCGGGGGTTCAAGAGCCGTTGCTGCAGGGGGCTTTGGTTTCGCTGGATGCAAAA
-                                    # [...]
-
-                                    # import sys
-                                    # import json
-                                    # import requests
-
-                                    # for line in sys.stdin:
-                                    #    # NG_gyrA 1       >NG_gyrA_1      CTGTACGCGAT
-                                    #    INFO locus (column 1)
-                                    #    INFO allele_id (column 2)
-                                    #    locus, allele_id, fasta_header, sequence = line.rstrip().split("\t")
-                                    #    recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + locus + '/alleles/' + allele_id
-                                    #    pubmlst = ""
-
-                                    #    try:
-                                    #       pubmlst = requests.get(recordurl).text
-                                    #    except requests.exceptions.RequestException as e:
-                                    #       raise SystemExit(e)
-
-                                    #    pub_dict = json.loads(pubmlst)
-                                    #    comments = ""
-
-                                    #    try:
-                                    #       comments = pub_dict["comments"]
-                                    #    except KeyError as e:
-                                    #       comments = ""
-
-                                    #    output = '\t'.join([locus, allele_id, sequence, str(len(sequence)), comments])
-
-                                    #    # get this into same format as PubMLST online UI output
-                                    #    # output = record
-
 
 
 # Match NGSTAR with NGMAST porB sequences
@@ -226,7 +210,7 @@ def match_porb(ngmast_porb, ngstar_porb):
         return ttable
         
     else:
-        err('ERROR: porB files for NG-STAR or NG-MAST could not be found. Run ngmaster.py --update to update PubMLST databases.')
+        err('ERROR: porB files for NG-STAR or NG-MAST could not be found. Run ngmaster --update to update PubMLST databases.')
 
 
 def read_ngstar(ngsfile):
