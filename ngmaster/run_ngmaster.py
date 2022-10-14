@@ -102,7 +102,8 @@ def main():
     try:
         checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
         mlstpath = checkdep.stdout.strip()
-        mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"    
+        mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
+        msg("script path ", mkblastdbpath)  
     except CalledProcessError as e:
         err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
         raise SystemExit(e)
@@ -122,7 +123,7 @@ def main():
                 if not os.path.isfile(db['db']):
                     err('ERROR: Cannot locate database: "{}"'.format(db['db']))
             msg("Creating mlst BLAST database ... ")
-            make_mlst_db(DBpath, cpmbdb)
+            make_mlst_db(DBpath, mkblastdbpath)
         sys.exit(0)
 
 

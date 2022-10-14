@@ -7,6 +7,7 @@ import re
 from Bio import SeqIO
 import subprocess
 import requests
+from pkg_resources import resource_filename
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -124,7 +125,9 @@ def make_mlst_db(DBpath, mkblastdbpath):
     if os.path.exists(mkblastdbpath):
         # msg('mlst installed (' + mlstpath.decode('utf-8').strip() + ') and mlst-make_blast_db (' + mkblastdbpath + ') found.')
         #copied make-blast-db == cpmbdb
-        cpmbdb = resource_filename(__name__, 'scripts') + 'mlst-make_blast_db'
+        # cpmbdb = resource_filename(__name__, 'scripts/') + 'mlst-make_blast_db'
+        cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
+        #msg(cpmbdb)
         try:
             shutil.copy(mkblastdbpath, cpmbdb)
         except:
@@ -257,7 +260,7 @@ def read_ngstar(ngsfile):
 def convert_ngstar(ngstable, mlstngstar):
     
     alleles = tuple(mlstngstar.alleles)
-    st = ngstable.get(alleles, "")
+    st = ngstable.get(alleles, "-")
 
     converted = MlstRecord(mlstngstar.fname, mlstngstar.scheme, st, mlstngstar.alleles)
 
