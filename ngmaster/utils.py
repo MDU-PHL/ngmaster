@@ -293,7 +293,22 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
     if ngmast_res.keys() == ngstar_res.keys():
         for file in ngmast_res:
 
-            ngstar_res[file].alleles[2] = ttable[ngmast_res[file].porb]
+            msg(f"Post-processing file {file} and creating output ...")
+
+            try:
+                ngstar_res[file].alleles[2] = "".join([ngmast_res[file].simil, ttable[ngmast_res[file].porb], ngmast_res[file].part])
+            except TypeError as e:
+                #This gets triggered when porb is a list rather than a single value
+                # Go through all elements and create a multi-allele entry using ttable
+                if isinstance(ngmast_res[file].porb, list):
+                    porblist = []
+                    for pb in ngmast_res[file].porb:
+                        porblist.append(ttable[pb])
+                    ngstar_res[file].alleles[2] = ",".join(porblist)
+                else:
+                    err(f"Porb allele for record {file} is not list but {type(ngmast_res[file].porb)}. Exiting ...")
+                    raise SystemExit
+
             conv_ngs = convert_ngstar(ngstartbl, ngstar_res[file])
 
             ngmastar = MlstRecord(ngmast_res[file].fname,
