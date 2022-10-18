@@ -14,25 +14,27 @@ class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
     output record for a single FASTA file
     analysed by the mlst tool'''
+
     def __init__(self, fname, scheme, st, alleles):
         self.fname = fname
         self.scheme = scheme
         self.st = st
         self.alleles = alleles
+        self.simil = "" # similar "~"
+        self.part = "" # partial "?"
 
         if self.scheme == 'ngstar':
             self.porb = self.alleles[2]
         else:
             self.porb = self.alleles[0]
 
-        # self.simil = "" # similar "~"
-        # self.part = "" # partial "?"
-
         # FIXME how to handle multi allele porB?
         # INFO if there is a multi hit then the approx hits won't be present
         # INFO if there are approximate hits then no multi hits will be present
         # TODO make self.porb a list (so we can do multi match to ngmast via ttable)
+        # TODO to get comments for others we might also want to allow multiple alleles
         # INFO for all other alleles this is not needed
+        # FIXME only allow comments to be pulled in when allele is an exact match
 
         if re.match('~', self.porb):
             self.porb = self.porb[1:]
@@ -50,10 +52,38 @@ class MlstRecord:
         # -       allele missing                          < --mincov  < --minid
         # n,m     multiple alleles         
 
-    def get_record(self, sep):
+    def get_record(self, sep, comments):
+        '''
+        Function that returns a comma-separated or tab-separated string of allele IDs
+        (and optionally associated PubMLST comments) for each record
+        '''
 
-        record = sep.join([self.fname, self.scheme, self.st] + [a for a in self.alleles])
-        return record
+        ngmast = self.alleles[:2]
+        ngstar = self.alleles[2:]
+
+        if comments:
+            rec_comms = []
+
+            #Retrieve record-specific comments
+            for locus, allele in enumerate(ngstar):
+                rec_comms.append(comments[locus].get(allele,""))
+                
+            # Interleave comments with allele IDs
+            ngstar = list(sum(zip(ngstar,rec_comms), ()))
+
+        record = ngmast + ngstar
+
+        if sep == ',':
+            csv_record = []
+            for col in record:
+                if re.search(r',', col):
+                    col = '"' + col + '"'
+                csv_record.append(col)
+            record = csv_record
+
+        joined_record = sep.join([self.fname, self.scheme, self.st] + record)
+
+        return joined_record
 
 
 # Log a message to stderr
@@ -108,33 +138,34 @@ def update_db(db_folder, db):
     msg(db['db'] + ' ... Done.')
 
 
-def download_comments(DBpath, db_list)
+def download_comments(DBpath, db_list):
     '''
     Function to download the comments for individual NG-STAR alleles
     '''
 
+    msg("Downloading NG-STAR information for individual alleles. This may take a while.")
     comms_file = []
 
     for db in db_list:
         if db["comments"]:
             for seq in SeqIO.parse(db['db'], "fasta"):
 
-            locus, allele = str(seq.id).split("_") 
-            recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + db["comments"] + '/alleles/' + allele
+                locus, allele = str(seq.id).split("_") 
+                recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + db["comments"] + '/alleles/' + allele
 
-            try:
-                comms = requests.get(recordurl).text
-            except requests.exceptions.RequestException as e:
-                raise SystemExit(e)
+                try:
+                    comms = requests.get(recordurl).text
+                except requests.exceptions.RequestException as e:
+                    raise SystemExit(e)
 
-            comm_dict = json.loads(comms)
-            allele_comm = comm_dict.get("comments", "")
+                comm_dict = json.loads(comms)
+                allele_comm = comm_dict.get("comments", "")
 
-            comms_file.append[locus, allele, allele_comm]
+                comms_file.append("\t".join([locus, allele, allele_comm]))
 
     with open(DBpath + "/pubmlst/ngstar/allele_comments.tsv",'w') as f:
         for line in comms_file:
-            f.writeline("\t".join(line))
+            f.write(line + "\n")
 
 def load_ngstar_comments(DBpath):
     '''
@@ -144,12 +175,14 @@ def load_ngstar_comments(DBpath):
     with open(DBpath + "/pubmlst/ngstar/allele_comments.tsv",'r') as f:
         d_comms = {"penA":{}, "mtrR":{}, "porB":{}, "ponA":{}, "gyrA":{}, "parC":{}, "23S":{}}
 
+        ngstar_comments = []
+
         for line in f:
-            cols = line.rstrip().split("\t")
+            cols = line.rstrip("\n").split("\t")
             d_comms[cols[0]][cols[1]]=cols[2]
 
-        for a in ["penA"    "mtrR"    "porB"    "ponA"    "gyrA"    "parC"    "23S"]
-            ngstar_comments.append[d_comms[a]]        
+        for a in ["penA", "mtrR", "porB", "ponA", "gyrA", "parC", "23S"]:
+            ngstar_comments.append(d_comms[a])        
     
     return ngstar_comments
 
@@ -226,7 +259,7 @@ def read_ngstar(ngsfile):
 
     with open(ngsfile,'r') as f:
         for line in f:
-            cols = line.rstrip().split("\t")
+            cols = line.rstrip('\n').split("\t")
             tpl_key = tuple(cols[1:])  
             st = cols[0]
             ngstable[tpl_key] = st
@@ -263,15 +296,10 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
             ngstar_res[file].alleles[2] = ttable[ngmast_res[file].porb]
             conv_ngs = convert_ngstar(ngstartbl, ngstar_res[file])
 
-            # check = [a for a in ngmast_res[file].alleles] + [a for a in conv_ngs.alleles]
-            # msg(check)
-            # msg(type(check))
-
             ngmastar = MlstRecord(ngmast_res[file].fname,
                 "ngmaSTar",
                 ngmast_res[file].st + "/" + conv_ngs.st,
-                # FIXME a list when otherwise it is a dict ['porB', 'tbpB', 'penA', 'mtrR', 'porB', 'ponA', 'gyrA', 'parC', '23S']
-                [a for a in ngmast_res[file].alleles] + [a for a in conv_ngs.alleles]
+                ngmast_res[file].alleles + conv_ngs.alleles
             )
 
             combined_res.append(ngmastar)

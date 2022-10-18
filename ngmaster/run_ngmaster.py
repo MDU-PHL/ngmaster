@@ -40,6 +40,7 @@ def main():
         prog="ngmaster",
         formatter_class=RawTextHelpFormatter,
         description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+            'and Neisseria gonorrhoeae Sequence Typing for Antimicrobial Resistance (NG-STAR)\n'
             '\nPlease cite as:\n'
             '  Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.\n'
             '  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae.\n'
@@ -50,17 +51,19 @@ def main():
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
         'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
-    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
+    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
+    parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allelle to consider \'similar\' [~]')
+    parser.add_argument('--mincov', metavar='MINCOV', nargs=1, default=10, help='DNA percent coverage to report partial allele at [?]')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update NGMAST and NGSTAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
-    parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments in output')
+    parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments for each allele in output')
     parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
     args = parser.parse_args()
-    # TODO make --minid and --mincov available from mlst
-    # TODO make sure --db works as expected for running mlst (should be ok)
-    # FIXME --printseq, this one is hard because mlst does not have an option to find the matched sequences. So all we could do is return the ones from PubMLST
-    # This could be integrated with outputting a batch file for NG-STAR website?
+    # TODO make sure --db works as expected for running mlst (should be ok), once it has been packaged
+
+
+    idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
 
     # Set separator
     if args.csv:
@@ -73,6 +76,11 @@ def main():
         DBpath = str(args.db).rstrip('/')
     else:
         DBpath = resource_filename(__name__, 'db')
+
+    ngstar_comments = []
+    if args.comments:
+        ngstar_comments = load_ngstar_comments(DBpath)
+        
 
     ngm_porb['db'] = DBpath + '/pubmlst/ngmast/porB.tfa'
     ngm_tbpb['db'] = DBpath + '/pubmlst/ngmast/tbpB.tfa'
@@ -125,7 +133,6 @@ def main():
                     err('ERROR: Cannot locate database: "{}"'.format(db['db']))
                     raise SystemExit(e)
             download_comments(DBpath, db_list)
-            msg("Creating mlst BLAST database ... ")
             make_mlst_db(DBpath, mkblastdbpath)
         sys.exit(0)
 
@@ -152,8 +159,13 @@ def main():
     output = {"ngmast" : {}, "ngstar" : {}}
     for scheme in output:
 
+        printseq = []
+        if args.printseq:
+            msg(args.printseq[0])
+            printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
+
         try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--scheme', scheme] + args.fasta,  capture_output=True, check=True, text=True)
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
             # A list of allele names
@@ -178,16 +190,38 @@ def main():
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
 
 
-    # FIXME call commments
-    # FIXME load_ngstar_comments(DBpath)
-    # if args.comments:
-
 ################################################
 
-    print(SEP.join(['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']))
+    header = ''
+    if args.comments:
+        header = ['FILE',
+                'SCHEME',
+                'NG-MAST/NG-STAR',
+                'porB_NG-MAST',
+                'tbpB',
+                'penA',
+                'penA_comments',
+                'mtrR',
+                'mtrR_comments',
+                'porB_NG-STAR',
+                'porB_NG-STAR_comments',
+                'ponA',
+                'ponA_comments',
+                'gyrA',
+                'gyrA_comments',
+                'parC',
+                'parC_comments',
+                '23S',
+                '23S_comments'
+                ]
+
+    else:
+        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']
+
+    print(SEP.join(header))
 
     for out in collate_out:
-        print(out.get_record(SEP))
+        print(out.get_record(sep = SEP, comments = ngstar_comments))  
 
     # FIXME add test file that tests both NG-MAST and NG-STAR
     if args.test:
@@ -195,13 +229,6 @@ def main():
             err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
         else:
             msg('\033[92m... Test successful.\033[0m')
-
-    # # FIXME how to include this?
-    # # Print allele sequences to file
-    # if args.printseq:
-    #     allelesOUT = "".join(args.printseq)
-    #     with open(allelesOUT, "w") as output:
-    #         SeqIO.write(alleleSEQS, output, 'fasta')
 
 if __name__ == "__main__":
     main()
