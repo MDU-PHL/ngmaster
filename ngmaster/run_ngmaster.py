@@ -49,7 +49,8 @@ def main():
         usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
     parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
-        'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)')
+        'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)\n'
+        'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
     parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allelle to consider \'similar\' [~]')
