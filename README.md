@@ -5,11 +5,13 @@
 
 # ngmaster
 
-*In silico* multi-antigen sequence typing for *Neisseria gonorrhoeae* (NG-MAST).  
+*In silico* **m**ulti-**a**ntigen **s**equence **t**yping for ***N**eisseria **g**onorrhoeae* (NG-MAST) and
+_**N**eisseria **g**onorrhoeae_ **s**equence **t**yping for **a**ntimicrobial **r**esistance (NG-STAR).  
 
 ## Synopsis
 ```
-% ngmaster gono.fa
+# TODO
+ngmaster gono.fa
 ID         NG-MAST    POR    TBPB
 gono.fa    10699      6277   4
 ```
@@ -24,28 +26,30 @@ gono.fa    10699      6277   4
 
 #### PiPy
 ```
+# TODO how to integrate mlst dependency
 pip3 install ngmaster
 ```
 #### Brew
 ```
+# TODO how to integrate mlst dependency
 brew install brewsci/bio/ngmaster
 ```
 #### Conda
 ```
-conda install -c conda-forge -c bioconda -c defaults ngmaster  # COMING SOON
+conda install -c bioconda ngmaster
 ```
 
 ## Test
 
 Once installed, you can run the following to ensure `ngmaster` is successfully working:
 
-    $ ngmaster --test
+    ngmaster --test
 
 If everything works, you will see the following:
 
 ```
+# TODO
 Running ngmaster.py on test example (NG-MAST 10699) ...
-$ ngmaster.py test/test.fa
 ID    NG-MAST    POR    TBPB
 test.fa    10699    6277    4
 ... Test successful.
@@ -53,12 +57,13 @@ test.fa    10699    6277    4
 
 ## Usage
 
-    $ ngmaster -h
+    ngmaster -h
 
     usage:
       ngmaster [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>
 
     In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
+    and Neisseria gonorrhoeae Sequence Typing for Antimicrobial Resistance (NG-STAR)
 
     Please cite as:
       Kwong JC, Goncalves da Silva A, Howden BP and Seemann T.
@@ -71,13 +76,17 @@ test.fa    10699    6277    4
     optional arguments:
       -h, --help       show this help message and exit
       --db DB          specify custom directory containing allele databases
-                       directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"
-      --csv               output comma-separated format (CSV) rather than tab-separated
+                       directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)
+                       in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)
+      --csv            output comma-separated format (CSV) rather than tab-separated
       --printseq FILE  specify filename to save allele sequences to (default=off)
-       --updatedb       update allele database from <www.ng-mast.net>
+      --minid MINID    DNA percent identity of full allelle to consider 'similar' [~]
+      --mincov MINCOV  DNA percent coverage to report partial allele at [?]
+      --updatedb       update NGMAST and NGSTAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>
+      --assumeyes      assume you are certain you wish to update db
       --test           run test example
+      --comments       include NG-STAR comments for each allele in output
       --version        show program's version number and exit
-
 
 ## Quick start
 
@@ -86,9 +95,18 @@ test.fa    10699    6277    4
 `$ ngmaster <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
 The NG-MAST result and allele numbers are printed in tab-separated format to `stdout`.
-* If an allele is not found (ie. unable to located with primers), the allele result is "`–`".
-* If an allele is found (ie. located with primers), but the conserved region containing the starting key motif required for sequence trimming cannot be located, the allele result is "`no_key`".
-* If an allele is found (ie. located with primers), but the trimmed sequence is novel, and not in the current database, the allele result is "`new`".
+
+* `ngmaster` reports alleles according to the same rules that are implemented in `mlst`.
+* `mlst`'s arguments `--minid` and `--mincov` are available directly in `ngmaster` 
+* For each allele n:
+
+Symbol | Meaning | Length | Identity
+---   | --- | --- | ---
+`n`   | exact intact allele                   | 100%            | 100%
+`~n`  | novel full length allele similar to n | 100%            | &ge; `--minid`
+`n?`  | partial match to known allele         | &ge; `--mincov` | &ge; `--minid`
+`-`   | allele missing                        | &lt; `--mincov` | &lt; `--minid`
+`n,m` | multiple alleles                      | &nbsp;          | &nbsp;
 
 **To save results to a tab-separated text file, redirect `stdout`:**
 
@@ -98,13 +116,18 @@ The NG-MAST result and allele numbers are printed in tab-separated format to `st
 
 `$ ngmaster --csv <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-**To save sequences of the alleles to a file (eg. for uploading "new" sequences to [http://www.ng-mast.net](http://www.ng-mast.net/)):**
+**To save sequences of the alleles to a file (eg. for uploading "new" sequences to [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/)):**
 
 `$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
+This will create two files:
+
+1. `NGMAST__filename`
+2. `NGSTAR__filename`
+
 ## Updating the allele databases
 
-**To update the allele databases from https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/ :**  
+**To update the allele databases from [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/):**  
 *Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
 
     $ ngmaster.py --updatedb
@@ -120,15 +143,9 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 ## Creating a custom allele database
 
-1. Create custom database files: `POR.tfa`, `TBPB.tfa`, `ng_mast.txt`  
-   See default `db` directory for examples.  
-   `POR.tfa` and `TBPB.tfa` contain the respective allele sequences in FASTA format.  
-   `ng_mast.txt` contains a list of NG-MAST types and the corresponding allele types.
-
-2. Place the custom database files in a folder.
-
-3. Specify the path to that custom database folder:  
-   `$ ngmaster --db [/path/to/custom/folder/] <fasta1> <fasta2> <fasta3> ... <fastaN>`
+To create a custom allele database please follow the instructions for creating a custom ```mlst``` database
+described [here](https://github.com/tseemann/mlst#adding-a-new-scheme).
+Usually, this should not be necessary, simply run ngmaster --update to update to the latest NG-MAST and NG-STAR schemes from PubMLST
 
 ## Citation
 
@@ -144,12 +161,6 @@ DOI:[10.1099/mgen.0.000076](https://doi.org/10.1099/mgen.0.000076)
 ### Software
 Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
-### Database
-Note that the NG-MAST databases and website are curated and hosted at the
-Department of Infectious Disease Epidemiology, Imperial College London.  For
-issues with the NG-MAST databases, please contact the [NG-MAST
-curator](mailto:d.aanensen@imperial.ac.uk).
-
 ## Software Licence
 
 [GPLv2](https://github.com/MDU-PHL/ngmaster/blob/master/LICENSE)
@@ -157,7 +168,7 @@ curator](mailto:d.aanensen@imperial.ac.uk).
 ## References
 
 * Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
-* See also [http://www.ng-mast.net](http://www.ng-mast.net/).
+* See also [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/).
 
 ## Authors
 
