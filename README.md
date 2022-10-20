@@ -10,10 +10,9 @@ _**N**eisseria **g**onorrhoeae_ **s**equence **t**yping for **a**ntimicrobial **
 
 ## Synopsis
 ```
-# TODO
 ngmaster gono.fa
-ID         NG-MAST    POR    TBPB
-gono.fa    10699      6277   4
+FILE	SCHEME	    NG-MAST/NG-STAR	porB_NG-MAST	tbpB	penA	mtrR	porB_NG-STAR	ponA	gyrA	parC	23S
+gono.fa	ngmaSTar    4186/231            2569            241     23      42      100             100     10      2       100
 ```
 
 ## Dependencies
@@ -48,10 +47,9 @@ Once installed, you can run the following to ensure `ngmaster` is successfully w
 If everything works, you will see the following:
 
 ```
-# TODO
-Running ngmaster.py on test example (NG-MAST 10699) ...
-ID    NG-MAST    POR    TBPB
-test.fa    10699    6277    4
+Running ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...
+FILE	SCHEME	    NG-MAST/NG-STAR	porB_NG-MAST	tbpB	penA	mtrR	porB_NG-STAR	ponA	gyrA	parC	23S
+test.fa	ngmaSTar    4186/231            2569            241     23      42      100             100     10      2       100
 ... Test successful.
 ```
 
