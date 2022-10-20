@@ -161,23 +161,22 @@ def main():
 
         printseq = []
         if args.printseq:
-            msg(args.printseq[0])
             printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
 
         try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
-            # A list of allele names
-            alleles = rlist[0].split("\t")[3:]
-            # INFO NGSTAR: FILE    SCHEME  ST  penA    mtrR    porB    ponA    gyrA    parC    23S
-            # INFO NGMAST: FILE    SCHEME  ST  porB    tbpB
+            # INFO Checking number of alleles to catch mlst error
+            # Issue #125
+            # https://github.com/tseemann/mlst/issues/125
+            n_allele = len(rlist[0].split("\t")[3:])
 
             for rec in rlist[1:]: # drop header
                 # allele_dct = {}
                 reclist = rec.split("\t")
                 fname, st = reclist[0], reclist[2]
-                alleles = reclist[3:]
+                alleles = reclist[3:][:n_allele]
 
                 # Add this record to output dict with filename as key
                 output[scheme][fname] = MlstRecord(fname,scheme,st,alleles)

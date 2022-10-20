@@ -66,7 +66,12 @@ class MlstRecord:
 
             #Retrieve record-specific comments
             for locus, allele in enumerate(ngstar):
-                rec_comms.append(comments[locus].get(allele,""))
+                try:
+                    rec_comms.append(comments[locus].get(allele,""))
+                except IndexError as e:
+                    raise SystemExit(e)
+                    err(f'error {e}: locus is {locus} when comments is of length {len(comments)} and last index {comments[-1]} and allele {allele} for file {self.fname} and scheme {self.scheme}')
+
                 
             # Interleave comments with allele IDs
             ngstar = list(sum(zip(ngstar,rec_comms), ()))
@@ -224,8 +229,6 @@ def match_porb(ngmast_porb, ngstar_porb):
     ngstar_porb: Path to ngstar porB fasta file
     Returns a dict with ngmast porB IDs as keys and NGSTAR porB IDs as values: ttable
     '''
-    # msg(ngmast_porb)
-    # msg(ngstar_porb)
 
     if os.path.isfile(ngmast_porb) and os.path.isfile(ngstar_porb):
         ttable = {}
