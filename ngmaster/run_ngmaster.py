@@ -144,10 +144,9 @@ def main():
     ngstartbl = read_ngstar(ngs_profiles['db'])
 
     # Run test example
-    # FIXME create NG-STAR test file
     if args.test:
         testSEQ = resource_filename(__name__, "/test/test.fa")
-        msg('\033[94mRunning ngmaster.py on test example (NG-MAST 10699 / NG-STAR XXXX) ...\033[0m')
+        msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
 
     # Check if positional arguments
@@ -165,7 +164,7 @@ def main():
             printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
 
         try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--nopath', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
             # INFO Checking number of alleles to catch mlst error
@@ -223,9 +222,8 @@ def main():
     for out in collate_out:
         print(out.get_record(sep = SEP, comments = ngstar_comments))  
 
-    # FIXME add test file that tests both NG-MAST and NG-STAR
     if args.test:
-        if collate_out[0].st != '10699/XXXX':
+        if collate_out[0].st != '4186/231':
             err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
         else:
             msg('\033[92m... Test successful.\033[0m')

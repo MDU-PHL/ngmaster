@@ -296,7 +296,7 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
     if ngmast_res.keys() == ngstar_res.keys():
         for file in ngmast_res:
 
-            msg(f"Post-processing file {file} and creating output ...")
+            #msg(f"Post-processing file {file} and creating output ...")
 
             try:
                 ngstar_res[file].alleles[2] = "".join([ngmast_res[file].simil, ttable[ngmast_res[file].porb], ngmast_res[file].part])
