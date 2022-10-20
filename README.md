@@ -79,7 +79,7 @@ test.fa    10699    6277    4
                        directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)
                        in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)
       --csv            output comma-separated format (CSV) rather than tab-separated
-      --printseq FILE  specify filename to save allele sequences to (default=off)
+      --printseq FILE  specify filename to save allele sequences to
       --minid MINID    DNA percent identity of full allele to consider 'similar' [~]
       --mincov MINCOV  DNA percent coverage to report partial allele at [?]
       --updatedb       update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>
@@ -145,7 +145,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 To create a custom allele database please follow the instructions for creating a custom ```mlst``` database
 described [here](https://github.com/tseemann/mlst#adding-a-new-scheme).
-Usually, this should not be necessary, simply run `ngmaster --update` to update to the latest NG-MAST and NG-STAR schemes from PubMLST
+Usually, this should not be necessary, simply run `ngmaster --update` to update to the latest NG-MAST and NG-STAR schemes from PubMLST.
 
 ## Citation
 
@@ -158,7 +158,6 @@ DOI:[10.1099/mgen.0.000076](https://doi.org/10.1099/mgen.0.000076)
 
 ## Bugs
 
-### Software
 Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/issues).  
 
 ## Software Licence
