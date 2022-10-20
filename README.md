@@ -145,7 +145,7 @@ This can then be specified when running ngmaster using the ```--db  path/to/fold
 
 To create a custom allele database please follow the instructions for creating a custom ```mlst``` database
 described [here](https://github.com/tseemann/mlst#adding-a-new-scheme).
-Usually, this should not be necessary, simply run ngmaster --update to update to the latest NG-MAST and NG-STAR schemes from PubMLST
+Usually, this should not be necessary, simply run `ngmaster --update` to update to the latest NG-MAST and NG-STAR schemes from PubMLST
 
 ## Citation
 
