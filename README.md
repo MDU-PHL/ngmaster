@@ -80,9 +80,9 @@ test.fa    10699    6277    4
                        in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)
       --csv            output comma-separated format (CSV) rather than tab-separated
       --printseq FILE  specify filename to save allele sequences to (default=off)
-      --minid MINID    DNA percent identity of full allelle to consider 'similar' [~]
+      --minid MINID    DNA percent identity of full allele to consider 'similar' [~]
       --mincov MINCOV  DNA percent coverage to report partial allele at [?]
-      --updatedb       update NGMAST and NGSTAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>
+      --updatedb       update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>
       --assumeyes      assume you are certain you wish to update db
       --test           run test example
       --comments       include NG-STAR comments for each allele in output
@@ -90,11 +90,11 @@ test.fa    10699    6277    4
 
 ## Quick start
 
-**To perform *in silico* NG-MAST on FASTA files:**
+**To perform *in silico* NG-MAST and NG-STAR typing on FASTA files:**
 
 `$ ngmaster <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-The NG-MAST result and allele numbers are printed in tab-separated format to `stdout`.
+The NG-MAST and NG-STAR results and allele numbers are printed in tab-separated format to `stdout`.
 
 * `ngmaster` reports alleles according to the same rules that are implemented in `mlst`.
 * `mlst`'s arguments `--minid` and `--mincov` are available directly in `ngmaster` 
@@ -167,7 +167,8 @@ Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/i
 
 ## References
 
-* Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505.  
+* [Martin et al. J Infect Dis, 2004 Apr 15; 189(8): 1497-1505](https://doi.org/10.1086/383047).
+* [Demczuk et al. J Clin Microbiol, 2017 May; 55(5): 1454-1468](https://doi.org/10.1128/jcm.00100-17)
 * See also [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/).
 
 ## Authors
