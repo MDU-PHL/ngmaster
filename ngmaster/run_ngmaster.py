@@ -164,7 +164,7 @@ def main():
             printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
 
         try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--nopath', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
             # INFO Checking number of alleles to catch mlst error
