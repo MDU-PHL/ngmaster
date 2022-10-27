@@ -1,51 +1,46 @@
 # Script by Jason Kwong & Torsten Seemann
+# Re-factored and extended (NG-STAR) by Andreas Stroehlein
 # In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)
-
-# Use modern print function from python 3.x
-
+# and Neisseria gonorrhoeae Sequence Typing for Antimicrobial Resistance (NG-STAR)
 
 # import ngmaster functions
 import ngmaster
 from ngmaster.utils import *
 
-#import ngmaster
-import argparse
-from argparse import RawTextHelpFormatter
+#imports
+from argparse import ArgumentParser, RawTextHelpFormatter
 import sys
 import os
 import os.path
-import io
-import urllib.request, urllib.error, urllib.parse
-from urllib.request import urlopen
-from urllib.error import HTTPError, URLError
-import subprocess
-import shutil
+from io import StringIO
+from subprocess import run, CalledProcessError
 import re
-import tempfile
-from sys import argv
-from subprocess import Popen
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from pkg_resources import resource_string, resource_filename
+from pkg_resources import resource_filename
 
-# Set target lengths for isPcr amplicons and trimmed sequences
-porAMPLEN = 737
-porTRIMLEN = 490
-tbpbAMPLEN = 580
-tbpbTRIMLEN = 390
+# Define REST API URLs from PubMLST
+ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta", "comments":""}
+ngm_tbpb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_tbpB/alleles_fasta", "comments":""}
+ngm_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/71/profiles_csv", "comments":""}
+ngs_pena = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NEIS1753/alleles_fasta", "comments":"NEIS1753"} 
+ngs_mtrr = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/'mtrR/alleles_fasta", "comments":"\'mtrR"}
+ngs_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_porB/alleles_fasta", "comments":"NG_porB"}
+ngs_pona = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_ponA/alleles_fasta", "comments":"NG_ponA"}
+ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_gyrA/alleles_fasta", "comments":"NG_gyrA"}
+ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta", "comments":"NG_parC"}
+ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta", "comments":"NG_23S"}
+ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv", "comments":""}
 
-# database urls
-porURL = "http://www.ng-mast.net/sql/fasta.asp?allele=POR"
-tbpbURL = "http://www.ng-mast.net/sql/fasta.asp?allele=TBPB"
-alleleURL = "http://www.ng-mast.net/sql/st_comma.asp"
 
 def main():
     # Usage
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         prog="ngmaster",
         formatter_class=RawTextHelpFormatter,
         description='In silico multi-antigen sequence typing for Neisseria gonorrhoeae (NG-MAST)\n'
+            'and Neisseria gonorrhoeae Sequence Typing for Antimicrobial Resistance (NG-STAR)\n'
             '\nPlease cite as:\n'
             '  Kwong JC, Gonçalves da Silva A, Dyet K, Williamson DA, Stinear TP, Howden BP and Seemann T.\n'
             '  NGMASTER: in silico multi-antigen sequence typing for Neisseria gonorrhoeae.\n'
@@ -54,14 +49,28 @@ def main():
         usage='\n  %(prog)s [OPTIONS] <fasta1> <fasta2> <fasta3> ... <fastaN>')
     parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
-        'directory must contain database files "POR.tfa", "TBPB.tfa", and "ng_mast.txt"')
+        'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)\n'
+        'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
-    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to (default=off)')
-    parser.add_argument('--updatedb', action='store_true', default=False, help='update allele database from <www.ng-mast.net>')
+    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
+    parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
+    parser.add_argument('--mincov', metavar='MINCOV', nargs=1, default=10, help='DNA percent coverage to report partial allele at [?]')
+    parser.add_argument('--updatedb', action='store_true', default=False, help='update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
+    parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments for each allele in output')
     parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
     args = parser.parse_args()
+    # TODO make sure --db works as expected for running mlst (should be ok), once it has been packaged
+
+
+    idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
+
+    # Set separator
+    if args.csv:
+        SEP = ','
+    else:
+        SEP = '\t'
 
     # Path to database files
     if args.db:
@@ -69,10 +78,46 @@ def main():
     else:
         DBpath = resource_filename(__name__, 'db')
 
-    porDB = DBpath + '/POR.tfa'
-    tbpbDB = DBpath + '/TBPB.tfa'
-    alleleDB = DBpath + '/ng_mast.txt'
-    tempFILE = DBpath + '/temp'
+    ngstar_comments = []
+    if args.comments:
+        ngstar_comments = load_ngstar_comments(DBpath)
+        
+
+    ngm_porb['db'] = DBpath + '/pubmlst/ngmast/porB.tfa'
+    ngm_tbpb['db'] = DBpath + '/pubmlst/ngmast/tbpB.tfa'
+    ngm_profiles['db'] = DBpath + '/pubmlst/ngmast/ngmast.txt'
+    ngs_pena['db'] = DBpath + '/pubmlst/ngstar/penA.tfa'
+    ngs_mtrr['db'] = DBpath + '/pubmlst/ngstar/mtrR.tfa'
+    ngs_porb['db'] = DBpath + '/pubmlst/ngstar/porB.tfa'
+    ngs_pona['db'] = DBpath + '/pubmlst/ngstar/ponA.tfa'
+    ngs_gyra['db'] = DBpath + '/pubmlst/ngstar/gyrA.tfa'
+    ngs_parc['db'] = DBpath + '/pubmlst/ngstar/parC.tfa'
+    ngs_23S['db'] = DBpath + '/pubmlst/ngstar/23S.tfa'
+    ngs_profiles['db'] = DBpath + '/pubmlst/ngstar/ngstar.txt'
+
+    db_list = [
+    ngm_porb,
+    ngm_tbpb,
+    ngm_profiles,
+    ngs_pena,
+    ngs_mtrr,
+    ngs_porb,
+    ngs_pona,
+    ngs_gyra,
+    ngs_parc,
+    ngs_23S,
+    ngs_profiles
+    ]
+
+    # Check mlst installed and running correctly
+    try:
+        checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
+        mlstpath = checkdep.stdout.strip()
+        mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
+    except CalledProcessError as e:
+        err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
+        raise SystemExit(e)
+        
 
     # Update DB
     if args.updatedb:
@@ -83,184 +128,105 @@ def main():
             yn = 'y'
         if yn == 'y':
             msg("Updating DB files ... ")
-            # Update POR DB
-            update_db( DBpath, porDB, porURL )
-            # Update TBPB DB
-            update_db( DBpath, tbpbDB, tbpbURL )
-            # Update allele DB
-            update_db( DBpath, alleleDB, alleleURL, allele_db = True )
+            for db in db_list:
+                update_db(DBpath, db)
+                if not os.path.isfile(db['db']):
+                    err('ERROR: Cannot locate database: "{}"'.format(db['db']))
+                    raise SystemExit(e)
+            download_comments(DBpath, db_list)
+            make_mlst_db(DBpath, mkblastdbpath)
         sys.exit(0)
 
-    # Check if database can be located
-    if not os.path.isfile(porDB):
-        err('ERROR: Cannot locate database: "{}"'.format(porDB))
-    if not os.path.isfile(tbpbDB):
-        err('ERROR: Cannot locate database: "{}"'.format(tbpbDB))
-    if not os.path.isfile(alleleDB):
-        err('ERROR: Cannot locate database: "{}"'.format(alleleDB))
+    # Translation table to match NG-STAR and NG-MAST results
+    ttable = match_porb(ngm_porb['db'], ngs_porb['db'])
 
-    # Check isPcr installed and running correctly
-    devnull = open(os.devnull, 'w')
-    checkdep = subprocess.Popen(['which', 'isPcr'], stdout=devnull, stderr=subprocess.PIPE, close_fds=True)
-    output, errcode = checkdep.communicate()
-    if checkdep.returncode != 0:
-        err('ERROR: Check isPcr is installed correctly and in $PATH.')
-
-    # Set separator
-    if args.csv:
-        SEP = ','
-    else:
-        SEP = '\t'
+    # Read in NGSTAR profile table for conversion
+    ngstartbl = read_ngstar(ngs_profiles['db'])
 
     # Run test example
     if args.test:
         testSEQ = resource_filename(__name__, "/test/test.fa")
-        msg('\033[94mRunning ngmaster.py on test example (NG-MAST 10699) ...\033[0m')
-        msg('$ ngmaster.py '+testSEQ)
+        msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
 
     # Check if positional arguments
     if not args.fasta:
         parser.print_help()
-        err("ERROR: too few arguments")
+        err("ERROR: No FASTA file provided")
 
-    # Import allele profiles as dictionary
-    NGMAST = {}
-    with open(alleleDB) as f:
-        for line in f:
-            if line.strip():
-                lines = line.split(',')
-                ST = lines[0]
-                porALLELE = lines[1].rstrip('\n')
-                tbpbALLELE = lines[2].rstrip('\n')
-                alleles = str(porALLELE) + '-' + str(tbpbALLELE)
-                NGMAST[alleles] = ST
-    # Import allele databases
-    porDICT = fasta_to_dict(porDB)
-    tbpbDICT = fasta_to_dict(tbpbDB)
+################################################
+    
+    output = {"ngmast" : {}, "ngstar" : {}}
+    for scheme in output:
 
-    # Set up primer database
-    primerDB = [['por', 'CAAGAAGACCTCGGCAA', 'CCGACAACCACTTGGT'], ['tbpB', 'CGTTGTCGGCAGCGCGAAAAC', 'TTCATCGGTGCGCTCGCCTTG']]
-    NGprimers = "\n".join(" ".join(map(str,l)) for l in primerDB) + "\n"
+        printseq = []
+        if args.printseq:
+            printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
 
-    # Check queries are in FASTA format
-    # Run Jim Kent's isPcr to identify amplicon
-    alleleSEQS = []
-    print(('ID' + SEP + 'NG-MAST' + SEP + 'POR' + SEP + 'TBPB'))
-    for f in args.fasta:
-        if os.path.isfile(f) == False:
-            msg( 'ERROR: Cannot find "{}". Check file exists.'.format(f) )
-            continue
-        s = open(f, 'r')
-        if s.read(1) != '>':
-            msg( 'ERROR: "{}" does not appear to be in FASTA format.'.format(f) )
-            continue
-        s.close()
+        try:
+            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
+            rlist = result.stdout.split("\n")[:-1] # drop last empty line
 
-        # Setup lists in case there are multiple hits
-        por = None
-        porCOUNT = set()
-        porKEY = set()
-        tbpb = None
-        tbpbCOUNT = set()
-        tbpbKEY = set()
+            # INFO Checking number of alleles to catch mlst error
+            # Issue #125
+            # https://github.com/tseemann/mlst/issues/125
+            n_allele = len(rlist[0].split("\t")[3:])
 
-        # Run isPcr by Jim Kent
-        cmd = f'echo "{NGprimers}"'
-        cmd2 = f'isPcr "{f}" stdin stdout -tileSize=6 -minPerfect=5 -stepSize=3 -maxSize=900'
-        import shlex
-        proc0 = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
-        proc = subprocess.Popen(shlex.split(cmd2), stdin=proc0.stdout, stdout=subprocess.PIPE)
-        PCRout = proc.communicate()[0].decode('UTF-8')
-        alleleSEQ = io.StringIO()
-        alleleSEQ.write(PCRout)
-        alleleSEQ.seek(0)
-        # Check amplicon length and starting key motif
-        for amplicon in SeqIO.parse(alleleSEQ, "fasta"):
-            product = amplicon.description.split()
-            ampID = product[1]
-            ampLEN = product[2]
-            if ampID == "por":
-                if int(ampLEN[:-2]) > (porAMPLEN-100) and int(ampLEN[:-2]) < (porAMPLEN+100):    # Check por amplicon length
-                    porSEQ = amplicon.seq.upper()
-                    start = porSEQ.find('TTGAA')
-                    if start != -1:                                            # Check for starting key motif
-                        newporSEQ = str(porSEQ[start:(start+porTRIMLEN)])    # Trim sequence from starting key motif
-                        if len(newporSEQ) == porTRIMLEN:
-                            # Add sequences to print later
-                            porSEQR = Seq(newporSEQ)
-                            porRECR = SeqRecord(porSEQR, id=f, description='POR')
-                            alleleSEQS.append(porRECR)
-                            # Search trimmed sequence against database dictionary
-                            try:
-                                porRESULT = (porDICT[str(porSEQR)])
-                                por = porRESULT.split('R')[1]
-                            except KeyError:
-                                por = 'new'
-                            if por not in porCOUNT:
-                                porCOUNT.add(por)
-                    else:
-                        porKEY.add('no_key')
-            if ampID == "tbpB":
-                if int(ampLEN[:-2]) > (tbpbAMPLEN-100) and int(ampLEN[:-2]) < (tbpbAMPLEN+100):    # Check tbpB amplicon length
-                    tbpbSEQ = amplicon.seq.upper()
-                    match = re.search('CGTCTG[AG]A',str(tbpbSEQ))                # Allow single mismatch in key motif
-                    if match:                                                    # Check for starting key motif
-                        start = match.start()
-                        newtbpbSEQ = str(tbpbSEQ[start:(start+tbpbTRIMLEN)])    # Trim sequence from starting key motif
-                        if len(newtbpbSEQ) == tbpbTRIMLEN:
-                            # Add sequences to print later
-                            tbpbSEQR = Seq(newtbpbSEQ)
-                            tbpbRECR = SeqRecord(tbpbSEQR, id=f, description='TBPB')
-                            alleleSEQS.append(tbpbRECR)
-                            # Search trimmed sequence against database dictionary
-                            try:
-                                tbpbRESULT = (tbpbDICT[str(tbpbSEQR)])
-                                tbpb = tbpbRESULT.split('PB')[1]
-                            except KeyError:
-                                tbpb = 'new'
-                            if tbpb not in tbpbCOUNT:
-                                tbpbCOUNT.add(tbpb)
-                    else:
-                        tbpbKEY.add('no_key')
-        alleleSEQ.close()
+            for rec in rlist[1:]: # drop header
+                # allele_dct = {}
+                reclist = rec.split("\t")
+                fname, st = reclist[0], reclist[2]
+                alleles = reclist[3:][:n_allele]
 
-        if not por:
-            por = '-'
-        if not tbpb:
-            tbpb = '-'
+                # Add this record to output dict with filename as key
+                output[scheme][fname] = MlstRecord(fname,scheme,st,alleles)
 
-        # If multiple hits with trimmed sequence (eg. duplicated genes, multiple starting key motifs etc.) print multiple results
-        if len(porCOUNT) > 1 or len(tbpbCOUNT) > 1:
-            print(( f + SEP + 'multiple' + SEP + '/'.join(porCOUNT) + SEP + '/'.join(tbpbCOUNT) ))
+        except CalledProcessError as e:
+            raise SystemExit(e)
+
+        
+    # Collate results from two runs
+    collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
+
+
+################################################
+
+    header = ''
+    if args.comments:
+        header = ['FILE',
+                'SCHEME',
+                'NG-MAST/NG-STAR',
+                'porB_NG-MAST',
+                'tbpB',
+                'penA',
+                'penA_comments',
+                'mtrR',
+                'mtrR_comments',
+                'porB_NG-STAR',
+                'porB_NG-STAR_comments',
+                'ponA',
+                'ponA_comments',
+                'gyrA',
+                'gyrA_comments',
+                'parC',
+                'parC_comments',
+                '23S',
+                '23S_comments'
+                ]
+
+    else:
+        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']
+
+    print(SEP.join(header))
+
+    for out in collate_out:
+        print(out.get_record(sep = SEP, comments = ngstar_comments))  
+
+    if args.test:
+        if collate_out[0].st != '4186/231':
+            err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
         else:
-        # Report if starting key motifs present
-            if not porCOUNT:
-                if porKEY:
-                    por = 'no_key'
-            if not tbpbCOUNT:
-                if tbpbKEY:
-                    tbpb = 'no_key'
-            portbpb = str(por) + '-' + str(tbpb)
-        # Print results to screen
-            if portbpb in NGMAST:
-                type = NGMAST[portbpb]
-            else:
-                type = "-"
-            if not args.test:
-                print(( f + SEP + type + SEP + por + SEP + tbpb ))
-            else:
-                print(( 'test.fa' + SEP + type + SEP + por + SEP + tbpb ))
-                if type != '10699':
-                    err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
-                else:
-                    msg('\033[92m... Test successful.\033[0m')
-
-    # Print allele sequences to file
-    if args.printseq:
-        allelesOUT = "".join(args.printseq)
-        with open(allelesOUT, "w") as output:
-            SeqIO.write(alleleSEQS, output, 'fasta')
+            msg('\033[92m... Test successful.\033[0m')
 
 if __name__ == "__main__":
     main()

@@ -1,2 +1,3 @@
 graft ngmaster/db
 graft ngmaster/test
+graft ngmaster/scripts
