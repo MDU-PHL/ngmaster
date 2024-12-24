@@ -5,8 +5,8 @@
 
 # import ngmaster functions
 import ngmaster
-from ngmaster.utils import *
-
+# from ngmaster.utils import * 
+from utils import * # FLAG: import all functions from the utils.py not the compiled `.pyc` file
 #imports
 from argparse import ArgumentParser, RawTextHelpFormatter
 import sys
@@ -170,6 +170,7 @@ def main():
             # INFO Checking number of alleles to catch mlst error
             # Issue #125
             # https://github.com/tseemann/mlst/issues/125
+            
             n_allele = len(rlist[0].split("\t")[3:])
 
             for rec in rlist[1:]: # drop header
@@ -211,17 +212,18 @@ def main():
                 'parC',
                 'parC_comments',
                 '23S',
-                '23S_comments'
+                '23S_comments',
+                'CC'  # Add CC column
                 ]
 
     else:
-        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']
+        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S', 'CC']  # Add CC column
 
     print(SEP.join(header))
 
-    for out in collate_out:
-        print(out.get_record(sep = SEP, comments = ngstar_comments))  
-
+    for out in collate_out: 
+        print(out.get_record(sep = SEP, comments = ngstar_comments))
+    
     if args.test:
         if collate_out[0].st != '4186/231':
             err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
