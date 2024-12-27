@@ -10,6 +10,7 @@ import requests
 import json
 from pkg_resources import resource_filename
 import logging
+import tempfile
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -211,36 +212,158 @@ def load_ngstar_comments(DBpath):
 def make_mlst_db(DBpath, mkblastdbpath):
     '''
     A function to run mlst's mlst-make_blast_db script to create custom ngstar and ngmast databases
-    in the db folder (copy to scripts folder)
+    in the db folder (copy to scripts folder).
+    Temporarily copies pubmlst and blast directories from DBpath to db, creates a temporary backup of db/pubmlst 
+    and db/blast before running the script, and restores the backup after the script runs.
     Has two inputs:
-    DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders
-    mkblastdbpath: path to mlst-make_blast_db script
+    DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders.
+    mkblastdbpath: path to mlst-make_blast_db script.
     '''
+    # Define the default db directory relative to this script
+    default_db_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "db")
+    pubmlst_dir = os.path.join(default_db_dir, "pubmlst")
+    blast_dir = os.path.join(default_db_dir, "blast")
+    temp_backup_dir = tempfile.mkdtemp()
+
     msg("Starting make_mlst_db...")
     msg(f"Base directory: {DBpath}")
+    msg(f"Default db directory: {default_db_dir}")
     msg(f"Script path: {mkblastdbpath}")
 
-    if os.path.exists(mkblastdbpath):
-        cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
-        msg(f"Copying script to: {cpmbdb}")
+    # Validate inputs
+    if not os.path.exists(DBpath):
+        err(f"Provided DBpath does not exist: {DBpath}")
+    if not os.path.isdir(os.path.join(DBpath, "pubmlst")):
+        err(f"pubmlst directory not found in DBpath: {os.path.join(DBpath, 'pubmlst')}")
+    if not os.path.isdir(os.path.join(DBpath, "blast")):
+        err(f"blast directory not found in DBpath: {os.path.join(DBpath, 'blast')}")
+    if not os.path.isfile(mkblastdbpath) or not os.access(mkblastdbpath, os.X_OK):
+        err(f"Provided mkblastdbpath does not exist or is not executable: {mkblastdbpath}")
 
-        try:
-            shutil.copy(mkblastdbpath, cpmbdb)
-            msg("Successfully copied the script.")
-        except Exception as e:
-            err(f"Failed to copy mlst-make_blast_db script: {e}")
+    try:
+        # Step 1: Backup existing db/pubmlst and db/blast directories
+        msg("Backing up original pubmlst and blast directories...")
+        if os.path.exists(pubmlst_dir):
+            shutil.move(pubmlst_dir, os.path.join(temp_backup_dir, "pubmlst"))
+        if os.path.exists(blast_dir):
+            shutil.move(blast_dir, os.path.join(temp_backup_dir, "blast"))
 
-        msg("Running mlst-make_blast_db script...")
+        # Step 2: Copy pubmlst and blast directories from DBpath to db
+        msg("Copying pubmlst and blast directories from DBpath to db...")
+        shutil.copytree(os.path.join(DBpath, "pubmlst"), pubmlst_dir)
+        shutil.copytree(os.path.join(DBpath, "blast"), blast_dir)
 
-        try:
-            subprocess.run(cpmbdb, check=True)
-            msg("Successfully ran mlst-make_blast_db script.")
-        except subprocess.CalledProcessError as e:
-            err(f"Failed to run mlst-make_blast_db script: {e}")
-    else:
-        err(f"Script not found: {mkblastdbpath}")
+        # Step 3: Copy mlst-make_blast_db script
+        if os.path.exists(mkblastdbpath):
+            cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
+            msg(f"Copying script to: {cpmbdb}")
+
+            try:
+                shutil.copy(mkblastdbpath, cpmbdb)
+                msg("Successfully copied the script.")
+            except Exception as e:
+                err(f"Failed to copy mlst-make_blast_db script: {e}")
+
+            # Step 4: Run mlst-make_blast_db script
+            msg("Running mlst-make_blast_db script...")
+            try:
+                subprocess.run(cpmbdb, check=True)
+                msg("Successfully ran mlst-make_blast_db script.")
+            except subprocess.CalledProcessError as e:
+                err(f"Failed to run mlst-make_blast_db script: {e}")
+        else:
+            err(f"Script not found: {mkblastdbpath}")
+
+        # Step 5: Copy updated pubmlst and blast directories back to DBpath
+        msg("Copying updated pubmlst and blast directories back to DBpath...")
+        shutil.rmtree(os.path.join(DBpath, "pubmlst"), ignore_errors=True)
+        shutil.rmtree(os.path.join(DBpath, "blast"), ignore_errors=True)
+        shutil.move(pubmlst_dir, os.path.join(DBpath, "pubmlst"))
+        shutil.move(blast_dir, os.path.join(DBpath, "blast"))
+
+    except Exception as e:
+        err(f"Error during make_mlst_db: {e}")
+    finally:
+        # Step 6: Restore original pubmlst and blast directories from backup
+        msg("Restoring original pubmlst and blast directories...")
+        if os.path.exists(os.path.join(temp_backup_dir, "pubmlst")):
+            shutil.move(os.path.join(temp_backup_dir, "pubmlst"), pubmlst_dir)
+        if os.path.exists(os.path.join(temp_backup_dir, "blast")):
+            shutil.move(os.path.join(temp_backup_dir, "blast"), blast_dir)
+        shutil.rmtree(temp_backup_dir, ignore_errors=True)
 
     msg("Finished make_mlst_db.")
+
+# def make_mlst_db(DBpath, mkblastdbpath):
+#     '''
+#     A function to run mlst's mlst-make_blast_db script to create custom ngstar and ngmast databases
+#     in the db folder (copy to scripts folder)
+#     Has two inputs:
+#     DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders
+#     mkblastdbpath: path to mlst-make_blast_db script
+#     '''
+#     msg("Starting make_mlst_db...")
+#     msg(f"Base directory: {DBpath}")
+#     msg(f"Script path: {mkblastdbpath}")
+
+#     if os.path.exists(mkblastdbpath):
+#         cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
+#         msg(f"Copying script to: {cpmbdb}")
+
+#         try:
+#             shutil.copy(mkblastdbpath, cpmbdb)
+#             msg("Successfully copied the script.")
+#         except Exception as e:
+#             err(f"Failed to copy mlst-make_blast_db script: {e}")
+
+#         msg("Running mlst-make_blast_db script...")
+
+#         try:
+#             subprocess.run(cpmbdb, check=True)
+#             msg("Successfully ran mlst-make_blast_db script.")
+#         except subprocess.CalledProcessError as e:
+#             err(f"Failed to run mlst-make_blast_db script: {e}")
+#     else:
+#         err(f"Script not found: {mkblastdbpath}")
+
+#     msg("Finished make_mlst_db.")
+
+# def make_mlst_db(DBpath, mkblastdbpath):
+#     '''
+#     A function to run mlst's mlst-make_blast_db script to create custom ngstar and ngmast databases
+#     in the db folder (copy to scripts folder).
+#     Has two inputs:
+#     DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders.
+#     mkblastdbpath: path to mlst-make_blast_db script.
+#     '''
+#     msg("Starting make_mlst_db...")
+#     msg(f"Base directory: {DBpath}")
+#     msg(f"Script path: {mkblastdbpath}")
+
+#     if os.path.exists(mkblastdbpath):
+#         # Define the path to copy the script
+#         cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
+#         msg(f"Copying script to: {cpmbdb}")
+
+#         try:
+#             shutil.copy(mkblastdbpath, cpmbdb)
+#             msg("Successfully copied the script.")
+#         except Exception as e:
+#             err(f"Failed to copy mlst-make_blast_db script: {e}")
+
+#         msg("Running mlst-make_blast_db script...")
+
+#         try:
+#             # Pass DBpath explicitly to the script
+#             subprocess.run([cpmbdb, '--datadir', DBpath], check=True)
+#             msg("Successfully ran mlst-make_blast_db script.")
+#         except subprocess.CalledProcessError as e:
+#             err(f"Failed to run mlst-make_blast_db script: {e}")
+#     else:
+#         err(f"Script not found: {mkblastdbpath}")
+
+#     msg("Finished make_mlst_db.")
+
 
 # Match NGSTAR with NGMAST porB sequences
 def match_porb(ngmast_porb, ngstar_porb):
@@ -355,3 +478,18 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
         raise KeyError("Not all files have been successfully processed by mlst (ngstar or ngmast scheme). Cannot collate results from two runs. Exiting.")
         
     return combined_res
+
+# FLAG: for troubleshooting
+# if __name__ == "__main__":
+#     import argparse
+
+#     # Define CLI arguments
+#     parser = argparse.ArgumentParser(description="Run the make_mlst_db function.")
+#     parser.add_argument('--dbpath', required=True, help="Base directory for BLAST and allele databases.")
+#     parser.add_argument('--mkblastdbpath', required=True, help="Path to mlst-make_blast_db script.")
+
+#     # Parse arguments
+#     args = parser.parse_args()
+
+#     # Call the function with provided arguments
+#     make_mlst_db(args.dbpath, args.mkblastdbpath)
