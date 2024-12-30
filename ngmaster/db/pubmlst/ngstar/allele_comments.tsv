@@ -11,14 +11,14 @@ penA	10
 penA	11	
 penA	12	
 penA	13	
-penA	14	mutations present: V316→T; D345→a; F504→L; G545→S Type X mosaic NG STAR penA allele: 10.001 Penicillin MIC: 2
+penA	14	Type X mosaic; N513Y; NG STAR penA allele: 10.001 Penicillin MIC: 2
 penA	15	mutations present: F504→L Type V non-mosaic NG STAR penA allele: 5.003
 penA	16	
-penA	17	mutations present: I312→M: NO; V316→T: NO; D345→a: NO; F504→L: NO; N512→Y: NO; G545→S: NO Type I non-mosaic;  NG STAR penA allele: 1.001
+penA	17	Type I non-mosaic; NG STAR penA allele: 1.001
 penA	18	mutations present: D345→a Wild type; non-mosaic NG STAR penA allele: 100.001
 penA	19	Type I non-mosaic; FA1090 NG STAR penA allele: 1.002
-penA	20	mutations present: mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type XXII non-mosaic NG STAR penA allele: 22.001 Penicillin MIC: 1
-penA	21	mutations present: F504→L YES; P551→S YES Type XII non-mosaic NG STAR penA allele: 12.001 Penicillin MIC: 32
+penA	20	Type XXII non-mosaic NG STAR penA allele: 22.001 Penicillin MIC: 1
+penA	21	Type XII non-mosaic NG STAR penA allele: 12.001 Penicillin MIC: 32
 penA	22	mutations present: I312→M NO; V316→T NO; D345→a YES; F504→L NO; N512→Y NO; G545→S NO Type XV non-mosaic NG STAR penA allele: 15.001 penicillin MIC: 0.032
 penA	23	mutations present: F504→L Type II non-mosaic NG STAR penA allele: 2.002 Penicillin MIC: 64
 penA	24	
@@ -35,7 +35,7 @@ penA	34
 penA	35	
 penA	36	
 penA	37	
-penA	38	
+penA	38	Type 76 Non Mosaic; NG STAR penA allele: 76.006
 penA	39	
 penA	40	
 penA	41	
@@ -46,7 +46,7 @@ penA	45
 penA	46	
 penA	47	
 penA	48	
-penA	49	PBP2 motif XXXVIII
+penA	49	Type 258 Semi Mosaic; NG STAR penA allele: 258.001
 penA	50	
 penA	51	
 penA	52	
@@ -153,12 +153,11 @@ penA	152
 penA	153	
 penA	154	
 penA	155	
-penA	156	
 penA	157	
 penA	158	
 penA	159	
 penA	160	
-penA	161	
+penA	161	Type XXXVIII Mosaic; NG STAR penA allele: 38.002
 penA	162	
 penA	163	
 penA	164	
@@ -468,7 +467,7 @@ penA	467
 penA	468	
 penA	469	
 penA	470	
-penA	471	
+penA	471	penA Type 275 Mosaic; N513Y; NG STAR penA allele: 275.001
 penA	472	
 penA	473	
 penA	474	
@@ -506,7 +505,7 @@ penA	505
 penA	506	
 penA	507	mutations present: F504→L Type II non-mosaic NG STAR penA allele: 2.006 Penicillin MIC: 0
 penA	508	
-penA	509	mutations present: F504→L penA Type 69 Non Mosaic; NG STAR penA allele 69.001
+penA	509	penA Type XVI NonMosaic; A517G; NG STAR penA allele 16.002
 penA	510	
 penA	511	penA Type X Mosaic NG STAR penA allele: 10.002
 penA	512	
@@ -626,7 +625,7 @@ penA	625
 penA	626	
 penA	627	
 penA	628	
-penA	629	
+penA	629	Type 76 Non Mosaic; NG STAR penA allele: 76.005
 penA	630	
 penA	631	
 penA	632	
@@ -665,7 +664,7 @@ penA	664	mutations present: F504→L penA Type 77 Non Mosaic; NG STAR penA allel
 penA	665	mutations present: I312→M NO; V316→T NO; D345→a YES; F504→L YES; N512→Y NO; G545→S NO Type XLV non-mosaic NG STAR penA allele: 45.001 Penicillin MIC: 0.125
 penA	666	mutations present: F504→L penA Type XXII Non Mosaic; NG STAR allele: 22.01
 penA	667	mutations present: F504→L penA Type IX Non Mosaic; NG STAR penA allele: 9.005
-penA	668	mutations present: F504→L; N512→Y NG STAR allele: 78.001 penA Type 78 Semi-Mosaic
+penA	668	penA Type 78 SemiMosaic; N513Y; NG STAR allele: 78.001
 penA	669	NEIS1753
 penA	670	mutations present: D345→a NG STAR allele: 79.001 penA Type 79 NonMosaic
 penA	671	mutations present: F504→L penA Type XII Non Mosaic; NG STAR penA allele: 12.006
@@ -858,7 +857,7 @@ penA	857
 penA	858	
 penA	859	
 penA	860	
-penA	861	
+penA	861	penA Type 275 Mosaic; N513Y; NG STAR penA allele: 275.002
 penA	862	
 penA	863	
 penA	864	
@@ -1317,7 +1316,7 @@ penA	1316
 penA	1317	
 penA	1318	
 penA	1319	
-penA	1320	mutations present: F504→L penA Type 69 Non Mosaic; NG STAR penA allele: 69.002
+penA	1320	penA Type XVI NonMosaic; A517G; NG STAR penA allele: 16.003
 penA	1321	I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type XIV non-mosaic NG STAR penA allele: 14.002 penicillin MIC: 0.5
 penA	1322	Type I non-mosaic NG STAR penA allele: 1.003 penA MIC: 0.063
 penA	1323	mutations present: I312→M NO; V316→T NO; D345→a YES; F504→L NO; N512→Y NO; G545→S NO Type XV Non-Mosaic NG STAR penA allele: 15.002 Penicillin MIC: 0.125
@@ -1508,7 +1507,7 @@ penA	1507
 penA	1508	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type II non-mosaic NG STAR penA allele: 2.003 Penicillin MIC: 0.25
 penA	1509	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type II non-mosaic NG STAR penA allele: 2.004 Penicillin MIC: 0
 penA	1510	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type II non-mosaic NG STAR penA allele: 2.005 Penicillin MIC: 0
-penA	1511	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO   A501V, A517G NG STAR penA allele: 122.001; Penicillin MIC: 4
+penA	1511	PenA Type 122; A501V, A517G; NG STAR penA allele: 122.001;  Penicillin MIC: 4
 penA	1512	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type V Non-Mosaic NG STAR penA allele: 5.001 Penicillin MIC: 0.5
 penA	1513	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type V Non-Mosaic NG STAR penA allele: 5.004 Penicillin MIC: 1
 penA	1514	mutations present: I312→M NO; V316→T NO; D345→a NO; F504→L YES; N512→Y NO; G545→S NO Type XII Non-Mosaic NG STAR penA allele: 12.003 Penicillin MIC: 4
@@ -1589,14 +1588,11 @@ penA	1588
 penA	1589	
 penA	1590	
 penA	1591	
-penA	1592	
 penA	1593	
 penA	1594	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.035
 penA	1595	penA Type III NonMosaic NG STAR penA allele: 3.001
 penA	1596	
-penA	1597	
 penA	1598	
-penA	1599	
 penA	1600	
 penA	1601	
 penA	1602	
@@ -1604,25 +1600,21 @@ penA	1603
 penA	1604	
 penA	1605	
 penA	1606	
-penA	1607	Type 168 Mosaic; A501V, N513Y; NG STAR penA allele: 168.001
+penA	1607	penA Type XXX Mosaic; A501V, N513Y; NG STAR penA allele: 30.001
 penA	1608	penA Type XXXIV Mosaic NG STAR penA allele: 34.011
 penA	1609	
 penA	1610	
-penA	1611	
 penA	1612	penA Type V NonMosaic;  Mutations: A517G and G543S NG STAR penA allele: 5.007
 penA	1613	penA Type: 3; Non-Mosaic; NG STAR penA allele: 3.004
 penA	1614	penA Type 103 NonMosaic; A501→V;  NG STAR penA allele: 103.002
 penA	1615	
 penA	1616	
-penA	1617	
 penA	1618	
-penA	1619	
 penA	1620	
 penA	1621	
 penA	1622	
 penA	1623	
 penA	1624	
-penA	1625	
 penA	1626	
 penA	1627	
 penA	1628	
@@ -1643,7 +1635,6 @@ penA	1642
 penA	1643	
 penA	1644	
 penA	1645	
-penA	1646	
 penA	1647	
 penA	1648	
 penA	1649	
@@ -1674,9 +1665,7 @@ penA	1673
 penA	1674	
 penA	1675	
 penA	1676	
-penA	1677	
 penA	1678	
-penA	1679	
 penA	1680	
 penA	1681	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.037
 penA	1682	Type L Non-Mosaic NG STAR penA allele: 50.002
@@ -1693,12 +1682,10 @@ penA	1692
 penA	1693	
 penA	1694	
 penA	1695	
-penA	1696	
 penA	1697	
 penA	1698	
 penA	1699	
 penA	1700	
-penA	1701	
 penA	1702	
 penA	1703	
 penA	1704	
@@ -1712,21 +1699,16 @@ penA	1711
 penA	1712	
 penA	1713	
 penA	1714	
-penA	1715	
-penA	1716	
 penA	1717	
-penA	1718	
 penA	1719	
 penA	1720	
 penA	1721	
 penA	1722	
-penA	1723	
 penA	1724	
 penA	1725	
 penA	1726	
 penA	1727	
 penA	1728	
-penA	1729	
 penA	1730	
 penA	1731	
 penA	1732	
@@ -1747,7 +1729,6 @@ penA	1746
 penA	1747	
 penA	1748	
 penA	1749	
-penA	1750	
 penA	1751	
 penA	1752	
 penA	1753	
@@ -1756,7 +1737,6 @@ penA	1755
 penA	1756	
 penA	1757	
 penA	1758	
-penA	1759	
 penA	1760	
 penA	1761	
 penA	1762	
@@ -1768,7 +1748,6 @@ penA	1767
 penA	1768	
 penA	1769	
 penA	1770	
-penA	1771	
 penA	1772	
 penA	1773	
 penA	1774	
@@ -1796,7 +1775,6 @@ penA	1795
 penA	1796	
 penA	1797	
 penA	1798	
-penA	1799	
 penA	1800	
 penA	1801	
 penA	1802	
@@ -1806,7 +1784,6 @@ penA	1805
 penA	1806	
 penA	1807	
 penA	1808	
-penA	1809	
 penA	1810	
 penA	1811	
 penA	1812	
@@ -1816,7 +1793,6 @@ penA	1815
 penA	1816	
 penA	1817	
 penA	1818	
-penA	1819	
 penA	1820	penA Type 106 NonMosaic NG STAR penA allele: 106.001
 penA	1821	penA Type 149 Mosaic; A501V NG STAR penA allele: 149.001
 penA	1822	penA Type 150 SemiMosaic; A517G G543S NG STAR penA allele: 150.001
@@ -1828,7 +1804,6 @@ penA	1827
 penA	1828	
 penA	1829	
 penA	1830	
-penA	1831	
 penA	1832	penA Type X Mosaic;  Mutations: N513Y NG STAR penA allele: 10.008
 penA	1833	penA Type 152 Mosaic;  mutations: N513Y NG STAR penA allele: 152.001
 penA	1834	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y NO; G545→S NO penA Type 101 Mosaic; A501→V;  NG STAR penA allele: 101.001
@@ -1846,13 +1821,7 @@ penA	1845
 penA	1846	
 penA	1847	
 penA	1848	
-penA	1849	
-penA	1850	
 penA	1851	
-penA	1852	
-penA	1853	
-penA	1854	
-penA	1855	
 penA	1856	
 penA	1857	
 penA	1858	
@@ -1861,7 +1830,6 @@ penA	1860	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.039
 penA	1861	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.040
 penA	1862	
 penA	1863	
-penA	1864	
 penA	1865	
 penA	1866	
 penA	1867	
@@ -1878,7 +1846,6 @@ penA	1877
 penA	1878	
 penA	1879	
 penA	1880	
-penA	1881	
 penA	1882	
 penA	1883	
 penA	1884	
@@ -1910,7 +1877,7 @@ penA	1909	penA Type: 103; Non-Mosaic; NG STAR penA allele: 103.001
 penA	1910	Type XII non-mosaic NG STAR penA allele: 12.010
 penA	1911	Type 155 Non Mosaic; A501V A517G; NG STAR penA allele: 155.001
 penA	1912	penA Type: 86; Non-Mosaic; NG STAR penA allele: 86.001
-penA	1913	
+penA	1913	Type 156 Non Mosaic; A311V A517G; NG STAR penA allele: 156.001
 penA	1914	Type 157 Non Mosaic; A517G; NG STAR penA allele: 157.001
 penA	1915	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.043
 penA	1916	Type 158 Non Mosaic; A501V, A517G; NG STAR penA allele: 158.001
@@ -1919,18 +1886,18 @@ penA	1918	Type XIV non-mosaic NG STAR penA allele: 14.013; A517G
 penA	1919	Type 159 Non Mosaic; A517G; NG STAR penA allele: 159.001
 penA	1920	Type 160 Non Mosaic; A517G; NG STAR penA allele: 160.001
 penA	1921	penA Type IX Non Mosaic; NG STAR penA allele: 9.007; A517G
-penA	1922	Type 69 Non Mosaic; A517G; NG STAR penA allele 69.004
+penA	1922	penA Type XVI NonMosaic; A517G; NG STAR penA allele 16.005
 penA	1923	
 penA	1924	
 penA	1925	penA Type 176 NonMosaic NG STAR penA allele: 176.001
-penA	1926	
+penA	1926	penA Type 44 NonMosaic; A501T, A517G; NG STAR penA allele: 44.008
 penA	1927	penA Type: 2; Non-Mosaic; NG STAR penA allele: 2.017
 penA	1928	penA Type: 1; Non-Mosaic; NG STAR penA allele: 1.008
 penA	1929	penA Type: 22; Non-Mosaic; NG STAR penA allele: 22.012
 penA	1930	penA Type: 22; Non-Mosaic; NG STAR penA allele: 22.011
 penA	1931	penA Type: 2; Non-Mosaic; NG STAR penA allele: 2.015
 penA	1932	penA Type: 34; Mosaic; NG STAR penA allele: 34.013
-penA	1933	penA Type: 69; Non-Mosaic; NG STAR penA allele: 69.003
+penA	1933	penA Type XVI NonMosaic; A517G; NG STAR penA allele: 16.004
 penA	1934	penA Type: 90; Non-Mosaic; NG STAR penA allele: 90.001
 penA	1935	penA Type: 2; Non-Mosaic; NG STAR penA allele: 2.018
 penA	1936	penA Type: 12; Non-Mosaic; NG STAR penA allele: 12.007
@@ -1942,19 +1909,15 @@ penA	1941
 penA	1942	
 penA	1943	
 penA	1944	
-penA	1945	
-penA	1946	
 penA	1947	
 penA	1948	
 penA	1949	
-penA	1950	
 penA	1951	
 penA	1952	
 penA	1953	
 penA	1954	
 penA	1955	
 penA	1956	
-penA	1957	
 penA	1958	
 penA	1959	
 penA	1960	
@@ -2036,11 +1999,9 @@ penA	2035
 penA	2036	
 penA	2037	
 penA	2038	
-penA	2039	
 penA	2040	
 penA	2041	
 penA	2042	
-penA	2043	
 penA	2044	
 penA	2045	
 penA	2046	
@@ -2054,11 +2015,9 @@ penA	2053
 penA	2054	
 penA	2055	
 penA	2056	
-penA	2057	
 penA	2058	
 penA	2059	
 penA	2060	
-penA	2061	
 penA	2062	
 penA	2063	
 penA	2064	
@@ -2097,7 +2056,6 @@ penA	2096
 penA	2097	
 penA	2098	
 penA	2099	
-penA	2100	
 penA	2101	
 penA	2102	
 penA	2103	
@@ -2123,7 +2081,6 @@ penA	2122
 penA	2123	
 penA	2124	
 penA	2125	
-penA	2126	
 penA	2127	
 penA	2128	
 penA	2129	
@@ -2132,44 +2089,33 @@ penA	2131
 penA	2132	
 penA	2133	
 penA	2134	
-penA	2135	
 penA	2136	
-penA	2137	
 penA	2138	
 penA	2139	
 penA	2140	
 penA	2141	
-penA	2142	
 penA	2143	
-penA	2144	
 penA	2145	
 penA	2146	
-penA	2147	
 penA	2148	
 penA	2149	
 penA	2150	
 penA	2151	
 penA	2152	
-penA	2153	
-penA	2154	
 penA	2155	
 penA	2156	
-penA	2157	
 penA	2158	
 penA	2159	
 penA	2160	
 penA	2161	
-penA	2162	
 penA	2163	
-penA	2164	
-penA	2165	
 penA	2166	
 penA	2167	
 penA	2168	
 penA	2169	
 penA	2170	
 penA	2171	
-penA	2172	Type 163 Non Mosaic; A517G, G543S; NG STAR penA allele: 163.001
+penA	2172	penA Type 163 NonMosaic; A517G; G543S; NG STAR penA allele: 163.001
 penA	2173	
 penA	2174	
 penA	2175	
@@ -2181,7 +2127,6 @@ penA	2180
 penA	2181	
 penA	2182	
 penA	2183	
-penA	2184	
 penA	2185	
 penA	2186	
 penA	2187	
@@ -2224,23 +2169,18 @@ penA	2223
 penA	2224	
 penA	2225	
 penA	2226	
-penA	2227	
 penA	2228	
 penA	2229	
 penA	2230	
 penA	2231	
-penA	2232	
 penA	2233	
-penA	2234	
 penA	2235	
 penA	2236	
 penA	2237	
 penA	2238	
-penA	2239	
 penA	2240	
 penA	2241	
 penA	2242	
-penA	2243	
 penA	2244	
 penA	2245	Type 164 Semi Mosaic; N513Y; NG STAR penA allele: 164.001
 penA	2246	penA Type: 2; Non-Mosaic; NG STAR penA allele: 2.022
@@ -2250,7 +2190,6 @@ penA	2249	Type 166 Mosaic; N513Y; NG STAR penA allele: 166.001
 penA	2250	Type 167 Semi Mosaic; N513Y; NG STAR penA allele: 167.001
 penA	2251	
 penA	2252	
-penA	2253	
 penA	2254	
 penA	2255	
 penA	2256	
@@ -2284,10 +2223,8 @@ penA	2283
 penA	2284	
 penA	2285	
 penA	2286	
-penA	2287	
 penA	2288	
 penA	2289	
-penA	2290	
 penA	2291	
 penA	2292	
 penA	2293	
@@ -2297,15 +2234,11 @@ penA	2296
 penA	2297	
 penA	2298	
 penA	2299	
-penA	2300	
 penA	2301	
 penA	2302	
-penA	2303	
 penA	2304	
-penA	2305	
-penA	2306	
 penA	2307	
-penA	2308	
+penA	2308	Type XXXIV mosaic N513Y; NG STAR penA allele: 34.035
 penA	2309	
 penA	2310	
 penA	2311	
@@ -2314,21 +2247,16 @@ penA	2313
 penA	2314	
 penA	2315	
 penA	2316	
-penA	2317	
 penA	2318	
-penA	2319	
 penA	2320	
-penA	2321	
 penA	2322	
 penA	2323	
 penA	2324	
 penA	2325	
-penA	2326	
 penA	2327	
 penA	2328	
 penA	2329	
 penA	2330	
-penA	2331	
 penA	2332	
 penA	2333	
 penA	2334	
@@ -2345,7 +2273,6 @@ penA	2344
 penA	2345	
 penA	2346	
 penA	2347	
-penA	2348	
 penA	2349	
 penA	2350	
 penA	2351	
@@ -2357,15 +2284,14 @@ penA	2356
 penA	2357	
 penA	2358	
 penA	2359	
-penA	2360	
 penA	2361	penA Type XXII NonMosaic; A517G NG STAR penA allele: 22.014
 penA	2362	penA Type XIV NonMosaic; A517G NG STAR penA allele: 14.014
 penA	2363	
 penA	2364	I312→M NO; V316→T NO; D345→a NO; A501→T YES; F504→L YES; N512→Y NO; G545→S NO; P551→S/L YES Type XLIV non-mosaic
-penA	2365	mutations present: F504→L Type II Non-mosaic
+penA	2365	penA type II nonmosaic; A517G; NG STAR penA allele: 2.080
 penA	2366	penA Type 109 NonMosaic; A501V, A517G NG STAR penA allele: 109.001
-penA	2367	Type II NonMosaic A517G
-penA	2368	mutations present: F504→L Type II non-mosaic
+penA	2367	Type IX NonMosaic; A517G; NG STAR penA allele: 9.013
+penA	2368	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.081
 penA	2369	penA Type 95 NonMosaic NG STAR allele 95.001
 penA	2370	penA Type 96 NonMosaic NG STAR 96.001
 penA	2371	NG STAR allele 97.001  NonMosaic
@@ -2387,8 +2313,8 @@ penA	2386	Type 104 Non Mosaic; A501T, A517G, G543S; NG STAR penA allele: 104.001
 penA	2387	Type X mosaic NG STAR penA allele: 10.009 N513Y
 penA	2388	penA Type: 1; Non-Mosaic; NG STAR penA allele: 1.013
 penA	2389	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.048
-penA	2390	
-penA	2391	penA Type V Nonmosaic; A517G, G543S
+penA	2390	penA Type XXII NonMosaic; A517G; NG STAR penA allele: 22.022
+penA	2391	penA Type V Nonmosaic; A517G, G543S; NG STAR penA allele: 5.022
 penA	2392	Type 230 Non Mosaic; NG STAR penA allele: 230.001
 penA	2393	penA Type II NonMosaic; A517G NG STAR penA allele 2.023
 penA	2394	Type XIV non-mosaic NG STAR penA allele: 14.018; A517G
@@ -2400,7 +2326,7 @@ penA	2399	Type XIV non-mosaic NG STAR penA allele: 14.017; A517G
 penA	2400	Type 190 Non Mosaic; A517G; NG STAR penA allele: 190.001
 penA	2401	Type 191 Non Mosaic; A517G; NG STAR penA allele: 191.001
 penA	2402	penA Type IX Non Mosaic; NG STAR penA allele: 9.010
-penA	2403	
+penA	2403	penA Type IV NonMosaic; A517G, G543S; NG STAR penA allele: 4.002
 penA	2404	
 penA	2405	penA Type I Non Mosaic; NG STAR penA allele: 1.022
 penA	2406	Type V Non Mosaic; A517G, G543S NG STAR penA allele: 5.020
@@ -2412,22 +2338,16 @@ penA	2411
 penA	2412	
 penA	2413	
 penA	2414	
-penA	2415	
 penA	2416	
-penA	2417	
 penA	2418	
 penA	2419	
 penA	2420	
-penA	2421	
-penA	2422	
-penA	2423	
 penA	2424	
 penA	2425	
 penA	2426	
 penA	2427	
 penA	2428	
 penA	2429	
-penA	2430	
 penA	2431	
 penA	2432	
 penA	2433	
@@ -2453,18 +2373,13 @@ penA	2452
 penA	2453	
 penA	2454	
 penA	2455	
-penA	2456	
 penA	2457	
 penA	2458	
 penA	2459	
 penA	2460	
-penA	2461	
 penA	2462	
-penA	2463	
 penA	2464	
 penA	2465	
-penA	2466	
-penA	2467	
 penA	2468	
 penA	2469	
 penA	2470	
@@ -2490,15 +2405,12 @@ penA	2489
 penA	2490	
 penA	2491	
 penA	2492	
-penA	2493	
 penA	2494	
 penA	2495	
 penA	2496	
 penA	2497	
 penA	2498	
-penA	2499	
 penA	2500	
-penA	2501	
 penA	2502	
 penA	2503	
 penA	2504	
@@ -2509,7 +2421,6 @@ penA	2508
 penA	2509	
 penA	2510	
 penA	2511	
-penA	2512	
 penA	2513	
 penA	2514	
 penA	2515	
@@ -2536,38 +2447,29 @@ penA	2535
 penA	2536	
 penA	2537	
 penA	2538	Type XIII non-mosaic NG STAR penA allele: 13.010; A501V, A517G
-penA	2539	
 penA	2540	
 penA	2541	
 penA	2542	
 penA	2543	
 penA	2544	
 penA	2545	Type X Mosaic; N513Y; NG STAR penA allele: 10.013
-penA	2546	
+penA	2546	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.042
 penA	2547	
-penA	2548	
-penA	2549	
-penA	2550	
 penA	2551	
 penA	2552	
 penA	2553	
 penA	2554	
-penA	2555	
 penA	2556	Type 112 Semi Mosaic; N513Y; NG STAR penA allele: 112.001
 penA	2557	Type XVI non-mosaic NG STAR penA allele: 16.001, A517G
 penA	2558	Type 180 Mosaic; N513Y; NG STAR penA allele: 180.001
 penA	2559	Type XIX non-mosaic NG STAR penA allele: 19.005
 penA	2560	penA Type III NonMosaic NG STAR penA allele: 3.002
 penA	2561	Type 113 Semi Mosaic; N513Y; NG STAR penA allele: 113.001
-penA	2562	
 penA	2563	Type XIX non-mosaic NG STAR penA allele: 19.014
 penA	2564	
-penA	2565	
-penA	2566	
 penA	2567	
 penA	2568	Type XLV non-mosaic NG STAR penA allele: 45.003
 penA	2569	Type 76 Non Mosaic; NG STAR penA allele: 76.002
-penA	2570	Type 199 Non Mosaic; A517G; NG STAR penA allele: 199.001
 penA	2571	
 penA	2572	
 penA	2573	
@@ -2595,9 +2497,8 @@ penA	2594
 penA	2595	
 penA	2596	
 penA	2597	
-penA	2598	
 penA	2599	
-penA	2600	
+penA	2600	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.082
 penA	2601	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.056
 penA	2602	penA Type II NonMosaic; A517G, NG STAR penA allele: 2.046
 penA	2603	penA Type IX Non Mosaic; NG STAR penA allele: 9.011
@@ -2606,12 +2507,9 @@ penA	2605
 penA	2606	
 penA	2607	
 penA	2608	Type XXXIV mosaic NG STAR penA allele: 34.025
-penA	2609	
+penA	2609	penA Type XXII NonMosaic; A517G; NG STAR penA allele: 22.023
 penA	2610	
-penA	2611	
 penA	2612	
-penA	2613	
-penA	2614	
 penA	2615	
 penA	2616	
 penA	2617	
@@ -2675,7 +2573,7 @@ penA	2674	Type V Non-Mosaic NG STAR penA allele: 5.011
 penA	2675	
 penA	2676	
 penA	2677	
-penA	2678	
+penA	2678	penA Type 299 SemiMosaic; A517G; NG STAR penA allele: 299.001
 penA	2679	
 penA	2680	
 penA	2681	
@@ -2693,7 +2591,7 @@ penA	2692
 penA	2693	
 penA	2694	
 penA	2695	
-penA	2696	
+penA	2696	penA Type 78 SemiMosaic; A501T, N513Y; NG STAR penA allele: 78.003
 penA	2697	
 penA	2698	
 penA	2699	
@@ -2766,7 +2664,6 @@ penA	2765
 penA	2766	
 penA	2767	
 penA	2768	
-penA	2769	
 penA	2770	
 penA	2771	
 penA	2772	
@@ -2785,7 +2682,6 @@ penA	2784
 penA	2785	
 penA	2786	
 penA	2787	
-penA	2788	
 penA	2789	
 penA	2790	
 penA	2791	
@@ -2836,7 +2732,7 @@ penA	2835
 penA	2836	
 penA	2837	Type 232 Mosaic; A311V, N513Y; NG STAR penA allele: 232.001
 penA	2838	
-penA	2839	Type 213 Non Mosaic; A501P, A517G; NG STAR penA allele: 213.001
+penA	2839	Type 213 Non Mosaic; A501V, A517G; NG STAR penA allele: 213.001
 penA	2840	
 penA	2841	
 penA	2842	
@@ -2966,7 +2862,6 @@ penA	2965
 penA	2966	
 penA	2967	
 penA	2968	
-penA	2969	
 penA	2970	
 penA	2971	
 penA	2972	
@@ -3002,7 +2897,7 @@ penA	3001
 penA	3002	
 penA	3003	Type 228 Non Mosaic; A517G; NG STAR penA allele: 228.001
 penA	3004	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.061
-penA	3005	
+penA	3005	penA Type XIV NonMosaic; A517G; NG STAR penA allele: 14.029
 penA	3006	Type XIV non-mosaic NG STAR penA allele: 14.023; A517G
 penA	3007	
 penA	3008	
@@ -3010,6 +2905,2265 @@ penA	3009
 penA	3010	
 penA	3011	
 penA	3012	
+penA	3013	
+penA	3014	
+penA	3015	
+penA	3016	
+penA	3017	
+penA	3018	
+penA	3019	
+penA	3020	
+penA	3021	
+penA	3022	
+penA	3023	
+penA	3024	
+penA	3025	
+penA	3026	
+penA	3027	mutations present: A517→G penA Type XIX Non-Mosaic NG STAR penA allele:19.018
+penA	3028	
+penA	3029	
+penA	3030	
+penA	3031	
+penA	3032	
+penA	3033	
+penA	3034	
+penA	3035	
+penA	3036	
+penA	3037	
+penA	3038	
+penA	3039	
+penA	3040	
+penA	3041	
+penA	3042	
+penA	3043	
+penA	3044	
+penA	3045	
+penA	3046	
+penA	3047	penA Type I NonMosaic; NG STAR penA allele: 1.025
+penA	3048	penA Type XXII NonMosaic; A517G; NG STAR penA allele: 22.024
+penA	3049	
+penA	3050	
+penA	3051	Type II non-mosaic NG STAR penA allele: 2.045; A517G
+penA	3052	
+penA	3053	
+penA	3054	
+penA	3055	
+penA	3056	
+penA	3057	
+penA	3058	
+penA	3059	
+penA	3060	
+penA	3061	
+penA	3062	
+penA	3063	Type XIX non-mosaic NG STAR penA allele: 19.016, A517G
+penA	3064	Type I non-mosaic; NG STAR penA allele: 1.014
+penA	3065	Type I non-mosaic; NG STAR penA allele: 1.015
+penA	3066	Type 80 Semi Mosaic; NG STAR penA allele: 80.002
+penA	3067	Type 183 Non Mosaic; NG STAR penA allele: 183.001
+penA	3068	Type 185 Non Mosaic; NG STAR penA allele: 185.001
+penA	3069	Type XXII Non Mosaic; NG STAR penA allele: 22.015; A517G
+penA	3070	Type XV non-mosaic NG STAR penA allele: 15.010
+penA	3071	Type XIX non-mosaic NG STAR penA allele: 19.015, A517G
+penA	3072	Type I non-mosaic; NG STAR penA allele: 1.018
+penA	3073	Type II non-mosaic NG STAR penA allele: 2.026; A517G
+penA	3074	Type I non-mosaic; NG STAR penA allele: 1.017
+penA	3075	Type 120 Non Mosaic; A501V, A517G; NG STAR penA allele: 120.001
+penA	3076	Type 188 Mosaic; N513Y; NG STAR penA allele: 188.001
+penA	3077	Type XXXIV mosaic NG STAR penA allele: 34.026
+penA	3078	Type II non-mosaic NG STAR penA allele: 2.049; A517G
+penA	3079	Type XIII non-mosaic NG STAR penA allele: 13.007; A501V, A517G
+penA	3080	Type II non-mosaic NG STAR penA allele: 2.050; A517G
+penA	3081	Type XIV non-mosaic NG STAR penA allele: 14.016; A517G
+penA	3082	Type 171 Mosaic; N513Y; NG STAR penA allele: 171.001
+penA	3083	Type XXII Non Mosaic; NG STAR penA allele: 22.016; A517G
+penA	3084	Type XV non-mosaic NG STAR penA allele: 15.009
+penA	3085	Type 186 Non Mosaic; NG STAR penA allele: 186.001
+penA	3086	Type I non-mosaic; NG STAR penA allele: 1.016
+penA	3087	Type XXXIV mosaic NG STAR penA allele: 34.029
+penA	3088	
+penA	3089	Type I non-mosaic; NG STAR penA allele: 1.019
+penA	3090	Type II non-mosaic NG STAR penA allele: 2.021; A517G
+penA	3091	Type II non-mosaic NG STAR penA allele: 2.025; A517G
+penA	3092	Type II non-mosaic NG STAR penA allele: 2.027; A517G
+penA	3093	Type II non-mosaic NG STAR penA allele: 2.028; A517G
+penA	3094	Type II non-mosaic NG STAR penA allele: 2.029; A517G
+penA	3095	Type II non-mosaic NG STAR penA allele: 2.032; A517G
+penA	3096	Type II non-mosaic NG STAR penA allele: 2.057; A517G
+penA	3097	Type II non-mosaic NG STAR penA allele: 2.058; A517G
+penA	3098	Type II non-mosaic NG STAR penA allele: 2.059; A517G
+penA	3099	Type II non-mosaic NG STAR penA allele: 2.060; A517G
+penA	3100	Type II non-mosaic NG STAR penA allele: 2.062; A517G
+penA	3101	Type II non-mosaic NG STAR penA allele: 2.066; A517G
+penA	3102	Type II non-mosaic NG STAR penA allele: 2.067; A517G
+penA	3103	Type V non-mosaic NG STAR penA allele: 5.005; A517G, G543S
+penA	3104	Type V non-mosaic NG STAR penA allele: 5.006; A517G, G543S
+penA	3105	Type V non-mosaic NG STAR penA allele: 5.012; A517G, G543S
+penA	3106	Type V non-mosaic NG STAR penA allele: 5.013; A517G, G543S
+penA	3107	Type V non-mosaic NG STAR penA allele: 5.015; A517G, G543S
+penA	3108	Type V non-mosaic NG STAR penA allele: 5.016; A517G, G543S
+penA	3109	Type V non-mosaic NG STAR penA allele: 5.017; A517G, G543S
+penA	3110	Type V non-mosaic NG STAR penA allele: 5.019; A517G, G543S
+penA	3111	Type V non-mosaic NG STAR penA allele: 5.021; A517G, G543S
+penA	3112	Type X mosaic NG STAR penA allele: 10.007; N513Y
+penA	3113	Type X mosaic NG STAR penA allele: 10.012; N513Y
+penA	3114	Type X mosaic NG STAR penA allele: 10.014; N513Y
+penA	3115	Type XIII non-mosaic NG STAR penA allele: 13.004; A501V, A517G
+penA	3116	Type XIII non-mosaic NG STAR penA allele: 13.008; A501V, A517G
+penA	3117	Type XIII non-mosaic NG STAR penA allele: 13.009; A501V, A517G
+penA	3118	Type XIII non-mosaic NG STAR penA allele: 13.011; A501V, A517G
+penA	3119	Type XIV non-mosaic NG STAR penA allele: 14.007; A517G
+penA	3120	Type XIV non-mosaic NG STAR penA allele: 14.008; A517G
+penA	3121	Type XIV non-mosaic NG STAR penA allele: 14.010; A517G
+penA	3122	Type XIV non-mosaic NG STAR penA allele: 14.011; A517G
+penA	3123	Type XIV non-mosaic NG STAR penA allele: 14.015; A517G
+penA	3124	Type XIV non-mosaic NG STAR penA allele: 14.020; A517G
+penA	3125	Type XIV non-mosaic NG STAR penA allele: 14.021; A517G
+penA	3126	Type XIV non-mosaic NG STAR penA allele: 14.022; A517G
+penA	3127	Type XIV non-mosaic NG STAR penA allele: 14.024; A517G
+penA	3128	Type XV non-mosaic NG STAR penA allele: 15.007
+penA	3129	Type XV non-mosaic NG STAR penA allele: 15.008
+penA	3130	Type XV non-mosaic NG STAR penA allele: 15.011
+penA	3131	Type XVIII non mosaic NG STAR penA allele: 18.002, A501T A517G G543S
+penA	3132	Type XVIII non mosaic NG STAR penA allele: 18.003, A501T A517G G543S
+penA	3133	Type XVIII non mosaic NG STAR penA allele: 18.005, A501T A517G G543S
+penA	3134	Type XIX non-mosaic NG STAR penA allele: 19.003; A517G
+penA	3135	ype XIX non-mosaic NG STAR penA allele: 19.007, A517G
+penA	3136	ype XIX non-mosaic NG STAR penA allele: 19.008, A517G
+penA	3137	ype XIX non-mosaic NG STAR penA allele: 19.009, A517G
+penA	3138	ype XIX non-mosaic NG STAR penA allele: 19.010, A517G
+penA	3139	ype XIX non-mosaic NG STAR penA allele: 19.013, A517G
+penA	3140	Type XIX non-mosaic NG STAR penA allele: 19.020, A517G
+penA	3141	Type XXI non-mosaic NG STAR penA allele: 21.003;  A501V, A517G
+penA	3142	Type XXII Non Mosaic; NG STAR penA allele: 22.013; A517G
+penA	3143	Type XXII Non Mosaic; NG STAR penA allele: 22.017; A517G
+penA	3144	pe XXVII Mosaic NG STAR penA allele: 27.002, N513Y
+penA	3145	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES  Type XXXIV mosaic NG STAR penA allele: 34.012
+penA	3146	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES Type XXXIV mosaic  NG STAR penA allele: 34.014
+penA	3147	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES Type XXXIV mosaic NG STAR penA allele: 34.016
+penA	3148	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES Type XXXIV mosaic NG STAR penA allele: 34.017
+penA	3149	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES  Type XXXIV mosaic NG STAR penA allele: 34.020
+penA	3150	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES Type XXXIV mosaic NG STAR penA allele: 34.021
+penA	3151	Type XXXIV mosaic NG STAR penA allele: 34.027
+penA	3152	Type XXXIV mosaic NG STAR penA allele: 34.028
+penA	3153	Type 43 Non Mosaic; A501V, A517G; NG STAR penA allele 43.007
+penA	3154	penA Type: 44; Non-Mosaic; NG STAR penA allele: 44.004
+penA	3155	Type 67 Mosaic; N513Y; NG STAR penA allele: 67.003
+penA	3156	Type 67 Mosaic; N513Y; NG STAR penA allele: 67.004
+penA	3157	penA Type XVI NonMosaic; A517G; NG STAR penA allele 16.006
+penA	3158	Type 72 Mosaic; NG STAR penA allele: 72.002
+penA	3159	Type 78 Semi-Mosaic; NG STAR allele: 78.002
+penA	3160	Type 84 non-mosaic; NG STAR penA allele: 84.001
+penA	3161	Type 85 Mosaic; A501V, N513Y; NG STAR penA allele: 85.001
+penA	3162	NG STAR penA allele: 87.002;  NonMosaic; A501T, A517G
+penA	3163	Type 91 SemiMosaic; N513Y; NG STAR allele: 91.001
+penA	3164	Type 93 SemiMosaic NG STAR penA allele: 93.002
+penA	3165	Type 94 Non Mosaic NG STAR allele: 94.002
+penA	3166	ild Type Non Mosaic; NG STAR penA allele 100.016
+penA	3167	Wild Type Non Mosaic; NG STAR penA allele 100.017
+penA	3168	Type 103 Non Mosaic; A501V A517G; NG STAR penA allele: 103.006
+penA	3169	Type 107 Non Mosaic; A501T, A517G, G543S NG STAR allele: 107.001
+penA	3170	Type 108 Mosaic; N513Y; Ng STAR penA allele: 108.001
+penA	3171	Type 110 Mosaic; N513Y; Ng STAR penA allele: 110.001
+penA	3172	Type 111 Mosaic; N513Y; NG STAR penA allele: 111.001
+penA	3173	Type 114 Semi Mosaic; N513Y; NG STAR penA allele: 114.001
+penA	3174	Type 115, mosaic; NG STAR penA allele: 115.001
+penA	3175	Type 116; semi mosaic; NG STAR penA allele: 116.001
+penA	3176	Type 119, non mosaic; NG STAR penA allele: 119.001
+penA	3177	Type 121 Mosaic; A311V A517G; NG STAR penA allele: 121.001
+penA	3178	Type 121 Mosaic; A311V, A517G; NG STAR penA allele: 121.002
+penA	3179	Type 124 Mosaic; A311V, N513Y; NG STAR penA allele: 124.001
+penA	3180	Type 125 Non Mosaic; A501T, A517G, G543S; NG STAR penA allele: 125.001
+penA	3181	Type 126 Non Mosaic; A501T, A517G, G543S; NG STAR penA allele: 126.001
+penA	3182	Type 127 Non Mosaic; N513Y; NG STAR penA allele: 127.001
+penA	3183	Type 128 Semi Mosaic; A501V, A517G; NG STAR penA allele: 128.001
+penA	3184	Type 129 Mosaic; A517G; NG STAR penA allele: 129.001
+penA	3185	Type 130 Semi Mosaic; N513Y; NG STAR penA allele: 130.001
+penA	3186	Type 133 Mosaic; N513Y; NG STAR penA allele: 133.001
+penA	3187	Type 134 Mosaic; A517G; NG STAR penA allele: 134.001
+penA	3188	Type 135 Semi Mosaic; N513Y; NG STAR penA allele: 135.001
+penA	3189	Type 136 Mosaic; N513Y; NG STAR penA allele: 136.001
+penA	3190	Type 141 Non Mosaic; A501V, A517G; NG STAR penA allele: 141.001
+penA	3191	Type 142 Non Mosaic; A501V, A517G; NG STAR penA allele: 142.001
+penA	3192	Type 144 Non Mosaic; A501V, A517G; NG STAR penA allele: 144.001
+penA	3193	Type 145 Mosaic; N513Y; NG STAR penA allele: 145.001
+penA	3194	Type 147 Non Mosaic; A501V, A517G; NG STAR penA allele: 147.001
+penA	3195	Type 166 Mosaic; N513Y; NG STAR penA allele: 166.002
+penA	3196	penA Type XXX Mosaic; A501V, N513Y; NG STAR penA allele: 30.002
+penA	3197	Type 170 Non Mosaic; NG STAR penA allele: 170.001
+penA	3198	Type 174 Non Mosaic; A517G; NG STAR penA allele: 174.001
+penA	3199	Type 175 Non Mosaic; A517G; NG STAR penA allele: 175.001
+penA	3200	Type 178 Non Mosaic; N513Y; NG STAR penA allele: 178.001
+penA	3201	Type 189 Non Mosaic; A517G, N543S; NG STAR penA allele: 189.001
+penA	3202	penA Type 124 Mosaic; A311V, N513Y; NG STAR penA allele: 124.003
+penA	3203	Type 196 Mosaic; N513Y; NG STAR penA allele: 196.001
+penA	3204	Type 198 Mosaic; N513Y; NG STAR penA allele: 198.002
+penA	3205	Type 200 Non Mosaic; A517G; NG STAR penA allele: 200.001
+penA	3206	Type 201 Non Mosaic; A517G; NG STAR penA allele: 201.001
+penA	3207	Type 202 Non Mosaic; A311V,A517G; NG STAR penA allele: 202.001
+penA	3208	Type 204 Non Mosaic; A517G; NG STAR penA allele: 204.001
+penA	3209	Type 205 Mosaic; N513Y; NG STAR penA allele: 205.001
+penA	3210	penA Type XXXI Mosaic; N513Y; NG STAR penA allele: 31.001
+penA	3211	Type 207 Mosaic; A501P, A517G; NG STAR penA allele: 207.001
+penA	3212	Type 208 Non Mosaic; A517G; NG STAR penA allele: 208.001
+penA	3213	Type 209 Non Mosaic; A501P, A517G; NG STAR penA allele: 209.001
+penA	3214	Type 210 Non Mosaic; A517G; NG STAR penA allele: 210.001
+penA	3215	Type 211 Mosaic; N513Y; NG STAR penA allele: 211.001
+penA	3216	Type 212 Mosaic; N513Y; NG STAR penA allele: 212.001
+penA	3217	Type 214 Mosaic; A311V, N513Y; NG STAR penA allele: 214.001
+penA	3218	Type 216 Semi Mosaic; N513Y; NG STAR penA allele: 216.001
+penA	3219	Type 217 Mosaic; N513Y; NG STAR penA allele: 217.001
+penA	3220	Type 218 Non Mosaic: A517G; NG STAR penA allele: 218.001
+penA	3221	Type 218 Non Mosaic: A517G; NG STAR penA allele: 218.002
+penA	3222	Type 219 Mosaic; N513Y; NG STAR penA allele: 219.001
+penA	3223	Type 221 Non Mosaic: A517G; NG STAR penA allele: 221.001
+penA	3224	Type 222 Non Mosaic; A517G; NG STAR penA allele: 222.001
+penA	3225	Type 223 Mosaic; N513Y; NG STAR penA allele: 223.001
+penA	3226	Type 224 Non Mosaic; A517G; NG STAR penA allele: 224.001
+penA	3227	Type 225 Non Mosaic; N513Y; NG STAR penA allele: 225.001
+penA	3228	Type 226 Non Mosaic; A517G, G543S; NG STAR penA allele: 226.001
+penA	3229	Type 229 Non Mosaic; A517G; NG STAR penA allele: 229.001
+penA	3230	Type 231 Non Mosaic; A501V, A517G; NG STAR penA allele: 231.001
+penA	3231	penA Type 234 NonMosaic; A517G; NG STAR penA allele: 234.001
+penA	3232	penA Type 235 NonMosaic; A517G; NG STAR penA allele: 235.001
+penA	3233	Type 2 Non Mosaic; A517G; NG STAR penA allele: 2.078
+penA	3234	Type 237 Mosaic; A311V, N513Y; NG STAR penA allele: 237.001
+penA	3235	Type 238 Non Mosaic; A517G; NG STAR penA allele: 238.001
+penA	3236	Type 239 Non Mosaic; A501V, A517G; NG STAR penA allele: 239.001
+penA	3237	Type 240 Semi Mosaic; N513Y; NG STAR penA allele: 240.001
+penA	3238	Type 241 Mosaic; A501V; NG STAR penA allele: 241.001
+penA	3239	Type 242 Non Mosaic; N513Y; NG STAR penA allele: 242.001
+penA	3240	Type 243 Semi Mosaic; N513Y; NG STAR penA allele: 243.001
+penA	3241	Type 245 Non Mosaic; A501V, A517G; NG STAR penA allele: 245.001
+penA	3242	penA Type XXIV NonMosaic; G543S; NG STAR penA allele: 24.001
+penA	3243	Type 248 Mosaic; A501T, N513Y; NG STAR penA allele: 248.001
+penA	3244	Type 253 Semi Mosaic; N513Y; NG STAR penA allele: 253.001
+penA	3245	Type 255 Non Mosaic; A517G; NG STAR penA allele: 255.001
+penA	3246	Type 259 Non Mosaic; NG STAR penA allele: 259.001
+penA	3247	Type 260 Semi Mosaic; N513Y; NG STAR penA allele: 260.001
+penA	3248	
+penA	3249	
+penA	3250	
+penA	3251	Type 146 Non Mosaic; A501T, A517G, G543S; NG STAR penA allele: 146.001
+penA	3252	Type 143 Non Mosaic; A501V, A517G; NG STAR penA allele: 143.001
+penA	3253	
+penA	3254	
+penA	3255	Type V non-mosaic; A517G, G543S; NG STAR penA allele: 5.018
+penA	3256	
+penA	3257	
+penA	3258	
+penA	3259	
+penA	3260	
+penA	3261	
+penA	3262	
+penA	3263	
+penA	3264	
+penA	3265	
+penA	3266	
+penA	3267	
+penA	3268	
+penA	3269	
+penA	3270	
+penA	3271	
+penA	3272	
+penA	3273	
+penA	3275	
+penA	3276	
+penA	3277	
+penA	3278	
+penA	3279	
+penA	3280	
+penA	3281	
+penA	3282	
+penA	3283	
+penA	3284	
+penA	3286	
+penA	3287	
+penA	3288	
+penA	3289	
+penA	3292	
+penA	3293	
+penA	3294	
+penA	3296	
+penA	3297	
+penA	3298	
+penA	3299	
+penA	3300	
+penA	3301	
+penA	3302	
+penA	3303	
+penA	3304	
+penA	3305	
+penA	3306	
+penA	3308	
+penA	3309	
+penA	3310	
+penA	3311	
+penA	3313	
+penA	3315	
+penA	3317	
+penA	3318	
+penA	3319	
+penA	3321	
+penA	3322	
+penA	3323	
+penA	3324	
+penA	3325	
+penA	3326	
+penA	3327	
+penA	3328	
+penA	3329	
+penA	3330	
+penA	3331	
+penA	3332	
+penA	3333	
+penA	3334	
+penA	3335	
+penA	3337	
+penA	3338	
+penA	3340	
+penA	3341	
+penA	3342	
+penA	3343	
+penA	3344	
+penA	3345	
+penA	3346	
+penA	3347	
+penA	3348	
+penA	3349	
+penA	3350	
+penA	3351	
+penA	3352	
+penA	3353	
+penA	3354	
+penA	3355	
+penA	3356	
+penA	3357	
+penA	3358	
+penA	3359	
+penA	3360	
+penA	3361	
+penA	3362	
+penA	3363	
+penA	3364	
+penA	3365	
+penA	3366	
+penA	3367	
+penA	3368	
+penA	3369	
+penA	3370	
+penA	3371	
+penA	3372	
+penA	3373	
+penA	3374	
+penA	3375	
+penA	3376	
+penA	3377	
+penA	3378	
+penA	3379	
+penA	3380	
+penA	3381	
+penA	3382	
+penA	3383	
+penA	3384	
+penA	3385	
+penA	3386	
+penA	3387	
+penA	3388	
+penA	3389	
+penA	3390	
+penA	3391	
+penA	3392	
+penA	3393	
+penA	3394	
+penA	3395	
+penA	3396	
+penA	3397	
+penA	3398	
+penA	3399	
+penA	3400	
+penA	3401	Type I non-mosaic; NG STAR penA allele: 1.020
+penA	3402	
+penA	3403	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L YES; N512→Y YES; G545→S YES  penA Type XXXIV Mosaic; NG STAR penA allele: 34.033
+penA	3404	mutations present: I312→M NO; V316→T NO; D345→a YES; F504→L YES; N512→Y YES; G545→S YES Type LX Mosaic NG STAR penA allele: 60.002
+penA	3405	mutations present: D345→a Wild type; non-mosaic NG STAR penA allele: 100.018
+penA	3406	mutations present: D345→a Wild type; non-mosaic NG STAR penA allele: 100.019
+penA	3407	Type 198 Mosaic; N513Y; NG STAR penA allele: 198.004
+penA	3408	penA Type 264 Mosaic; N513Y; NG STAR penA allele: 264.001
+penA	3409	penA Type 266 NonMosaic; A517G; NG STAR penA allele: 266.001
+penA	3410	
+penA	3411	
+penA	3412	
+penA	3413	penA Type 270 Mosaic; A311V, N513Y; NG STAR penA allele: 270.001
+penA	3414	
+penA	3415	
+penA	3416	
+penA	3417	
+penA	3418	
+penA	3419	
+penA	3420	
+penA	3421	
+penA	3422	
+penA	3423	
+penA	3424	
+penA	3425	
+penA	3426	
+penA	3427	
+penA	3428	
+penA	3429	
+penA	3430	
+penA	3431	
+penA	3432	
+penA	3433	
+penA	3434	
+penA	3435	
+penA	3436	
+penA	3437	
+penA	3438	
+penA	3439	
+penA	3440	
+penA	3441	
+penA	3442	
+penA	3443	
+penA	3444	
+penA	3445	
+penA	3446	
+penA	3447	
+penA	3448	
+penA	3449	
+penA	3450	
+penA	3451	
+penA	3452	
+penA	3453	
+penA	3454	
+penA	3455	
+penA	3456	
+penA	3457	
+penA	3458	
+penA	3459	
+penA	3460	
+penA	3461	
+penA	3462	
+penA	3463	
+penA	3464	
+penA	3465	
+penA	3466	
+penA	3467	
+penA	3468	
+penA	3469	
+penA	3470	
+penA	3471	
+penA	3472	
+penA	3473	
+penA	3474	
+penA	3475	
+penA	3476	
+penA	3477	
+penA	3478	
+penA	3479	
+penA	3480	
+penA	3481	
+penA	3483	
+penA	3484	
+penA	3485	
+penA	3487	
+penA	3488	
+penA	3489	
+penA	3490	
+penA	3491	
+penA	3492	
+penA	3493	
+penA	3494	
+penA	3495	
+penA	3496	
+penA	3497	
+penA	3498	
+penA	3499	
+penA	3500	
+penA	3501	
+penA	3502	
+penA	3503	
+penA	3504	
+penA	3505	
+penA	3506	
+penA	3507	
+penA	3508	
+penA	3509	
+penA	3510	
+penA	3511	
+penA	3512	
+penA	3513	
+penA	3514	
+penA	3515	
+penA	3516	
+penA	3517	
+penA	3518	
+penA	3519	
+penA	3520	
+penA	3521	
+penA	3522	
+penA	3524	
+penA	3525	
+penA	3526	
+penA	3527	
+penA	3528	
+penA	3529	
+penA	3530	
+penA	3531	
+penA	3532	
+penA	3533	
+penA	3534	
+penA	3535	
+penA	3536	
+penA	3537	
+penA	3538	
+penA	3539	
+penA	3540	
+penA	3541	
+penA	3542	
+penA	3543	
+penA	3544	
+penA	3545	
+penA	3546	
+penA	3547	
+penA	3548	
+penA	3549	
+penA	3550	
+penA	3551	
+penA	3552	
+penA	3553	
+penA	3554	
+penA	3555	
+penA	3556	
+penA	3557	
+penA	3558	
+penA	3559	
+penA	3560	
+penA	3561	
+penA	3562	
+penA	3563	
+penA	3564	
+penA	3565	
+penA	3566	
+penA	3567	
+penA	3568	
+penA	3569	
+penA	3570	
+penA	3571	
+penA	3572	
+penA	3573	
+penA	3574	
+penA	3575	
+penA	3576	
+penA	3577	
+penA	3578	
+penA	3579	
+penA	3580	
+penA	3581	
+penA	3582	
+penA	3583	
+penA	3584	
+penA	3585	
+penA	3586	
+penA	3587	
+penA	3588	
+penA	3589	
+penA	3590	
+penA	3591	
+penA	3592	
+penA	3593	
+penA	3594	
+penA	3595	
+penA	3596	
+penA	3597	
+penA	3598	
+penA	3599	
+penA	3600	
+penA	3601	
+penA	3602	
+penA	3603	
+penA	3604	
+penA	3605	
+penA	3606	
+penA	3607	
+penA	3608	
+penA	3609	
+penA	3610	
+penA	3611	
+penA	3612	
+penA	3613	
+penA	3614	
+penA	3615	
+penA	3616	
+penA	3617	
+penA	3618	
+penA	3619	
+penA	3620	
+penA	3621	
+penA	3622	
+penA	3623	
+penA	3624	
+penA	3625	
+penA	3626	
+penA	3627	
+penA	3628	
+penA	3629	
+penA	3630	
+penA	3631	
+penA	3632	
+penA	3633	
+penA	3634	
+penA	3635	
+penA	3636	
+penA	3637	
+penA	3638	
+penA	3639	
+penA	3640	
+penA	3641	
+penA	3642	
+penA	3643	
+penA	3644	
+penA	3645	
+penA	3646	
+penA	3647	
+penA	3648	
+penA	3649	
+penA	3650	
+penA	3651	
+penA	3652	
+penA	3653	
+penA	3654	
+penA	3655	
+penA	3656	
+penA	3657	
+penA	3658	
+penA	3659	
+penA	3660	
+penA	3661	
+penA	3662	
+penA	3663	
+penA	3664	
+penA	3665	penA Type 187 NonMosaic; NG STAR penA allele: 187.002
+penA	3666	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.039 GGC insert at position 219
+penA	3667	penA Type 290 NonMosaic; A517S; NG STAR penA allele: 290.001
+penA	3668	penA Type 198 Mosaic; N513Y; NG STAR penA allele: 198.006
+penA	3669	penA Type 76 Non Mosaic; NG STAR penA allele: 76.007
+penA	3670	penA Type XIV Non Mosaic; A517G; NG STAR penA allele: 14.026
+penA	3671	penA Type 278 Non Mosaic; NG STAR penA allele: 278.001
+penA	3672	penA Type IX NonMosaic; A517G; NG STAR penA allele: 9.012
+penA	3673	penA Type 283 NonMosaic; A517G; NG STAR penA allele: 283.001
+penA	3674	penA Type 208 Non Mosaic; A517G; NG STAR penA allele: 208.002
+penA	3675	
+penA	3676	penA Type 234 NonMosaic; A517G; NG STAR penA allele: 234.002
+penA	3677	
+penA	3678	
+penA	3679	
+penA	3680	
+penA	3681	
+penA	3682	
+penA	3683	
+penA	3684	
+penA	3686	
+penA	3687	
+penA	3688	
+penA	3689	
+penA	3690	
+penA	3691	
+penA	3692	
+penA	3693	
+penA	3694	
+penA	3695	
+penA	3696	
+penA	3697	
+penA	3698	Type I non-mosaic; NG STAR penA allele: 1.010
+penA	3699	Type I non-mosaic; NG STAR penA allele: 1.012
+penA	3700	Type I non-mosaic; NG STAR penA allele: 1.021
+penA	3701	Type I non-mosaic; NG STAR penA allele: 1.023
+penA	3702	Type I non-mosaic; NG STAR penA allele: 1.024
+penA	3703	
+penA	3704	
+penA	3705	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.074
+penA	3706	penA Type 67 Mosaic; N513Y; NG STAR penA allele: 67.005
+penA	3707	penA Type XIV Non Mosaic; A517G; NG STAR penA allele: 14.025
+penA	3709	
+penA	3710	penA Type 52 Mosaic; N513Y; NG STAR penA allele: 52.002
+penA	3711	penA Type 268 Mosaic; N513Y; NG STAR penA allele: 268.001
+penA	3712	penA Type 269 NonMosaic; N513Y; NG STAR penA allele: 269.001
+penA	3713	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.068
+penA	3714	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.069
+penA	3715	penA Type 267 NonMosaic; A517G; NG STAR penA allele: 267.001
+penA	3716	penA Type V NonMosaic; A517G, G543S; NG STAR penA allele: 5.023
+penA	3717	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.070
+penA	3718	penA Type XVI NonMosaic; A517G; NG STAR penA allele: 16.007
+penA	3719	penA Type 271 Mosaic; N513Y; NG STAR penA allele: 271.001
+penA	3720	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.034
+penA	3721	penA Type 272 Non Mosaic; NG STAR penA allele: 272.001
+penA	3722	penA Type 274 Mosaic; N513Y; NG STAR penA allele: 274.001
+penA	3723	Type XXXIV mosaic; NG STAR penA allele: 34.036
+penA	3724	penA Type XIX Non Mosaic; A517G; NG STAR penA allele: 19.022
+penA	3725	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.072
+penA	3726	penA Type XIX Non Mosaic; A517G; NG STAR penA allele: 19.021
+penA	3727	penA Type 277 Non Mosaic; A517G; NG STAR penA allele: 277.001
+penA	3728	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.071
+penA	3729	penA Type II Non Mosaic; A517G; NG STAR penA allele: 2.073
+penA	3730	penA Type 215 Mosaic; A517G, G543S; NG STAR penA allele: 215.002
+penA	3731	penA Type 265 Mosaic; A311V, N513Y; NG STAR penA allele: 265.001
+penA	3732	
+penA	3733	
+penA	3734	
+penA	3735	
+penA	3736	
+penA	3737	
+penA	3738	
+penA	3739	
+penA	3740	
+penA	3741	
+penA	3742	
+penA	3743	
+penA	3744	
+penA	3745	
+penA	3746	
+penA	3747	
+penA	3748	
+penA	3749	
+penA	3750	
+penA	3751	
+penA	3752	
+penA	3753	
+penA	3754	
+penA	3755	
+penA	3756	
+penA	3757	
+penA	3758	
+penA	3759	
+penA	3760	
+penA	3761	
+penA	3762	
+penA	3763	
+penA	3764	
+penA	3765	
+penA	3766	
+penA	3767	
+penA	3768	
+penA	3769	
+penA	3770	
+penA	3771	
+penA	3772	
+penA	3773	
+penA	3774	
+penA	3775	
+penA	3776	
+penA	3777	
+penA	3778	
+penA	3779	
+penA	3780	
+penA	3781	
+penA	3782	
+penA	3783	
+penA	3784	
+penA	3785	
+penA	3786	
+penA	3787	
+penA	3788	
+penA	3789	
+penA	3790	
+penA	3791	
+penA	3792	
+penA	3793	
+penA	3794	
+penA	3795	
+penA	3796	
+penA	3797	
+penA	3798	
+penA	3799	
+penA	3800	
+penA	3801	
+penA	3802	
+penA	3803	
+penA	3804	
+penA	3805	
+penA	3806	
+penA	3807	
+penA	3808	
+penA	3809	
+penA	3810	
+penA	3811	
+penA	3812	
+penA	3813	
+penA	3814	
+penA	3815	
+penA	3816	
+penA	3817	
+penA	3818	
+penA	3819	
+penA	3820	
+penA	3821	
+penA	3822	
+penA	3823	
+penA	3824	
+penA	3825	
+penA	3826	
+penA	3827	
+penA	3828	
+penA	3829	
+penA	3830	
+penA	3831	
+penA	3832	
+penA	3833	
+penA	3834	
+penA	3835	
+penA	3836	
+penA	3837	
+penA	3838	
+penA	3839	
+penA	3840	
+penA	3841	
+penA	3842	
+penA	3843	
+penA	3844	
+penA	3845	
+penA	3846	
+penA	3847	
+penA	3848	
+penA	3849	
+penA	3850	
+penA	3851	
+penA	3852	
+penA	3853	
+penA	3854	
+penA	3855	
+penA	3856	
+penA	3857	
+penA	3858	
+penA	3859	
+penA	3860	
+penA	3861	
+penA	3862	
+penA	3863	
+penA	3864	
+penA	3865	
+penA	3866	
+penA	3867	
+penA	3868	
+penA	3869	
+penA	3870	
+penA	3871	
+penA	3872	
+penA	3873	
+penA	3874	
+penA	3875	
+penA	3876	
+penA	3877	
+penA	3878	
+penA	3879	
+penA	3880	
+penA	3881	
+penA	3882	
+penA	3883	
+penA	3884	
+penA	3885	
+penA	3886	
+penA	3887	
+penA	3888	
+penA	3889	
+penA	3890	
+penA	3891	
+penA	3892	
+penA	3893	
+penA	3894	
+penA	3895	
+penA	3896	
+penA	3897	
+penA	3898	
+penA	3899	
+penA	3900	
+penA	3901	
+penA	3902	
+penA	3903	
+penA	3904	
+penA	3905	
+penA	3906	
+penA	3907	
+penA	3908	
+penA	3909	
+penA	3910	
+penA	3911	
+penA	3912	
+penA	3913	
+penA	3914	
+penA	3915	
+penA	3916	
+penA	3917	
+penA	3918	
+penA	3919	
+penA	3920	
+penA	3921	
+penA	3922	
+penA	3923	
+penA	3924	
+penA	3925	
+penA	3926	
+penA	3927	
+penA	3928	
+penA	3929	
+penA	3930	
+penA	3931	
+penA	3932	
+penA	3933	
+penA	3934	
+penA	3935	
+penA	3936	
+penA	3937	
+penA	3938	
+penA	3939	
+penA	3940	
+penA	3941	
+penA	3942	
+penA	3943	
+penA	3944	
+penA	3945	
+penA	3946	
+penA	3947	
+penA	3948	
+penA	3949	
+penA	3950	
+penA	3951	
+penA	3952	
+penA	3953	
+penA	3954	
+penA	3955	
+penA	3956	
+penA	3957	
+penA	3958	
+penA	3959	
+penA	3960	
+penA	3961	
+penA	3962	
+penA	3963	
+penA	3964	
+penA	3965	
+penA	3966	
+penA	3967	
+penA	3968	
+penA	3969	
+penA	3970	
+penA	3971	
+penA	3972	
+penA	3973	
+penA	3974	
+penA	3975	
+penA	3976	
+penA	3977	
+penA	3978	
+penA	3979	
+penA	3980	
+penA	3981	
+penA	3982	
+penA	3983	
+penA	3984	
+penA	3985	
+penA	3986	
+penA	3987	
+penA	3988	
+penA	3989	
+penA	3990	
+penA	3991	
+penA	3992	
+penA	3993	
+penA	3994	
+penA	3995	
+penA	3996	
+penA	3997	
+penA	3998	
+penA	3999	
+penA	4000	
+penA	4001	
+penA	4002	
+penA	4003	
+penA	4004	
+penA	4005	
+penA	4006	
+penA	4007	
+penA	4008	
+penA	4009	
+penA	4010	
+penA	4011	
+penA	4012	
+penA	4013	
+penA	4014	
+penA	4015	
+penA	4016	
+penA	4017	
+penA	4018	
+penA	4019	
+penA	4020	
+penA	4021	
+penA	4022	
+penA	4023	
+penA	4024	
+penA	4025	
+penA	4026	
+penA	4027	
+penA	4028	
+penA	4029	
+penA	4030	
+penA	4031	
+penA	4032	
+penA	4033	
+penA	4034	
+penA	4035	
+penA	4036	
+penA	4037	
+penA	4038	
+penA	4039	
+penA	4040	
+penA	4041	
+penA	4042	
+penA	4043	
+penA	4044	
+penA	4045	
+penA	4046	
+penA	4047	
+penA	4048	
+penA	4049	
+penA	4050	
+penA	4051	
+penA	4052	
+penA	4053	
+penA	4054	
+penA	4055	
+penA	4056	
+penA	4057	
+penA	4058	
+penA	4059	
+penA	4060	
+penA	4061	
+penA	4062	
+penA	4063	
+penA	4064	
+penA	4065	
+penA	4066	
+penA	4067	
+penA	4068	
+penA	4069	
+penA	4070	
+penA	4071	
+penA	4072	
+penA	4073	
+penA	4074	
+penA	4075	
+penA	4076	
+penA	4077	
+penA	4078	
+penA	4079	
+penA	4080	
+penA	4081	
+penA	4082	
+penA	4083	
+penA	4084	
+penA	4085	
+penA	4086	
+penA	4087	
+penA	4088	
+penA	4089	
+penA	4090	
+penA	4091	
+penA	4092	
+penA	4093	
+penA	4094	
+penA	4095	
+penA	4096	
+penA	4097	
+penA	4098	
+penA	4099	
+penA	4100	
+penA	4101	
+penA	4102	
+penA	4103	
+penA	4104	
+penA	4105	
+penA	4106	
+penA	4107	
+penA	4108	
+penA	4109	
+penA	4110	
+penA	4111	
+penA	4112	
+penA	4113	
+penA	4114	
+penA	4115	
+penA	4116	
+penA	4117	
+penA	4118	
+penA	4119	
+penA	4120	
+penA	4121	
+penA	4122	
+penA	4123	
+penA	4124	
+penA	4125	
+penA	4126	
+penA	4127	
+penA	4128	
+penA	4129	
+penA	4130	
+penA	4131	
+penA	4132	
+penA	4133	
+penA	4134	
+penA	4135	
+penA	4136	
+penA	4137	
+penA	4138	
+penA	4139	
+penA	4140	
+penA	4141	
+penA	4142	
+penA	4143	
+penA	4144	
+penA	4145	
+penA	4146	
+penA	4147	
+penA	4148	
+penA	4149	
+penA	4150	
+penA	4151	
+penA	4152	
+penA	4153	
+penA	4154	
+penA	4155	
+penA	4156	
+penA	4157	
+penA	4158	
+penA	4159	
+penA	4160	
+penA	4161	
+penA	4162	
+penA	4163	
+penA	4164	
+penA	4165	
+penA	4166	
+penA	4167	
+penA	4168	
+penA	4169	
+penA	4170	
+penA	4171	
+penA	4172	
+penA	4173	
+penA	4174	
+penA	4175	
+penA	4176	
+penA	4177	
+penA	4178	
+penA	4179	
+penA	4180	
+penA	4181	
+penA	4182	
+penA	4183	
+penA	4184	
+penA	4185	
+penA	4186	
+penA	4187	
+penA	4188	
+penA	4189	
+penA	4190	
+penA	4191	
+penA	4192	
+penA	4193	
+penA	4194	
+penA	4195	
+penA	4196	
+penA	4197	
+penA	4198	
+penA	4199	
+penA	4200	
+penA	4201	
+penA	4202	
+penA	4203	
+penA	4204	
+penA	4205	
+penA	4206	
+penA	4207	
+penA	4208	
+penA	4209	
+penA	4210	
+penA	4211	
+penA	4212	
+penA	4213	
+penA	4214	
+penA	4215	
+penA	4216	
+penA	4217	
+penA	4218	
+penA	4219	
+penA	4220	
+penA	4221	
+penA	4222	
+penA	4223	
+penA	4224	
+penA	4225	
+penA	4226	
+penA	4227	
+penA	4228	
+penA	4229	
+penA	4230	
+penA	4231	
+penA	4232	
+penA	4233	
+penA	4234	
+penA	4235	
+penA	4236	
+penA	4237	
+penA	4238	
+penA	4239	
+penA	4240	
+penA	4241	
+penA	4242	
+penA	4243	
+penA	4244	
+penA	4245	
+penA	4246	
+penA	4247	
+penA	4248	
+penA	4249	
+penA	4250	
+penA	4251	
+penA	4252	
+penA	4253	
+penA	4254	
+penA	4255	
+penA	4256	
+penA	4257	
+penA	4258	
+penA	4259	
+penA	4260	
+penA	4261	
+penA	4262	
+penA	4263	
+penA	4264	
+penA	4265	
+penA	4266	
+penA	4267	
+penA	4268	
+penA	4269	
+penA	4270	
+penA	4271	
+penA	4272	
+penA	4273	
+penA	4274	
+penA	4275	
+penA	4276	
+penA	4277	
+penA	4278	
+penA	4279	
+penA	4280	
+penA	4281	
+penA	4282	
+penA	4283	
+penA	4284	
+penA	4285	
+penA	4286	
+penA	4287	
+penA	4288	
+penA	4289	
+penA	4290	
+penA	4291	
+penA	4292	
+penA	4293	
+penA	4294	
+penA	4295	
+penA	4296	
+penA	4297	
+penA	4298	
+penA	4299	
+penA	4300	
+penA	4301	
+penA	4302	
+penA	4303	
+penA	4304	
+penA	4305	
+penA	4306	
+penA	4307	
+penA	4308	
+penA	4309	
+penA	4310	
+penA	4311	
+penA	4312	
+penA	4313	
+penA	4314	
+penA	4315	
+penA	4316	
+penA	4317	
+penA	4318	
+penA	4319	
+penA	4320	
+penA	4321	
+penA	4322	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.023
+penA	4323	penA type X mosaic; N513Y; NG STAR penA allele: 10.02
+penA	4324	
+penA	4325	
+penA	4326	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.037
+penA	4327	
+penA	4328	
+penA	4329	
+penA	4330	
+penA	4331	
+penA	4332	
+penA	4333	
+penA	4334	
+penA	4335	
+penA	4336	
+penA	4337	
+penA	4338	
+penA	4339	
+penA	4340	
+penA	4341	
+penA	4342	
+penA	4343	
+penA	4344	
+penA	4345	
+penA	4346	
+penA	4347	
+penA	4348	
+penA	4349	
+penA	4350	
+penA	4351	
+penA	4352	
+penA	4353	
+penA	4354	
+penA	4355	
+penA	4356	penA Type 181 NonMosaic: A501V, A517G, G543S; NG STAR penA allele: 181.001
+penA	4357	
+penA	4358	
+penA	4359	
+penA	4360	
+penA	4361	penA Type XIX NonMosaic; A517G; NG STAR penA allele: 19.019
+penA	4362	penA Type XXII NonMosaic; A517G; NG STAR penA allele: 22.025
+penA	4363	penA Type 44 NonMosaic; A501T, A517G; NG STAR penA allele: 44.009
+penA	4364	
+penA	4365	
+penA	4366	penA Type 91 SemiMosaic; N513Y; NG STAR penA allele: 91.002
+penA	4367	
+penA	4368	
+penA	4369	
+penA	4370	
+penA	4371	
+penA	4372	
+penA	4373	
+penA	4374	
+penA	4375	
+penA	4376	
+penA	4377	
+penA	4378	
+penA	4379	
+penA	4380	
+penA	4381	
+penA	4382	
+penA	4383	penA Type 300 SemiMosaic; N513Y; NG STAR penA allele: 300.001
+penA	4384	
+penA	4385	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.083
+penA	4386	
+penA	4387	
+penA	4388	
+penA	4389	
+penA	4390	
+penA	4391	penA Type 302 NonMosaic; A517G; NG STAR penA allele: 302.001
+penA	4392	
+penA	4393	
+penA	4394	
+penA	4395	
+penA	4396	
+penA	4397	
+penA	4398	
+penA	4399	
+penA	4400	
+penA	4401	
+penA	4402	
+penA	4403	
+penA	4404	
+penA	4405	
+penA	4406	
+penA	4407	
+penA	4408	
+penA	4409	
+penA	4410	
+penA	4411	
+penA	4412	
+penA	4413	
+penA	4414	
+penA	4415	
+penA	4416	
+penA	4417	
+penA	4418	
+penA	4419	
+penA	4420	
+penA	4421	
+penA	4422	
+penA	4423	
+penA	4424	
+penA	4425	
+penA	4426	
+penA	4427	
+penA	4428	
+penA	4429	
+penA	4430	
+penA	4431	
+penA	4432	penA Type 199 Non Mosaic:A517G; NG STAR penA allele: 199.001
+penA	4433	
+penA	4434	
+penA	4435	
+penA	4436	
+penA	4437	
+penA	4438	
+penA	4439	
+penA	4440	
+penA	4441	
+penA	4442	
+penA	4443	
+penA	4444	
+penA	4445	
+penA	4446	
+penA	4447	
+penA	4448	
+penA	4449	
+penA	4450	
+penA	4451	
+penA	4452	
+penA	4453	
+penA	4454	
+penA	4455	
+penA	4456	
+penA	4457	
+penA	4458	
+penA	4459	
+penA	4460	
+penA	4461	
+penA	4462	
+penA	4463	
+penA	4464	
+penA	4465	
+penA	4466	
+penA	4467	
+penA	4468	
+penA	4469	
+penA	4470	
+penA	4471	
+penA	4472	
+penA	4473	
+penA	4474	
+penA	4475	
+penA	4476	
+penA	4477	
+penA	4478	
+penA	4479	
+penA	4480	
+penA	4481	
+penA	4482	
+penA	4483	
+penA	4484	
+penA	4485	
+penA	4486	
+penA	4487	
+penA	4488	
+penA	4489	
+penA	4490	
+penA	4491	
+penA	4492	
+penA	4493	
+penA	4494	
+penA	4495	
+penA	4496	
+penA	4497	
+penA	4498	
+penA	4499	
+penA	4500	
+penA	4501	
+penA	4502	
+penA	4503	penA Type 198 Mosaic; N513Y; NG STAR penA allele: 198.005
+penA	4504	penA Type 276 Non Mosaic; A517G; very similar to penA family 2; NG STAR penA allele: 276.001
+penA	4505	penA Type XIV Non Mosaic; A517G; NG STAR penA allele: 14.027
+penA	4506	penA Type 280 Mosaic; A517G; NG STAR penA allele: 280.001
+penA	4507	penA Type 281 Non Mosaic; A517G, G543S; NG STAR penA allele: 281.001
+penA	4508	penA Type 282 Non Mosaic; A517G, G543S; NG STAR penA allele: 282.001
+penA	4509	penA Type 279 Non Mosaic; A517G; NG STAR penA allele: 279.001
+penA	4510	
+penA	4511	penA Type V Non Mosaic; A517G, G543S; NG STAR penA allele: 5.024
+penA	4512	
+penA	4513	
+penA	4514	
+penA	4515	
+penA	4516	
+penA	4517	
+penA	4518	
+penA	4519	
+penA	4520	
+penA	4521	
+penA	4522	
+penA	4523	
+penA	4524	
+penA	4525	
+penA	4526	
+penA	4527	
+penA	4528	
+penA	4529	
+penA	4530	
+penA	4531	
+penA	4532	
+penA	4533	
+penA	4534	
+penA	4535	
+penA	4536	
+penA	4537	
+penA	4538	
+penA	4539	
+penA	4540	
+penA	4541	
+penA	4542	
+penA	4543	
+penA	4544	
+penA	4545	
+penA	4546	
+penA	4547	
+penA	4548	
+penA	4549	
+penA	4550	
+penA	4551	
+penA	4552	
+penA	4553	
+penA	4554	
+penA	4555	
+penA	4556	
+penA	4557	
+penA	4558	
+penA	4559	
+penA	4560	
+penA	4561	
+penA	4562	
+penA	4563	
+penA	4564	
+penA	4565	
+penA	4566	
+penA	4567	
+penA	4568	
+penA	4569	
+penA	4570	
+penA	4571	
+penA	4572	
+penA	4573	
+penA	4574	
+penA	4575	
+penA	4576	
+penA	4577	
+penA	4578	
+penA	4579	
+penA	4580	
+penA	4581	
+penA	4582	
+penA	4583	
+penA	4584	
+penA	4585	
+penA	4586	
+penA	4587	
+penA	4588	
+penA	4589	
+penA	4590	penA Type 309 NonMosaic; A517G, G543S; NG STAR penA allele: 309.001
+penA	4591	
+penA	4592	
+penA	4593	
+penA	4594	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.077
+penA	4595	
+penA	4596	
+penA	4597	penA Type 296 NonMosaic; A517G; NG STAR penA allele: 296.001
+penA	4598	
+penA	4599	
+penA	4600	
+penA	4601	
+penA	4602	
+penA	4603	
+penA	4604	
+penA	4605	
+penA	4606	
+penA	4607	
+penA	4608	
+penA	4609	
+penA	4610	
+penA	4611	
+penA	4612	
+penA	4613	
+penA	4614	
+penA	4615	
+penA	4616	
+penA	4617	
+penA	4618	
+penA	4619	
+penA	4620	
+penA	4621	
+penA	4622	
+penA	4623	
+penA	4624	
+penA	4625	
+penA	4626	
+penA	4627	
+penA	4628	
+penA	4629	
+penA	4630	
+penA	4631	
+penA	4632	
+penA	4633	
+penA	4634	
+penA	4635	
+penA	4636	
+penA	4637	
+penA	4638	
+penA	4639	
+penA	4640	
+penA	4641	
+penA	4642	
+penA	4643	
+penA	4644	
+penA	4645	
+penA	4646	
+penA	4647	
+penA	4648	
+penA	4649	
+penA	4650	
+penA	4651	
+penA	4652	
+penA	4653	
+penA	4654	
+penA	4655	
+penA	4656	
+penA	4657	
+penA	4658	
+penA	4659	
+penA	4660	
+penA	4661	
+penA	4662	
+penA	4663	
+penA	4664	
+penA	4665	
+penA	4666	
+penA	4667	
+penA	4668	penA Type 297 Mosaic; N513Y; NG STAR penA allele: 297.001
+penA	4669	
+penA	4670	
+penA	4671	
+penA	4672	penA Type 265 Mosaic; A311V N513Y; NG STAR penA allele: 265.002
+penA	4673	
+penA	4674	
+penA	4675	
+penA	4676	
+penA	4677	
+penA	4678	
+penA	4679	
+penA	4680	
+penA	4681	
+penA	4682	
+penA	4683	
+penA	4684	
+penA	4685	
+penA	4686	
+penA	4687	
+penA	4688	
+penA	4689	
+penA	4690	
+penA	4691	
+penA	4692	
+penA	4693	
+penA	4694	
+penA	4695	penA Type X Mosaic; N513Y; NG STAR penA allele: 10.016
+penA	4696	
+penA	4697	
+penA	4698	
+penA	4699	
+penA	4700	
+penA	4701	
+penA	4702	
+penA	4703	
+penA	4704	
+penA	4705	
+penA	4706	
+penA	4707	
+penA	4708	
+penA	4709	
+penA	4710	
+penA	4711	
+penA	4712	
+penA	4713	
+penA	4714	
+penA	4715	
+penA	4716	
+penA	4717	
+penA	4718	
+penA	4719	
+penA	4720	
+penA	4721	
+penA	4722	
+penA	4723	
+penA	4724	
+penA	4725	
+penA	4726	
+penA	4727	
+penA	4728	
+penA	4729	
+penA	4730	
+penA	4731	
+penA	4732	
+penA	4733	
+penA	4734	
+penA	4735	
+penA	4736	
+penA	4737	
+penA	4738	
+penA	4739	
+penA	4740	
+penA	4741	
+penA	4742	
+penA	4743	
+penA	4744	
+penA	4745	
+penA	4746	
+penA	4747	
+penA	4748	
+penA	4749	
+penA	4750	
+penA	4751	
+penA	4752	
+penA	4753	
+penA	4754	
+penA	4755	
+penA	4756	
+penA	4757	
+penA	4758	
+penA	4759	
+penA	4760	
+penA	4761	
+penA	4762	
+penA	4763	
+penA	4764	
+penA	4765	
+penA	4766	
+penA	4767	
+penA	4768	
+penA	4769	
+penA	4770	
+penA	4771	
+penA	4772	
+penA	4773	
+penA	4774	
+penA	4775	
+penA	4776	
+penA	4777	
+penA	4778	
+penA	4779	
+penA	4780	
+penA	4781	
+penA	4782	
+penA	4783	
+penA	4784	
+penA	4785	
+penA	4786	
+penA	4787	
+penA	4788	
+penA	4789	
+penA	4790	
+penA	4791	
+penA	4792	
+penA	4793	
+penA	4794	
+penA	4795	
+penA	4796	
+penA	4797	
+penA	4798	
+penA	4799	
+penA	4800	
+penA	4801	
+penA	4802	
+penA	4803	
+penA	4804	
+penA	4805	
+penA	4806	
+penA	4807	
+penA	4808	
+penA	4809	
+penA	4810	
+penA	4811	
+penA	4812	
+penA	4813	
+penA	4814	
+penA	4815	
+penA	4816	
+penA	4817	
+penA	4818	
+penA	4819	
+penA	4820	
+penA	4821	
+penA	4822	
+penA	4823	
+penA	4824	
+penA	4825	
+penA	4826	
+penA	4827	
+penA	4828	
+penA	4829	
+penA	4830	
+penA	4831	
+penA	4832	
+penA	4833	
+penA	4834	
+penA	4835	
+penA	4836	
+penA	4837	
+penA	4838	
+penA	4839	
+penA	4840	
+penA	4841	
+penA	4842	
+penA	4843	
+penA	4844	
+penA	4845	
+penA	4846	
+penA	4847	
+penA	4848	
+penA	4849	
+penA	4850	
+penA	4851	
+penA	4852	
+penA	4853	
+penA	4854	
+penA	4855	
+penA	4856	
+penA	4857	
+penA	4858	
+penA	4859	
+penA	4860	
+penA	4861	
+penA	4862	
+penA	4863	
+penA	4864	
+penA	4865	
+penA	4866	
+penA	4867	
+penA	4868	
+penA	4869	
+penA	4870	
+penA	4871	
+penA	4872	
+penA	4873	
+penA	4874	
+penA	4875	
+penA	4876	
+penA	4877	
+penA	4878	
+penA	4879	
+penA	4880	
+penA	4881	
+penA	4882	
+penA	4883	
+penA	4884	
+penA	4885	
+penA	4886	
+penA	4887	
+penA	4888	
+penA	4889	
+penA	4890	
+penA	4891	
+penA	4892	
+penA	4893	
+penA	4894	
+penA	4895	
+penA	4896	
+penA	4897	
+penA	4898	
+penA	4899	
+penA	4900	
+penA	4901	
+penA	4902	
+penA	4903	
+penA	4904	
+penA	4905	
+penA	4906	
+penA	4907	
+penA	4908	
+penA	4909	
+penA	4910	
+penA	4911	
+penA	4912	
+penA	4913	
+penA	4914	
+penA	4915	
+penA	4916	
+penA	4917	
+penA	4918	
+penA	4919	
+penA	4920	
+penA	4921	
+penA	4922	
+penA	4923	
+penA	4924	
+penA	4925	
+penA	4926	
+penA	4927	
+penA	4928	
+penA	4929	
+penA	4930	
+penA	4931	
+penA	4932	
+penA	4933	
+penA	4934	
+penA	4935	
+penA	4936	
+penA	4937	
+penA	4938	
+penA	4939	
+penA	4940	
+penA	4941	
+penA	4942	
+penA	4943	
+penA	4944	
+penA	4945	
+penA	4946	
+penA	4947	
+penA	4948	
+penA	4949	
+penA	4950	
+penA	4951	
+penA	4952	
+penA	4953	
+penA	4954	
+penA	4955	
+penA	4956	
+penA	4957	
+penA	4958	
+penA	4959	
+penA	4960	
+penA	4961	
+penA	4962	
+penA	4963	
+penA	4964	
+penA	4965	
+penA	4966	
+penA	4967	
+penA	4968	
+penA	4969	
+penA	4970	
+penA	4971	
+penA	4972	
+penA	4973	
+penA	4974	
+penA	4975	
+penA	4976	
+penA	4977	
+penA	4978	
+penA	4979	
+penA	4980	
+penA	4981	
+penA	4982	
+penA	4983	
+penA	4984	
+penA	4985	
+penA	4986	
+penA	4987	
+penA	4988	
+penA	4989	
+penA	4990	
+penA	4991	
+penA	4992	
+penA	4993	
+penA	4994	
+penA	4995	
+penA	4996	
+penA	4997	
+penA	4998	
+penA	4999	
+penA	5000	
+penA	5001	
+penA	5002	
+penA	5003	
+penA	5004	
+penA	5005	
+penA	5006	
+penA	5007	
+penA	5008	
+penA	5009	
+penA	5010	
+penA	5011	
+penA	5012	
+penA	5013	
+penA	5014	
+penA	5015	
+penA	5016	
+penA	5017	
+penA	5018	
+penA	5019	
+penA	5020	
+penA	5021	
+penA	5022	
+penA	5023	
+penA	5024	
+penA	5025	
+penA	5026	
+penA	5027	
+penA	5028	
+penA	5029	
+penA	5030	
+penA	5031	
+penA	5032	
+penA	5033	
+penA	5034	
+penA	5035	
+penA	5036	
+penA	5037	
+penA	5038	
+penA	5039	
+penA	5040	
+penA	5041	
+penA	5042	
+penA	5043	
+penA	5044	
+penA	5045	
+penA	5046	
+penA	5047	
+penA	5048	
+penA	5049	
+penA	5050	
+penA	5051	
+penA	5052	
+penA	5053	
+penA	5054	
+penA	5055	
+penA	5056	
+penA	5057	
+penA	5058	
+penA	5059	
+penA	5060	
+penA	5061	
+penA	5062	
+penA	5063	
+penA	5064	
+penA	5065	
+penA	5066	
+penA	5067	
+penA	5068	
+penA	5069	
+penA	5070	
+penA	5071	
+penA	5072	
+penA	5073	
+penA	5074	
+penA	5075	
+penA	5076	
+penA	5077	
+penA	5078	
+penA	5079	
+penA	5080	
+penA	5081	
+penA	5082	
+penA	5083	
+penA	5084	
+penA	5085	
+penA	5086	
+penA	5087	
+penA	5088	
+penA	5089	
+penA	5090	
+penA	5091	
+penA	5092	
+penA	5093	
+penA	5094	
+penA	5095	
+penA	5096	
+penA	5097	
+penA	5098	
+penA	5099	
+penA	5100	
+penA	5101	
+penA	5102	
+penA	5103	
+penA	5104	
+penA	5105	
+penA	5106	
+penA	5107	
+penA	5108	
+penA	5109	
+penA	5110	
+penA	5111	
+penA	5112	
+penA	5113	
+penA	5114	
+penA	5115	
+penA	5116	
+penA	5117	
+penA	5118	
+penA	5119	
+penA	5120	
+penA	5121	
+penA	5122	
+penA	5123	
+penA	5124	
+penA	5125	
+penA	5126	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.075
+penA	5127	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.076
+penA	5128	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.079
+penA	5129	penA Type XII NonMosaic; A517G; NG STAR penA allele: 12.011
+penA	5130	penA Type XII NonMosaic; A517G; NG STAR penA allele: 12.012
+penA	5131	penA Type XIII NonMosaic; A501V, A517G; NG STAR penA allele: 13.014
+penA	5132	penA Type XIV NonMosaic; A517G; NG STAR penA allele: 14.028
+penA	5133	penA Type XIV NonMosaic; A517G; NG STAR penA allele: 14.03
+penA	5134	penA Type XIX NonMosaic; A517G; NG STAR penA allele: 19.024
+penA	5135	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.038
+penA	5136	penA Type XXXIV Mosaic; N513Y; NG STAR penA allele: 34.040
+penA	5137	penA Type 43 NonMosaic; A501V, A517G; NG STAR penA allele: 43.009
+penA	5138	penA Type XVI NonMosaic; A517G; NG STAR penA allele: 16.008
+penA	5139	penA Type 72 Mosaic; N513Y; NG STAR penA allele: 72.004
+penA	5140	penA Type 72 Mosaic; N513Y; NG STAR penA allele: 72.005
+penA	5141	penA Type 93 SemiMosaic; NG STAR penA allele: 93.003
+penA	5142	penA Type 105 Mosaic; N513Y; NG STAR penA allele: 105.002
+penA	5143	penA Type 124 Mosaic; A311V, N513Y; NG STAR penA allele: 124.002
+penA	5144	penA Type 166 Mosaic; N513Y; NG STAR penA allele: 166.003
+penA	5145	penA Type 223 Mosaic; N513Y; NG STAR penA allele: 223.002
+penA	5146	penA Type 237 Mosaic; A311V, N513Y; NG STAR penA allele: 237.002
+penA	5147	penA Type 286 SemiMosaic; A517G; NG STAR penA allele: 286.001
+penA	5148	penA Type 287 Mosaic; A311V, N513Y; NG STAR penA allele: 287.001
+penA	5149	penA Type 288 Mosaic; N513Y; NG STAR penA allele: 288.001
+penA	5150	penA Type 291 Mosaic; A311V, N513Y; NG STAR penA allele: 291.001
+penA	5151	penA Type 291 Mosaic; NG STAR penA allele: 292.001
+penA	5152	penA Type 293 Mosaic; A311V, N513Y; NG STAR penA allele: 293.001
+penA	5153	penA Type 294 Mosaic; A311V, N513Y; NG STAR penA allele: 294.001
+penA	5154	penA Type 295 NonMosaic; N513Y; NG STAR penA allele: 295.001
+penA	5155	
+penA	5156	
+penA	5157	
+penA	5158	
+penA	5159	
+penA	5160	
+penA	5161	
+penA	5162	
+penA	5163	
+penA	5164	
+penA	5165	
+penA	5166	
+penA	5167	
+penA	5168	
+penA	5169	
+penA	5170	
+penA	5171	
+penA	5172	
+penA	5173	
+penA	5174	
+penA	5175	
+penA	5176	
+penA	5177	
+penA	5178	
+penA	5179	
+penA	5180	
+penA	5181	
+penA	5182	
+penA	5183	
+penA	5184	
+penA	5185	
+penA	5186	
+penA	5187	
+penA	5188	
+penA	5189	
+penA	5190	
+penA	5191	
+penA	5192	
+penA	5193	
+penA	5194	
+penA	5195	
+penA	5196	
+penA	5197	
+penA	5198	
+penA	5199	
+penA	5200	
+penA	5201	
+penA	5202	
+penA	5203	
+penA	5204	
+penA	5205	
+penA	5206	
+penA	5207	
+penA	5208	
+penA	5209	
+penA	5210	penA Type 273 Mosaic; A311V, N513Y; NG STAR penA allele: 273.001
+penA	5211	
+penA	5212	
+penA	5213	
+penA	5214	
+penA	5215	NG STAR penA allele: 317.001; Type 317 NonMosaic; A517G, G543S
+penA	5216	
+penA	5217	
+penA	5218	
+penA	5219	
+penA	5220	
+penA	5221	
+penA	5222	
+penA	5223	
+penA	5224	
+penA	5225	
+penA	5226	
+penA	5227	
+penA	5228	
+penA	5229	
+penA	5230	
+penA	5231	
+penA	5232	
+penA	5233	
+penA	5234	
+penA	5235	
+penA	5236	
+penA	5237	
+penA	5238	
+penA	5239	
+penA	5240	
+penA	5241	
+penA	5242	
+penA	5243	
+penA	5244	
+penA	5245	
+penA	5246	penA Type II NonMosaic; A517G; NG STAR penA allele: 2.104
+penA	5247	penA Type 318 Mosaic; N513Y; NG STAR penA allele: 318.001
+penA	5248	penA Type 319 NonMosaic; NG STAR penA allele: 319.001
+penA	5249	
+penA	5250	penA Type 120 NonMosaic; A501V, A517G; NG STAR penA allele: 120.002
+penA	5251	penA Type 120 NonMosaic; A501V, A517G; NG STAR penA allele: 120.003
+penA	5252	penA Type XXX Mosaic; A501V, N513Y; NG STAR penA allele: 30.003
+penA	5253	penA Type 263 SemiMosaic; A501V, A517G; NG STAR penA allele: 263.001
+penA	5254	
+penA	5255	
+penA	5256	
+penA	5257	
+penA	5258	
+penA	5259	
+penA	5260	
+penA	5261	
+penA	5262	
+penA	5263	
+penA	5264	
+penA	5265	
+penA	5266	
+penA	5267	
+penA	5268	
+penA	5269	
+penA	5270	
+penA	5271	
+penA	5272	
+penA	5273	
+penA	5274	
+penA	5275	
+penA	5276	
+penA	5277	
+penA	5278	
+penA	5279	
+penA	5280	
+penA	5281	
+penA	5282	
+penA	5283	
+penA	5284	
+penA	5285	
+penA	5286	
+penA	5287	
+penA	5288	
 mtrR	1	-35A Del Azithromycin: 0.25 Spectinomycin: 16 Tetracycline: 32
 mtrR	2	-35A Del Azithromycin: 0.5 Spectinomycin: 16
 mtrR	3	Wild-Type
@@ -3135,7 +5289,6 @@ mtrR	122	A39T
 mtrR	123	A39T
 mtrR	124	A39T
 mtrR	125	A39T
-mtrR	126	A39T
 mtrR	127	Wild-type
 mtrR	128	A39T
 mtrR	129	Wild-type
@@ -3567,6 +5720,219 @@ mtrR	556	Wild-Type
 mtrR	557	Wild-Type
 mtrR	559	Wild-Type
 mtrR	560	Wild-Type
+mtrR	561	A39T
+mtrR	562	Wild-Type
+mtrR	563	Disrupted WHO-P like promoter
+mtrR	564	A39T
+mtrR	565	A39T
+mtrR	566	Wild-Type
+mtrR	567	Wild-Type
+mtrR	568	A39T
+mtrR	569	A39T
+mtrR	570	-35Adel, A39T
+mtrR	571	Wild-Type
+mtrR	572	A39T
+mtrR	573	-35A Del
+mtrR	574	Disrupted WHO-P like promoter
+mtrR	575	A39T
+mtrR	576	-35A Del
+mtrR	577	Meningiditis-like promoter
+mtrR	578	Wild-Type
+mtrR	579	Disrupted WHO-P like promoter
+mtrR	580	-35A Del
+mtrR	581	Meningitidis-like promoter, -35A Del, A39T
+mtrR	582	Wild-Type
+mtrR	583	Wild-Type
+mtrR	584	A39T
+mtrR	585	Wild-Type
+mtrR	587	-35A Del
+mtrR	588	A39T
+mtrR	589	Wild-Type
+mtrR	590	Disrupted WHO-P like promoter
+mtrR	591	Wild-Type
+mtrR	592	A39T
+mtrR	593	Meningiditis-like promoter, A39T
+mtrR	594	Wild-Type
+mtrR	595	A39T
+mtrR	597	Meningitidis-like promoter
+mtrR	598	Meningitidis-like promoter
+mtrR	599	Meningitidis-like promoter
+mtrR	600	G45D
+mtrR	601	A39T
+mtrR	602	Meningitidis-like promoter
+mtrR	603	-35A Del
+mtrR	604	A39T
+mtrR	605	A39T
+mtrR	606	A39T
+mtrR	607	A39T
+mtrR	608	A39T
+mtrR	609	A39T
+mtrR	610	Wild-Type
+mtrR	611	A39T
+mtrR	612	A39T
+mtrR	613	Meningitidis-like promoter
+mtrR	614	-35Adel
+mtrR	615	A39T
+mtrR	616	Wild-Type
+mtrR	617	Wild-Type
+mtrR	618	Meningitidis-like promoter
+mtrR	619	Wild-Type
+mtrR	620	Disrupted WHO-P like promoter
+mtrR	621	Wild-Type
+mtrR	622	Wild-Type
+mtrR	623	A39T
+mtrR	624	N. meningitidis-like promoter
+mtrR	625	N. meningitidis-like promoter
+mtrR	626	A39T
+mtrR	627	A39T
+mtrR	628	A39T
+mtrR	629	A39T
+mtrR	630	A39T
+mtrR	631	A39T
+mtrR	632	A39T
+mtrR	633	Wild type
+mtrR	634	Disrupted WHO-P like promoter
+mtrR	635	Meningitidis-like promoter
+mtrR	636	A39T
+mtrR	637	Disrupted WHO-P like promoter
+mtrR	638	A39T
+mtrR	639	Disrupted WHO-P like promoter
+mtrR	640	Wild Type
+mtrR	641	Meningitidis-like promoter
+mtrR	642	A39T
+mtrR	643	A39T
+mtrR	644	Wild Type
+mtrR	645	A39T
+mtrR	646	G45D
+mtrR	647	A39T
+mtrR	648	G45D
+mtrR	649	
+mtrR	650	A39T
+mtrR	651	A39T
+mtrR	652	Wild Type
+mtrR	653	Meningitidis-like promoter, A39T
+mtrR	654	A39T
+mtrR	655	A39T
+mtrR	656	A39T
+mtrR	657	Meningitidis-like promoter
+mtrR	658	Meningitidis-like promoter, A39T
+mtrR	659	Wild Type
+mtrR	660	A39T GAGAAAAACCAAAAC insert at position 70
+mtrR	661	Meningitidis-like promoter
+mtrR	662	Disrupted WHO-P like promoter
+mtrR	663	-35Adel
+mtrR	664	-35Adel
+mtrR	665	-35Adel
+mtrR	666	Wild Type
+mtrR	667	-35Adel, A39T
+mtrR	668	-35Adel
+mtrR	669	Disrupted WHO-P like promoter
+mtrR	670	Disrupted WHO-P like promoter
+mtrR	671	A39T
+mtrR	672	A39T
+mtrR	673	A39T
+mtrR	674	A39T
+mtrR	675	Wild Type
+mtrR	676	A39T
+mtrR	677	Wild Type
+mtrR	678	A39T
+mtrR	679	Wild Type
+mtrR	680	Disrupted WHO-P like promoter
+mtrR	681	G45D
+mtrR	682	Wild Type
+mtrR	683	Wild Type
+mtrR	684	A39T
+mtrR	685	-35Adel
+mtrR	686	A39T
+mtrR	687	A39T
+mtrR	688	Wild Type
+mtrR	689	G45D
+mtrR	690	Wild Type
+mtrR	691	Wild Type
+mtrR	692	Meningitidis-like promoter
+mtrR	693	A39T
+mtrR	694	Wild Type
+mtrR	695	Wild Type
+mtrR	696	A39T
+mtrR	697	A39T
+mtrR	698	A39T
+mtrR	699	Wild Type
+mtrR	700	A39T
+mtrR	701	A39T
+mtrR	702	Wild Type
+mtrR	703	Wild Type
+mtrR	704	A39T
+mtrR	705	Wild Type
+mtrR	706	A39T
+mtrR	707	Wild Type
+mtrR	708	A39T
+mtrR	709	A39T
+mtrR	710	Wild Type
+mtrR	711	A39T
+mtrR	712	A39T
+mtrR	713	Wild Type
+mtrR	714	A39T
+mtrR	715	Wild Type
+mtrR	716	Wild Type
+mtrR	717	A39T
+mtrR	718	-35Adel
+mtrR	719	Wild Type
+mtrR	720	A39T
+mtrR	721	Wild Type
+mtrR	722	Wild Type
+mtrR	723	A39T
+mtrR	724	-35Adel, A39T
+mtrR	725	A39T
+mtrR	726	Disrupted WHO-P like promoter
+mtrR	727	A39T
+mtrR	728	Wild Type
+mtrR	729	Disrupted WHO-P like promoter, A39T
+mtrR	730	Wild Type
+mtrR	731	Wild Type
+mtrR	732	A39T
+mtrR	733	Wild Type
+mtrR	734	Wild Type
+mtrR	735	Wild Type
+mtrR	736	Meningitidis-like promoter
+mtrR	737	A39T
+mtrR	738	Wild Type
+mtrR	739	A39T
+mtrR	740	Disrupted WHO-P like promoter
+mtrR	741	Wild Type
+mtrR	742	Wild Type
+mtrR	743	A39T
+mtrR	744	A39T
+mtrR	745	A39T
+mtrR	746	A39T
+mtrR	748	Wild Type
+mtrR	749	Wild Type
+mtrR	750	G45D
+mtrR	751	Wild Type
+mtrR	752	Wild Type
+mtrR	753	Meningitidis-like promoter
+mtrR	754	A39T
+mtrR	755	A39T
+mtrR	756	A39T
+mtrR	757	Meningitidis-like promoter
+mtrR	758	A39T
+mtrR	759	-35Adel
+mtrR	760	Wild Type
+mtrR	761	A39T
+mtrR	762	A39T
+mtrR	763	A39T
+mtrR	764	A39T
+mtrR	765	-35Adel, A39T
+mtrR	766	-35Adel
+mtrR	767	A39T
+mtrR	768	G45
+mtrR	769	Wild Type
+mtrR	770	A39T
+mtrR	771	A39T
+mtrR	772	A39T
+mtrR	775	A39T
+mtrR	776	A39T
+mtrR	777	-35Adel
+mtrR	778	A39T
 porB	1	Wild Type
 porB	2	mutation: A121D
 porB	3	mutation: A121S
@@ -3579,8 +5945,8 @@ porB	9	mutations: G120R, A121D
 porB	10	mutations: G120K, A121D
 porB	11	mutations: G120K, A121N
 porB	12	mutations: G120K, A121G
-porB	13	
-porB	14	
+porB	13	porB1a
+porB	14	porB1a
 porB	15	mutations: A120K, A121V
 porB	16	mutation: G120N
 porB	17	mutations: G120N, A121D
@@ -3593,7 +5959,7 @@ porB	26	mutations: G120K, A121N
 porB	27	mutation: A121N
 porB	29	mutations: G120K, A121N
 porB	30	mutation: G120D
-porB	31	mutations: G120N, A121V
+porB	31	mutations: G120N, A121N
 porB	33	mutations: G120C, A121S
 porB	35	mutation: A121V
 porB	37	mutations: G120N, A121G
@@ -3637,6 +6003,16 @@ porB	76	A121D
 porB	77	Wild Type
 porB	78	G120N, A121D
 porB	79	G120D, A121D
+porB	80	Wild Type
+porB	81	Wild Type
+porB	82	Wild Type
+porB	83	G120K, A121N
+porB	84	G120N, A121Y
+porB	85	G120K, A121N
+porB	86	G120S
+porB	87	G120Q, A121D
+porB	88	Wild Type
+porB	89	G120R, A121D
 porB	100	Wild Type
 ponA	1	mutation: L421P
 ponA	2	wild-type
@@ -3657,6 +6033,9 @@ ponA	16
 ponA	17	Wild_type
 ponA	18	mutation: L421P
 ponA	19	Wild-type
+ponA	20	L421P
+ponA	21	Wild Type
+ponA	22	L421P
 ponA	100	wild-type
 gyrA	1	mutations: S91F, D95G Ciprofloxacin MIC: 2
 gyrA	2	mutations: S91F, D95N Ciprofloxacin: >32
@@ -3718,6 +6097,20 @@ gyrA	59	Wild type
 gyrA	60	mutation: S91T
 gyrA	61	mutation: S91I
 gyrA	62	mutations: S91F, D95H
+gyrA	63	Wild type
+gyrA	64	Wild type
+gyrA	65	mutations: S91F, D95G
+gyrA	66	mutations: S91F, D95A
+gyrA	67	Wild type
+gyrA	68	S91F, D95C
+gyrA	69	S91F, D95V
+gyrA	70	S91F, D95A
+gyrA	71	S91F, D95A
+gyrA	72	S91F, D95A
+gyrA	73	Wild Type
+gyrA	74	S91F, D95A
+gyrA	75	Wild Type
+gyrA	76	Wild type
 gyrA	100	Wild type
 parC	1	Wild Type
 parC	2	Wild Type
@@ -3904,9 +6297,46 @@ parC	184	Wild Type
 parC	185	Mutations: D86N, S88P
 parC	186	Mutation: S87I
 parC	187	Mutation: S87I
+parC	188	E91K
+parC	189	mutation: S87R
+parC	190	Wild_Type
+parC	191	Wild_Type
+parC	192	mutation: E91G
+parC	193	Wild_Type
+parC	194	mutation: D86N
+parC	195	mutations: S87N, E91G
+parC	196	mutations: S88P, E91G
+parC	197	Wild Type
+parC	198	S87N
+parC	199	S87R
+parC	200	Wild Type
+parC	201	E91K
+parC	202	D86N, S87I
+parC	203	S87R
+parC	204	S87R, S88P
+parC	205	D86N, S87N
+parC	206	Wild Type
+parC	207	Wild Type
+parC	208	Wild Type
+parC	209	Wild Type
+parC	210	D86G
+parC	211	S87I, E91G
+parC	212	E91Q
+parC	213	S87N
+parC	214	Wild Type
+parC	215	S87N, E91Q
+parC	216	Wild type
+parC	217	E91G
+parC	218	Wild Type
+parC	219	Wild Type
+parC	220	Wild Type
+parC	221	Wild Type
+parC	222	S87R
+parC	223	Wild Type
+parC	224	S87N, E91K
 23S	1	A2059G Azithromycin MIC:>=512 Erythromycin MIC:>=64
 23S	2	C2611T Azithromycin MIC:4 Erythromycin MIC: 32
-23S	3	Wild_type
+23S	3	Wild_Type
 23S	4	Wild_type
 23S	5	Wild_type
 23S	6	Wild_type
@@ -3982,4 +6412,21 @@ parC	187	Mutation: S87I
 23S	76	Wild-Type
 23S	77	Wild-Type
 23S	78	Wild-Type
+23S	79	Wild-Type
+23S	80	Wild-Type
+23S	81	Wild-Type
+23S	82	Wild_Type
+23S	83	Wild_Type
+23S	84	Wild Type
+23S	85	Wild Type
+23S	86	Wild Type
+23S	87	Wild Type
+23S	88	Wild Type
+23S	89	Wild type
+23S	90	Wild type
+23S	91	Wild type
+23S	92	Wild type
+23S	93	Wild type
+23S	94	Wild type
+23S	95	Wild type
 23S	100	Wild_type
