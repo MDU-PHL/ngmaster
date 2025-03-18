@@ -44,7 +44,7 @@ jobs:
       
       # Create conda environment using mamba
       - name: Create Conda environment with mlst
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
           mamba create -n ngmaster -c bioconda mlst
           conda activate ngmaster
@@ -54,8 +54,9 @@ jobs:
         
       # Install the current package
       - name: Install the current package
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
+          conda activate ngmaster
           pip install .
           echo "MLST version:"
           mlst --version
@@ -77,6 +78,7 @@ jobs:
       - name: Lint with flake8
         shell: bash -l {0}
         run: |
+          conda activate ngmaster
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
