@@ -15,7 +15,6 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-    branches: [ master ]
     inputs:
       tags:
         description: "Testing workflow"
@@ -28,39 +27,60 @@ jobs:
         python-version: [3.7, 3.8, 3.9]
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        auto-update-conda: true
-        python-version: ${{ matrix.python-version }}
-        channels: conda-forge, bioconda
-        activate-environment: ngmaster
-    - name: Install ngmaster and dependencies
-      shell: bash -l {0}
-      run: |
-        # Install flake8 for linting
-        conda install -y flake8
-        # Install mlst specifically from bioconda channel
-        conda install -y -c bioconda mlst
-        # Install the current package
-        pip install .
-        # Debug information
-        echo "MLST version:"
-        mlst --version
-        echo "MLST path:"
-        which mlst
-        # Check if databases exist
-        ls -la $(dirname $(which mlst))/../db/ || echo "No db directory found"
-    - name: Lint with flake8
-      shell: bash -l {0}
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Run test 
-      shell: bash -l {0}
-      run: ngmaster --test
+      # checkout the repository
+      - name: Checkout current code
+        uses: actions/checkout@v4
+
+      # Set up conda with mamba (using miniforge3)
+      - name: Set up Conda with Mamba
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-variant: Miniforge3
+          miniforge-version: latest
+          use-mamba: true
+          activate-environment: test
+          python-version: ${{ matrix.python-version }}
+
+      
+      # Create conda environment using mamba
+      - name: Create Conda environment with mlst
+        shell: bash -l {0}
+        run: |
+          mamba create -n ngmaster -c bioconda mlst
+          conda activate ngmaster
+          mlst --version
+          # install flake8 for linting
+          conda install -y flake8
+        
+      # Install the current package
+      - name: Install the current package
+        shell: bash -l {0}
+        run: |
+          pip install .
+          echo "MLST version:"
+          mlst --version
+          echo "MLST path:"
+          which mlst
+          ls -la $(dirname $(which mlst))/../db/ || echo "No db directory found"
+          echo "Installed package version:"
+          ngmaster --version
+        
+      # test the package
+      - name: Test the package
+        shell: bash -l {0}
+        run: |
+            set -euo pipefail
+            conda activate ngmaster
+            ngmaster --test
+      
+      # lint with flake8
+      - name: Lint with flake8
+        shell: bash -l {0}
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics 
 
   build-n-publish:
       name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
