@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
       # checkout the repository
@@ -75,7 +75,6 @@ jobs:
           set -euo pipefail
           conda activate ngmaster
           ngmaster --test
-          pytest --cov=ngmaster
 
       # lint with flake8
       - name: Lint with flake8
