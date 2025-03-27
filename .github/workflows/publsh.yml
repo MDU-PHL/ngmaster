@@ -1,0 +1,85 @@
+name: 📦 Publish Package 📦
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Deploy to PyPI"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9]
+
+    steps:
+      # checkout the repository
+      - name: Checkout current code
+        uses: actions/checkout@v4
+
+      # Set up conda with mamba
+      - name: Set up Conda with Mamba
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-variant: Miniforge3
+          miniforge-version: latest
+          use-mamba: true
+          activate-environment: test
+          python-version: ${{ matrix.python-version }}
+      
+      # Create conda environment
+      - name: Create Conda environment with mlst
+        shell: bash -el {0}
+        run: |
+          mamba create -n ngmaster -c bioconda mlst
+          conda activate ngmaster
+          mlst --version
+          conda install -y flake8
+      
+      # Test package
+      - name: Test the package
+        shell: bash -l {0}
+        run: |
+          set -euo pipefail
+          conda activate ngmaster
+          pip install .
+          ngmaster --test
+
+  build-n-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine setuptools wheel
+      
+      - name: Build package
+        run: |
+          python -m build --sdist --wheel --outdir dist/
+      
+      - name: Check distributions
+        run: |
+          twine check dist/*
+      
+      - name: Upload to PyPI
+        if: startsWith(github.ref, 'refs/tags') || startsWith(github.event.inputs.tags, 'Deploy')
+        env:
+          PYPI_TOKEN: ${{ secrets.pypi_password }}
+        run: |
+          twine upload -u __token__ -p $PYPI_TOKEN dist/*

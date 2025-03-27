@@ -6,9 +6,6 @@ on:
         - v*
       branches:
         - 'master'
-        - 'main'
-      paths:
-        - '**.py'
     pull_request:
       branches: [ master ]
     workflow_dispatch:
