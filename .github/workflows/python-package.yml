@@ -83,7 +83,6 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics 
-
   build-n-publish:
       name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
       needs: test
@@ -115,3 +114,9 @@ jobs:
             password: ${{ secrets.test_pypi_password }}
             repository-url: https://test.pypi.org/legacy/
             skip-existing: true
+        - name: Publish distribution 📦 to PyPI
+          if: startsWith(github.ref, 'refs/tags') || startsWith(github.event.inputs.tags, 'Deploy')
+          uses: pypa/gh-action-pypi-publish@release/v1
+          with:
+            user: __token__
+            password: ${{ secrets.pypi_password }}
