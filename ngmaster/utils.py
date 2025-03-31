@@ -11,6 +11,8 @@ import json
 from pkg_resources import resource_filename
 import logging
 import tempfile
+from mlstdb.core.auth import get_client_credentials, retrieve_session_token
+from rauth import OAuth1Session, OAuth1Service
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -107,15 +109,70 @@ def err(*args, **kwargs):
     msg(*args, **kwargs)
     sys.exit(1)
 
-# Update DB function
+
+class PubMLSTAuth: 
+    """Class to handle PubMLST authentication state and requests"""
+    
+    def __init__(self):
+        self.auth_tested = False
+        self.use_auth = False
+    
+    def get_response(self, url):
+        """
+        Get response from URL, using OAuth if possible
+        Falls back to unauthenticated request if OAuth fails
+        """
+        # Test auth only once
+        if not self.auth_tested:
+            try:
+                # Get OAuth credentials from mlstdb
+                client_key, client_secret = get_client_credentials('pubmlst')
+                session_token, session_secret = retrieve_session_token('pubmlst')
+                
+                # Initialize OAuth session
+                self.session = OAuth1Session(
+                    consumer_key=client_key,
+                    consumer_secret=client_secret,
+                    access_token=session_token,
+                    access_token_secret=session_secret,
+                )
+                self.session.headers.update({"User-Agent": "BIGSdb downloader"})
+                self.use_auth = True
+                
+            except Exception as e:
+                msg(f"OAuth setup failed: {e}")
+                msg("Please run 'mlstdb fetch' to set up/refresh OAuth credentials")
+                msg("Falling back to unauthenticated requests")
+                
+                self.use_auth = False
+                
+            self.auth_tested = True
+        
+        try:
+            if self.use_auth:
+                response = self.session.get(url)
+            else:
+                response = requests.get(url)
+                
+            # response.raise_for_status()
+            return response
+            
+        except Exception as e:
+            msg(f"Request failed: {e}")
+            if self.use_auth:
+                msg("Retrying without authentication")
+                response = requests.get(url)
+                return response
+            raise
+
+# Update DB function FLAG: fix oauth response
 def update_db(db_folder, db):
     '''
-    A function to update the database
-    Has four inputs:
-     db_folder: the base path for all DBs
-     db: a dict with keys 'url' (the url to obtain the new db from) and 'db' (the filename to save to)
+    A function to update the database with OAuth authentication via mlstdb
     '''
-
+    
+    auth_handler = PubMLSTAuth()
+    
     #check if db folder exists and try to create it if not
     for dir in ["/blast","/pubmlst","/pubmlst/ngmast","/pubmlst/ngstar"]:
         try:
@@ -123,16 +180,48 @@ def update_db(db_folder, db):
                 os.makedirs(db_folder)
         except:
             err("Could not find/create db folder:'{}'".format( db_folder))
-
+    
     #download and process db information
     try:
         if os.path.isfile(db['db']):
             shutil.copy(db['db'], db['db'] + '.old')
+            
 
         try:
-            pubmlst = requests.get(db['url']).text
+            # print debugging info
+            # print("DEBUGGING")
+            print(f"Dowloading from URL: {db['url']}")
+            
+            # Download the main data
+            pubmlst = auth_handler.get_response(db['url']).text
+            
+            # if `schemes` string present in db['url'], then it is a profile URL, get database_version info as well
+            if 'schemes' in db['url']:
+                print("Downloading database version info")
+                scheme_url = db['url'].replace('/profiles_csv', '')
+                print(f"Scheme URL: {scheme_url}")
+                
+                version_response = auth_handler.get_response(scheme_url)
+                # version_response.raise_for_status()
+                scheme_data = version_response.json()
+                
+                db_version = scheme_data.get('last_added', 'Not found')
+                if db_version is None:
+                    db_version = 'No version information available'
+                    
+                print(f"Database version: {db_version}")
+                
+                # Save database version to a file in the appropriate directory
+                scheme_type = 'ngstar' if '67' in scheme_url else 'ngmast'
+                db_version_path = os.path.join(db_folder, 'pubmlst', scheme_type, 'database_version.txt')
+                with open(db_version_path, 'w') as version_file:
+                    version_file.write(db_version)
+                print(f"Saved version info to: {version_file}")  
+                
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
+        
+        # print(pubmlst)
         
         # Clean up names from PubMLST so they work well with mlst's mlst-make_blast_db
         pubmlst = pubmlst.replace('NG-MAST_','')
@@ -148,13 +237,16 @@ def update_db(db_folder, db):
         f.write(new_db)
         
     msg(db['db'] + ' ... Done.')
-
+    
 def download_comments(DBpath, db_list):
     '''
     Function to download the comments for individual NG-STAR alleles
     '''
-    msg("Starting download_comments...")
+    msg("Starting download_comments...This may take a while (few hours) depending on the number of alleles.")
     msg(f"Base directory: {DBpath}")
+    
+    auth_handler = PubMLSTAuth()
+
 
     comments_file_path = os.path.join(DBpath, "pubmlst/ngstar/allele_comments.tsv")
     msg(f"Output file: {comments_file_path}")
@@ -171,7 +263,7 @@ def download_comments(DBpath, db_list):
                 msg(f"Fetching URL: {recordurl}")
 
                 try:
-                    comms = requests.get(recordurl).text
+                    comms = auth_handler.get_response(recordurl).text
                 except requests.exceptions.RequestException as e:
                     err(f"Failed to fetch URL: {recordurl} with error: {e}")
 
@@ -188,6 +280,7 @@ def download_comments(DBpath, db_list):
             f.write(line + "\n")
 
     msg("Finished download_comments.")
+    msg(f"Comments file created at: {comments_file_path}")
 
 def load_ngstar_comments(DBpath):
     '''
