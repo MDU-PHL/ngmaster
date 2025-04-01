@@ -67,7 +67,7 @@ jobs:
 
       # test the package
       - name: Test the package
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
           set -euo pipefail
           conda activate ngmaster
@@ -75,7 +75,7 @@ jobs:
 
       # lint with flake8
       - name: Lint with flake8
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
           conda activate ngmaster
           # stop the build if there are Python syntax errors or undefined names
