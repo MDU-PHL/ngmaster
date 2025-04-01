@@ -19,6 +19,8 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from pkg_resources import resource_filename
+from mlstdb.core.download import create_blast_db
+
 
 # Define REST API URLs from PubMLST
 ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta", "comments":""}
@@ -59,9 +61,8 @@ def main():
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
     parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments for each allele in output')
-    parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
+    parser.add_argument("--version", action="store_true", help="Show version information")
     args = parser.parse_args()
-    # TODO make sure --db works as expected for running mlst (should be ok), once it has been packaged
 
 
     idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
@@ -76,7 +77,13 @@ def main():
     if args.db:
         DBpath = str(args.db).rstrip('/')
     else:
-        DBpath = resource_filename(__name__, 'db')
+        DBpath = resource_filename(__name__, 'db')    
+
+    if args.version:
+        print(f"ngmaster version: \n{ngmaster.__version__}")
+        db_version = get_db_version(DBpath)
+        print(f"Database version: \n{db_version}")
+        sys.exit(0)
 
     ngstar_comments = []
     if args.comments:
@@ -112,8 +119,8 @@ def main():
     # Check mlst installed and running correctly
     try:
         checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
-        mlstpath = checkdep.stdout.strip()
-        mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
+        # mlstpath = checkdep.stdout.strip()
+        # mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
     except CalledProcessError as e:
         err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
         raise SystemExit(e)
@@ -134,7 +141,9 @@ def main():
                     err('ERROR: Cannot locate database: "{}"'.format(db['db']))
                     raise SystemExit(e)
             download_comments(DBpath, db_list)
-            make_mlst_db(DBpath, mkblastdbpath)
+            msg("\nCreating BLAST database from downloaded pubMLST schemes...")
+            create_blast_db(DBpath + '/pubmlst', DBpath + '/blast')
+            
         sys.exit(0)
 
     # Translation table to match NG-STAR and NG-MAST results
@@ -229,6 +238,6 @@ def main():
             err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
         else:
             msg('\033[92m... Test successful.\033[0m')
-
+            
 if __name__ == "__main__":
     main()

@@ -13,6 +13,7 @@ import logging
 import tempfile
 from mlstdb.core.auth import get_client_credentials, retrieve_session_token
 from rauth import OAuth1Session, OAuth1Service
+from tqdm import tqdm
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -208,6 +209,8 @@ def update_db(db_folder, db):
                 db_version = scheme_data.get('last_added', 'Not found')
                 if db_version is None:
                     db_version = 'No version information available'
+                if auth_handler.use_auth == False:
+                    db_version = f"{db_version} (Unauthenticated)"
                     
                 print(f"Database version: {db_version}")
                 
@@ -216,7 +219,7 @@ def update_db(db_folder, db):
                 db_version_path = os.path.join(db_folder, 'pubmlst', scheme_type, 'database_version.txt')
                 with open(db_version_path, 'w') as version_file:
                     version_file.write(db_version)
-                print(f"Saved version info to: {version_file}")  
+                print(f"Saved version info to: {db_version_path}")  
                 
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
@@ -247,11 +250,16 @@ def download_comments(DBpath, db_list):
     
     auth_handler = PubMLSTAuth()
 
-
     comments_file_path = os.path.join(DBpath, "pubmlst/ngstar/allele_comments.tsv")
     msg(f"Output file: {comments_file_path}")
 
     comms_file = []
+    
+    # Count total sequences first for progress bar
+    total_sequences = sum(len(list(SeqIO.parse(db['db'], "fasta"))) 
+                         for db in db_list if db["comments"])
+
+    progress_bar = tqdm(total=total_sequences, desc="Downloading comments")
 
     for db in db_list:
         if db["comments"]:
@@ -271,6 +279,9 @@ def download_comments(DBpath, db_list):
                 allele_comm = comm_dict.get("comments", "")
 
                 comms_file.append("\t".join([locus, allele, allele_comm]))
+                progress_bar.update(1)
+
+    progress_bar.close()
 
     msg(f"Writing comments to file: {comments_file_path}")
     os.makedirs(os.path.dirname(comments_file_path), exist_ok=True)
@@ -280,8 +291,7 @@ def download_comments(DBpath, db_list):
             f.write(line + "\n")
 
     msg("Finished download_comments.")
-    msg(f"Comments file created at: {comments_file_path}")
-
+    
 def load_ngstar_comments(DBpath):
     '''
     Function that returns a list of comment dicts when --comments is set
@@ -301,91 +311,6 @@ def load_ngstar_comments(DBpath):
     
     return ngstar_comments
 
-# Create mlst database
-def make_mlst_db(DBpath, mkblastdbpath):
-    '''
-    A function to run mlst's mlst-make_blast_db script to create custom ngstar and ngmast databases
-    in the db folder (copy to scripts folder).
-    Temporarily copies pubmlst and blast directories from DBpath to db, creates a temporary backup of db/pubmlst 
-    and db/blast before running the script, and restores the backup after the script runs.
-    Has two inputs:
-    DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders.
-    mkblastdbpath: path to mlst-make_blast_db script.
-    '''
-    # Define the default db directory relative to this script
-    default_db_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "db")
-    pubmlst_dir = os.path.join(default_db_dir, "pubmlst")
-    blast_dir = os.path.join(default_db_dir, "blast")
-    temp_backup_dir = tempfile.mkdtemp()
-
-    msg("Starting make_mlst_db...")
-    msg(f"Base directory: {DBpath}")
-    msg(f"Default db directory: {default_db_dir}")
-    msg(f"Script path: {mkblastdbpath}")
-
-    # Validate inputs
-    if not os.path.exists(DBpath):
-        err(f"Provided DBpath does not exist: {DBpath}")
-    if not os.path.isdir(os.path.join(DBpath, "pubmlst")):
-        err(f"pubmlst directory not found in DBpath: {os.path.join(DBpath, 'pubmlst')}")
-    if not os.path.isdir(os.path.join(DBpath, "blast")):
-        err(f"blast directory not found in DBpath: {os.path.join(DBpath, 'blast')}")
-    if not os.path.isfile(mkblastdbpath) or not os.access(mkblastdbpath, os.X_OK):
-        err(f"Provided mkblastdbpath does not exist or is not executable: {mkblastdbpath}")
-
-    try:
-        # Step 1: Backup existing db/pubmlst and db/blast directories
-        msg("Backing up original pubmlst and blast directories...")
-        if os.path.exists(pubmlst_dir):
-            shutil.move(pubmlst_dir, os.path.join(temp_backup_dir, "pubmlst"))
-        if os.path.exists(blast_dir):
-            shutil.move(blast_dir, os.path.join(temp_backup_dir, "blast"))
-
-        # Step 2: Copy pubmlst and blast directories from DBpath to db
-        msg("Copying pubmlst and blast directories from DBpath to db...")
-        shutil.copytree(os.path.join(DBpath, "pubmlst"), pubmlst_dir)
-        shutil.copytree(os.path.join(DBpath, "blast"), blast_dir)
-
-        # Step 3: Copy mlst-make_blast_db script
-        if os.path.exists(mkblastdbpath):
-            cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
-            msg(f"Copying script to: {cpmbdb}")
-
-            try:
-                shutil.copy(mkblastdbpath, cpmbdb)
-                msg("Successfully copied the script.")
-            except Exception as e:
-                err(f"Failed to copy mlst-make_blast_db script: {e}")
-
-            # Step 4: Run mlst-make_blast_db script
-            msg("Running mlst-make_blast_db script...")
-            try:
-                subprocess.run(cpmbdb, check=True)
-                msg("Successfully ran mlst-make_blast_db script.")
-            except subprocess.CalledProcessError as e:
-                err(f"Failed to run mlst-make_blast_db script: {e}")
-        else:
-            err(f"Script not found: {mkblastdbpath}")
-
-        # Step 5: Copy updated pubmlst and blast directories back to DBpath
-        msg("Copying updated pubmlst and blast directories back to DBpath...")
-        shutil.rmtree(os.path.join(DBpath, "pubmlst"), ignore_errors=True)
-        shutil.rmtree(os.path.join(DBpath, "blast"), ignore_errors=True)
-        shutil.move(pubmlst_dir, os.path.join(DBpath, "pubmlst"))
-        shutil.move(blast_dir, os.path.join(DBpath, "blast"))
-
-    except Exception as e:
-        err(f"Error during make_mlst_db: {e}")
-    finally:
-        # Step 6: Restore original pubmlst and blast directories from backup
-        msg("Restoring original pubmlst and blast directories...")
-        if os.path.exists(os.path.join(temp_backup_dir, "pubmlst")):
-            shutil.move(os.path.join(temp_backup_dir, "pubmlst"), pubmlst_dir)
-        if os.path.exists(os.path.join(temp_backup_dir, "blast")):
-            shutil.move(os.path.join(temp_backup_dir, "blast"), blast_dir)
-        shutil.rmtree(temp_backup_dir, ignore_errors=True)
-
-    msg("Finished make_mlst_db.")
 
 # Match NGSTAR with NGMAST porB sequences
 def match_porb(ngmast_porb, ngstar_porb):
@@ -501,3 +426,25 @@ def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
         
     return combined_res
 
+def get_db_version(DBpath):
+    """
+    Get database versions for NG-MAST and NG-STAR schemes
+    Returns a formatted string combining both versions
+    """
+    try:
+        # Read NG-MAST version
+        ngmast_version_path = os.path.join(DBpath, 'pubmlst', 'ngmast', 'database_version.txt')
+        with open(ngmast_version_path, 'r') as f:
+            ngmast_version = f.read().strip()
+
+        # Read NG-STAR version
+        ngstar_version_path = os.path.join(DBpath, 'pubmlst', 'ngstar', 'database_version.txt')
+        with open(ngstar_version_path, 'r') as f:
+            ngstar_version = f.read().strip()
+
+        # Format the combined version string
+        return f"ngmast_{ngmast_version}_ngstar_{ngstar_version}"
+    except FileNotFoundError:
+        return "Database version not available. Run --updatedb first"
+    except Exception as e:
+        return f"Error reading database versions: {str(e)}"
