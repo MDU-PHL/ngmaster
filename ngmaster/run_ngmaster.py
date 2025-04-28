@@ -119,7 +119,7 @@ def main():
     # Check mlst installed and running correctly
     try:
         checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
-        # mlstpath = checkdep.stdout.strip()
+        mlstpath = checkdep.stdout.strip()
         # mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
     except CalledProcessError as e:
         err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
@@ -175,6 +175,11 @@ def main():
         try:
             result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
+            
+            # INFO Avoild duplicate 23s alleles for ngstar
+            if scheme == 'ngstar':
+                rlist = process_duplicate_23s_alleles(rlist)
+                
 
             # INFO Checking number of alleles to catch mlst error
             # Issue #125

@@ -448,3 +448,56 @@ def get_db_version(DBpath):
         return "Database version not available. Run --updatedb first"
     except Exception as e:
         return f"Error reading database versions: {str(e)}"
+
+def process_duplicate_23s_alleles(rlist):
+    """
+    Process 23S alleles in ngstar scheme to handle duplicates.
+    """
+    if not rlist or len(rlist) < 2:  # No data or just headers
+        return rlist
+        
+    # Get header and find the 23S column
+    header = rlist[0].split("\t")
+    
+    # If no 23S column, nothing to process
+    if "23S" not in header:
+        return rlist
+    
+    # Find the column index for 23S
+    s23_index = header.index("23S")
+    
+    # Process each result row (skip header)
+    for i in range(1, len(rlist)):
+        fields = rlist[i].split("\t")
+        
+        # Skip if row doesn't have enough fields
+        if len(fields) <= s23_index:
+            continue
+            
+        # Get filename for warning message
+        filename = fields[0]
+        
+        # Check if 23S field contains commas (duplicates)
+        s23_value = fields[s23_index]
+        if "," in s23_value:
+            s23_alleles = s23_value.split(",")
+            unique_alleles = list(set(s23_alleles))
+            
+            # If we found duplicates
+            if len(unique_alleles) < len(s23_alleles):
+                # If only one unique value, use that
+                if len(unique_alleles) == 1:
+                    new_value = unique_alleles[0]
+                else:
+                    # Otherwise, join unique values with commas
+                    new_value = ",".join(unique_alleles)
+                
+                # Replace value in the row
+                fields[s23_index] = new_value
+                rlist[i] = "\t".join(fields)
+                
+                # Print warning message
+                msg(f"WARNING: Duplicate 23S alleles detected in {filename} ({s23_value}). "
+                      f"Squashed to {new_value}.")
+    
+    return rlist
