@@ -8,7 +8,7 @@ from Bio import SeqIO
 import subprocess
 import requests
 import json
-from pkg_resources import resource_filename
+
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -204,7 +204,7 @@ def make_mlst_db(DBpath, mkblastdbpath):
 
     if os.path.exists(mkblastdbpath):
 
-        cpmbdb = resource_filename(__name__, 'scripts/mlst-make_blast_db')
+        cpmbdb = os.path.join(os.path.dirname(__file__), 'scripts', 'mlst-make_blast_db')
 
         try:
             shutil.copy(mkblastdbpath, cpmbdb)

@@ -18,7 +18,7 @@ import re
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from pkg_resources import resource_filename
+
 
 # Define REST API URLs from PubMLST
 ngm_porb = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG-MAST_porB/alleles_fasta", "comments":""}
@@ -76,7 +76,7 @@ def main():
     if args.db:
         DBpath = str(args.db).rstrip('/')
     else:
-        DBpath = resource_filename(__name__, 'db')
+        DBpath = os.path.join(os.path.dirname(__file__), 'db')
 
     ngstar_comments = []
     if args.comments:
@@ -145,7 +145,7 @@ def main():
 
     # Run test example
     if args.test:
-        testSEQ = resource_filename(__name__, "/test/test.fa")
+        testSEQ = os.path.join(os.path.dirname(__file__), 'db', 'test', 'test.fa')
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
 
