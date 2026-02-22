@@ -2,7 +2,7 @@
 [![Conda Downloads](https://img.shields.io/conda/dn/bioconda/bohra)](https://anaconda.org/bioconda/bohra)
 ![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 [![DOI:10.1099/mgen.0.000076](https://zenodo.org/badge/DOI/10.1099/mgen.0.000076.svg)](https://doi.org/10.1099/mgen.0.000076)
-[![CI](https://github.com/MDU-PHL/ngamster/actions/workflows/ci.yml/badge.svg)](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml)
+[![Tests](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml/badge.svg)](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml)
 
 # ngmaster
 
