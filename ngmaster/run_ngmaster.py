@@ -145,9 +145,10 @@ def main():
 
     # Run test example
     if args.test:
-        testSEQ = os.path.join(os.path.dirname(__file__), 'db', 'test', 'test.fa')
+        testSEQ = os.path.join(os.path.dirname(__file__),  'test', 'test.fa')
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
+        print('Test example FASTA file: {}'.format(testSEQ))
 
     # Check if positional arguments
     if not args.fasta:
@@ -166,7 +167,7 @@ def main():
         try:
             result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
             rlist = result.stdout.split("\n")[:-1] # drop last empty line
-
+            
             # INFO Checking number of alleles to catch mlst error
             # Issue #125
             # https://github.com/tseemann/mlst/issues/125
@@ -184,7 +185,7 @@ def main():
         except CalledProcessError as e:
             raise SystemExit(e)
 
-        
+    
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
 
@@ -218,7 +219,7 @@ def main():
         header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']
 
     print(SEP.join(header))
-
+    
     for out in collate_out:
         print(out.get_record(sep = SEP, comments = ngstar_comments))  
 
