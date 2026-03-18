@@ -1,4 +1,5 @@
 # Modules and Functions
+import ngmaster
 import sys
 import os
 import os.path
@@ -137,7 +138,7 @@ class PubMLSTAuth:
                     access_token=session_token,
                     access_token_secret=session_secret,
                 )
-                self.session.headers.update({"User-Agent": "BIGSdb downloader"})
+                self.session.headers.update({"User-Agent": f"ngmaster v{ngmaster.__version__}"})
                 self.use_auth = True
                 
             except Exception as e:
