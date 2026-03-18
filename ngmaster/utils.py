@@ -218,7 +218,7 @@ def update_db(db_folder, db):
                 scheme_type = 'ngstar' if '67' in scheme_url else 'ngmast'
                 db_version_path = os.path.join(db_folder, 'pubmlst', scheme_type, 'database_version.txt')
                 with open(db_version_path, 'w') as version_file:
-                    version_file.write(db_version)
+                    version_file.write(f"{db_version}\n")
                 print(f"Saved version info to: {db_version_path}")  
                 
         except requests.exceptions.RequestException as e:
