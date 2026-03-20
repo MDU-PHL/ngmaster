@@ -18,7 +18,7 @@ import re
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from pkg_resources import resource_filename
+from pathlib import Path
 from mlstdb.core.download import create_blast_db
 
 
@@ -53,7 +53,7 @@ def main():
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
         'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)\n'
         'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)\n'
-        f'default: {resource_filename("ngmaster", "db")}\n')
+        f'default: {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
     parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
@@ -78,7 +78,7 @@ def main():
     if args.db:
         DBpath = str(args.db).rstrip('/')
     else:
-        DBpath = resource_filename(__name__, 'db')    
+        DBpath = str(Path(__file__).parent / 'db')    
 
     if args.version:
         print(f"ngmaster version: \n{ngmaster.__version__}")
@@ -155,7 +155,7 @@ def main():
 
     # Run test example
     if args.test:
-        testSEQ = resource_filename(__name__, "/test/test.fa")
+        testSEQ = str(Path(__file__).parent / 'test' / 'test.fa')
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
 

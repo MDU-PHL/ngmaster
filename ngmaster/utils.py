@@ -9,7 +9,7 @@ from Bio import SeqIO
 import subprocess
 import requests
 import json
-from pkg_resources import resource_filename
+from pathlib import Path
 import logging
 import tempfile
 from mlstdb.core.auth import get_client_credentials, retrieve_session_token
