@@ -30,7 +30,7 @@ setup(name='ngmaster',
       author_email='kwongj@gmail.com',
       license='GPLv3',
       packages=['ngmaster'],
-      python_requires='>=3.6',
+      python_requires='>=3.12',
       install_requires=[
           'argparse',
           'biopython',

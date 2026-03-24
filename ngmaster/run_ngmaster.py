@@ -200,6 +200,7 @@ def main():
         testSEQ = str(Path(__file__).parent / 'test' / 'test.fa')
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
+        print('Test example FASTA file: {}'.format(testSEQ))
 
     # Check if positional arguments
     if not args.fasta:
