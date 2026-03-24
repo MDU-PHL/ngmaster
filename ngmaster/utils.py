@@ -221,7 +221,7 @@ def update_db(db_folder, db):
                 if db_version is None:
                     db_version = 'No version information available'
                 if auth_handler.use_auth == False:
-                    db_version = f"{db_version} (Unauthenticated)"
+                    db_version = "2024-12-31_Unauthenticated"
                     
                 print(f"Database version: {db_version}")
                 
