@@ -15,6 +15,8 @@ import tempfile
 from mlstdb.core.auth import get_client_credentials, retrieve_session_token
 from rauth import OAuth1Session, OAuth1Service
 from tqdm import tqdm
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -167,6 +169,14 @@ class PubMLSTAuth:
                 return response
             raise
 
+_thread_local = threading.local()
+
+def _get_thread_auth():
+    """Return a PubMLSTAuth instance local to the current thread."""
+    if not hasattr(_thread_local, 'auth'):
+        _thread_local.auth = PubMLSTAuth()
+    return _thread_local.auth
+
 # Update DB function FLAG: fix oauth response
 def update_db(db_folder, db):
     '''
@@ -242,45 +252,52 @@ def update_db(db_folder, db):
         
     msg(db['db'] + ' ... Done.')
     
-def download_comments(DBpath, db_list):
+def download_comments(DBpath, db_list, threads=1):
     '''
-    Function to download the comments for individual NG-STAR alleles
+    Function to download the comments for individual NG-STAR alleles.
+    `threads` controls the number of concurrent HTTP requests to PubMLST
+    (default 1; recommended 4 to balance speed and server load).
     '''
-    msg("Starting download_comments...This may take a while (few hours) depending on the number of alleles.")
+    msg(f"Starting download_comments with {threads} thread(s)...This may take a while depending on the number of alleles.")
     msg(f"Base directory: {DBpath}")
-    
-    auth_handler = PubMLSTAuth()
 
     comments_file_path = os.path.join(DBpath, "pubmlst/ngstar/allele_comments.tsv")
     msg(f"Output file: {comments_file_path}")
 
-    comms_file = []
-    
-    # Count total sequences first for progress bar
-    total_sequences = sum(len(list(SeqIO.parse(db['db'], "fasta"))) 
-                         for db in db_list if db["comments"])
-
-    progress_bar = tqdm(total=total_sequences, desc="Downloading comments")
-
+    # Pre-collect all work items in original order: (index, locus, allele, url)
+    work_items = []
     for db in db_list:
         if db["comments"]:
             msg(f"Processing database: {db['db']} with comments URL base: {db['comments']}")
-
             for seq in SeqIO.parse(db['db'], "fasta"):
                 locus, allele = str(seq.id).split("_")
-                recordurl = f'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/{db["comments"]}/alleles/{allele}'
-                msg(f"Fetching URL: {recordurl}")
+                recordurl = (
+                    f'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef'
+                    f'/loci/{db["comments"]}/alleles/{allele}'
+                )
+                work_items.append((len(work_items), locus, allele, recordurl))
 
-                try:
-                    comms = auth_handler.get_response(recordurl).text
-                except requests.exceptions.RequestException as e:
-                    err(f"Failed to fetch URL: {recordurl} with error: {e}")
+    progress_bar = tqdm(total=len(work_items), desc="Downloading comments")
 
-                comm_dict = json.loads(comms)
-                allele_comm = comm_dict.get("comments", "")
+    def _fetch(item):
+        idx, locus, allele, url = item
+        auth = _get_thread_auth()
+        try:
+            comms = auth.get_response(url).text
+        except requests.exceptions.RequestException as e:
+            msg(f"Failed to fetch URL: {url} with error: {e}")
+            comms = '{}'
+        comm_dict = json.loads(comms)
+        allele_comm = comm_dict.get("comments", "")
+        return idx, locus, allele, allele_comm
 
-                comms_file.append("\t".join([locus, allele, allele_comm]))
-                progress_bar.update(1)
+    results = {}
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        futures = {executor.submit(_fetch, item): item for item in work_items}
+        for future in as_completed(futures):
+            idx, locus, allele, allele_comm = future.result()
+            results[idx] = (locus, allele, allele_comm)
+            progress_bar.update(1)
 
     progress_bar.close()
 
@@ -288,8 +305,9 @@ def download_comments(DBpath, db_list):
     os.makedirs(os.path.dirname(comments_file_path), exist_ok=True)
 
     with open(comments_file_path, 'w') as f:
-        for line in comms_file:
-            f.write(line + "\n")
+        for idx in range(len(work_items)):
+            locus, allele, allele_comm = results[idx]
+            f.write("\t".join([locus, allele, allele_comm]) + "\n")
 
     msg("Finished download_comments.")
     
