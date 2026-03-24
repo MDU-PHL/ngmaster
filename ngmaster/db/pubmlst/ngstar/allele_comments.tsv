@@ -281,8 +281,8 @@ penA	281	PBP2 motif XXXIV; mutations present: I312→M; V316→T; D345→a; F504
 penA	282	mutations present: F504→L penA Type II Non Mosaic; NG STAR penA allele: 2.007
 penA	283	mutations present: F504→L YES; P551→S YES Type XII non-mosaic NG STAR penA allele: 12.004 Penicillin MIC: 0
 penA	284	mutations present: A501→V YES; F504→L; P551→S  Type XIII non-mosaic  NG STAR penA allele: 13.001 Penicillin MIC: 2
-penA	285	mutations present: F504→L; P551→L Type IX non-mosaic NG STAR penA allele: 9.001 Penicillin MIC: 1
-penA	286	mutations present: A501→V; F504→L; P551→L penA Type XI Non Mosaic; NG STAR penA allele: 11.001
+penA	285	mutations present: A571G; Type IX non-mosaic NG STAR penA allele: 9.001 Penicillin MIC: 1
+penA	286	mutations present: A501V, A517G; penA Type XI Non Mosaic; NG STAR penA allele: 11.001
 penA	287	mutations present: mutations present: I312→M NO; V316→T NO; D345→a NO;  A501→T YES; F504→L YES N512→Y NO; G545→S NO Type XVIII non mosaic NG STAR penA allele: 18.001 Penicillin MIC: 256
 penA	288	mutations present: F504→L; P551→S Type V non-mosaic NG STAR penA allele: 5.002 Penicillin MIC: 2
 penA	289	mutations present: I312→M YES; V316→T YES; D345→a YES; F504→L NO; N512→Y NO; G545→S NO Type XXXV mosaic NG STAR penA allele: 35.001 Penicillin MIC: 4
@@ -290,7 +290,7 @@ penA	290	mutations present: mutations present: I312→M NO; V316→T NO; D345→
 penA	291	mutations present: mutations present: I312→M NO; V316→T NO; D345→a NO; A501→V YES;F504→L YES; N512→Y NO; G545→S NO Type XLIII non-mosaic NG STAR penA allele: 43.002
 penA	292	mutations present: A501→V; F504→L penA Type 43 Non Mosaic; NG STAR penA allele 43.003
 penA	293	mutations present: F504→L; P551→L penA Type IX Non Mosaic; NG STAR penA allele: 9.002
-penA	294	mutations present: F504→L Type XIV non-mosaic NG STAR penA allele: 14.001 Penicillin MIC: 0.25
+penA	294	mutations present: F504L; A517G;  Type XIV non-mosaic NG STAR penA allele: 14.001 Penicillin MIC: 0.25
 penA	295	
 penA	296	
 penA	297	
