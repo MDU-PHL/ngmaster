@@ -6,7 +6,7 @@
   "description": "MLST",
   "number-of-letters": 17520394,
   "number-of-sequences": 23222,
-  "last-updated": "2026-03-24T14:43:00",
+  "last-updated": "2026-03-24T17:11:00",
   "number-of-volumes": 1,
   "bytes-total": 8891814,
   "bytes-to-cache": 4672362,
