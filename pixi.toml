@@ -1,11 +1,14 @@
 [workspace]
-authors = ["Himal Shrestha <stha.himal2007@gmail.com>"]
+authors = ["Himal Shrestha"]
 channels = ["conda-forge", "nodefaults", "bioconda", "r"]
 name = "ngmaster-env"
 platforms = ["linux-64"]
 version = "0.1.0"
 
 [tasks]
+test = { cmd = "pytest tests/ -v --tb=short", description = "Run full test suite (unit + integration)" }
+test-unit = { cmd = "pytest tests/test_utils.py -v --tb=short", description = "Run unit tests only (no mlst required)" }
+test-integration = { cmd = "pytest tests/test_cli.py -v --tb=short", description = "Run CLI integration tests (requires mlst)" }
 
 [dependencies]
 # --- core runtime ---
