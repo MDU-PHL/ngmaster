@@ -1,4 +1,5 @@
 # Modules and Functions
+import ngmaster
 import sys
 import os
 import os.path
@@ -8,7 +9,14 @@ from Bio import SeqIO
 import subprocess
 import requests
 import json
-
+from pathlib import Path
+import logging
+import tempfile
+from mlstdb.core.auth import get_client_credentials, retrieve_session_token
+from rauth import OAuth1Session, OAuth1Service
+from tqdm import tqdm
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class MlstRecord:
     '''A class that defines an NG-MAST or NG-STAR
@@ -22,6 +30,7 @@ class MlstRecord:
         self.alleles = alleles
         self.simil = "" # similar "~"
         self.part = "" # partial "?"
+        self.cc = ''  # Add CC field
 
         if self.scheme == 'ngstar':
             self.porb = self.alleles[2]
@@ -52,44 +61,48 @@ class MlstRecord:
         # -       allele missing                          < --mincov  < --minid
         # n,m     multiple alleles         
 
-    def get_record(self, sep, comments):
+ 
+    def get_record(self, sep='\t', comments=None, header=None): # FLAG: modified function to deal with wrong number of fields in output
         '''
         Function that returns a comma-separated or tab-separated string of allele IDs
         (and optionally associated PubMLST comments) for each record
         '''
-
-        ngmast = self.alleles[:2]
-        ngstar = self.alleles[2:]
-
+        
+        ngmast_loci = self.alleles[:2]
+        ngstar_loci = self.alleles[2:]
+        # print(f"DEBUG: ngmast_loci: {ngmast_loci}, ngstar_loci: {ngstar_loci}") # FLAG: for debugging
         if comments:
-            rec_comms = []
+            out = [self.fname, self.scheme, self.st] + self.alleles
+            # Interleave alleles and comments
+            out_with_comments = []
+            # print(f"DEBUG: out: {out}") # FLAG: for debugging
+            for i, allele in enumerate(ngstar_loci):  # Assuming 7 loci
+                # Get the corresponding header if provided
+                column_header = header[3 + 2 * i] if header else f"Allele_{i + 1}"
+                comment_header = header[4 + 2 * i] if header else f"Comment_{i + 1}"
+                comment = comments[i].get(allele, "")
+                # Debugging: Log the header, allele, and comment
+                # print(f"DEBUG: {column_header}: {allele}, {comment_header}: {comment}")
+                out_with_comments.append(allele)
+                out_with_comments.append(comment)
+            out = out[:5] + out_with_comments
+            out.append(self.cc)  # Add CC to output
+        else:
+            out = [self.fname, self.scheme, self.st] + self.alleles + [self.cc]  # Add CC to output
 
-            #Retrieve record-specific comments
-            for locus, allele in enumerate(ngstar):
-                try:
-                    rec_comms.append(comments[locus].get(allele,""))
-                except IndexError as e:
-                    raise SystemExit(e)
-                    err(f'error {e}: locus is {locus} when comments is of length {len(comments)} and last index {comments[-1]} and allele {allele} for file {self.fname} and scheme {self.scheme}')
-
-                
-            # Interleave comments with allele IDs
-            ngstar = list(sum(zip(ngstar,rec_comms), ()))
-
-        record = ngmast + ngstar
-
+        # **Handle special characters for CSV output**
         if sep == ',':
             csv_record = []
-            for col in record:
-                if re.search(r',', col):
-                    col = '"' + col + '"'
+            for col in out:
+                if isinstance(col, str) and (',' in col or ';' in col):
+                    col = f'"{col}"'  # Quote fields containing special characters
                 csv_record.append(col)
-            record = csv_record
+            out = csv_record
 
-        joined_record = sep.join([self.fname, self.scheme, self.st] + record)
+        # Debugging: Log the final row before returning
+        # print(f"DEBUG: Final row: {out}")
 
-        return joined_record
-
+        return sep.join(map(str, out))
 
 # Log a message to stderr
 def msg(*args, **kwargs):
@@ -100,15 +113,78 @@ def err(*args, **kwargs):
     msg(*args, **kwargs)
     sys.exit(1)
 
-# Update DB function
+
+class PubMLSTAuth: 
+    """Class to handle PubMLST authentication state and requests"""
+    
+    def __init__(self):
+        self.auth_tested = False
+        self.use_auth = False
+    
+    def get_response(self, url):
+        """
+        Get response from URL, using OAuth if possible
+        Falls back to unauthenticated request if OAuth fails
+        """
+        # Test auth only once
+        if not self.auth_tested:
+            try:
+                # Get OAuth credentials from mlstdb
+                client_key, client_secret = get_client_credentials('pubmlst')
+                session_token, session_secret = retrieve_session_token('pubmlst')
+                
+                # Initialize OAuth session
+                self.session = OAuth1Session(
+                    consumer_key=client_key,
+                    consumer_secret=client_secret,
+                    access_token=session_token,
+                    access_token_secret=session_secret,
+                )
+                self.session.headers.update({"User-Agent": f"ngmaster v{ngmaster.__version__}"})
+                self.use_auth = True
+                
+            except Exception as e:
+                msg(f"OAuth setup failed: {e}")
+                msg("Please run 'mlstdb fetch' to set up/refresh OAuth credentials")
+                msg("Falling back to unauthenticated requests")
+                
+                self.use_auth = False
+                
+            self.auth_tested = True
+        
+        try:
+            if self.use_auth:
+                response = self.session.get(url)
+            else:
+                response = requests.get(url)
+                
+            # response.raise_for_status()
+            return response
+            
+        except Exception as e:
+            msg(f"Request failed: {e}")
+            if self.use_auth:
+                msg("Retrying without authentication")
+                response = requests.get(url)
+                return response
+            raise
+
+_thread_local = threading.local()
+
+def _get_thread_auth():
+    """Return a PubMLSTAuth instance local to the current thread."""
+    if not hasattr(_thread_local, 'auth'):
+        _thread_local.auth = PubMLSTAuth()
+    return _thread_local.auth
+
+# Update DB function FLAG: fix oauth response
 def update_db(db_folder, db):
     '''
-    A function to update the database
-    Has four inputs:
-     db_folder: the base path for all DBs
-     db: a dict with keys 'url' (the url to obtain the new db from) and 'db' (the filename to save to)
+    A function to update the database with OAuth authentication via mlstdb
     '''
-
+    
+    auth_handler = PubMLSTAuth()
+    
     #check if db folder exists and try to create it if not
     for dir in ["/blast","/pubmlst","/pubmlst/ngmast","/pubmlst/ngstar"]:
         try:
@@ -116,16 +192,50 @@ def update_db(db_folder, db):
                 os.makedirs(db_folder)
         except:
             err("Could not find/create db folder:'{}'".format( db_folder))
-
+    
     #download and process db information
     try:
         if os.path.isfile(db['db']):
             shutil.copy(db['db'], db['db'] + '.old')
+            
 
         try:
-            pubmlst = requests.get(db['url']).text
+            # print debugging info
+            # print("DEBUGGING")
+            print(f"Dowloading from URL: {db['url']}")
+            
+            # Download the main data
+            pubmlst = auth_handler.get_response(db['url']).text
+            
+            # if `schemes` string present in db['url'], then it is a profile URL, get database_version info as well
+            if 'schemes' in db['url']:
+                print("Downloading database version info")
+                scheme_url = db['url'].replace('/profiles_csv', '')
+                print(f"Scheme URL: {scheme_url}")
+                
+                version_response = auth_handler.get_response(scheme_url)
+                # version_response.raise_for_status()
+                scheme_data = version_response.json()
+                
+                db_version = scheme_data.get('last_added', 'Not found')
+                if db_version is None:
+                    db_version = 'No version information available'
+                if auth_handler.use_auth == False:
+                    db_version = "2024-12-31_Unauthenticated"
+                    
+                print(f"Database version: {db_version}")
+                
+                # Save database version to a file in the appropriate directory
+                scheme_type = 'ngstar' if '67' in scheme_url else 'ngmast'
+                db_version_path = os.path.join(db_folder, 'pubmlst', scheme_type, 'database_version.txt')
+                with open(db_version_path, 'w') as version_file:
+                    version_file.write(f"{db_version}\n")
+                print(f"Saved version info to: {db_version_path}")  
+                
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
+        
+        # print(pubmlst)
         
         # Clean up names from PubMLST so they work well with mlst's mlst-make_blast_db
         pubmlst = pubmlst.replace('NG-MAST_','')
@@ -141,37 +251,66 @@ def update_db(db_folder, db):
         f.write(new_db)
         
     msg(db['db'] + ' ... Done.')
-
-
-def download_comments(DBpath, db_list):
+    
+def download_comments(DBpath, db_list, threads=1):
     '''
-    Function to download the comments for individual NG-STAR alleles
+    Function to download the comments for individual NG-STAR alleles.
+    `threads` controls the number of concurrent HTTP requests to PubMLST
+    (default 1; recommended 4 to balance speed and server load).
     '''
+    msg(f"Starting download_comments with {threads} thread(s)...This may take a while depending on the number of alleles.")
+    msg(f"Base directory: {DBpath}")
 
-    msg("Downloading NG-STAR information for individual alleles. This may take a while.")
-    comms_file = []
+    comments_file_path = os.path.join(DBpath, "pubmlst/ngstar/allele_comments.tsv")
+    msg(f"Output file: {comments_file_path}")
 
+    # Pre-collect all work items in original order: (index, locus, allele, url)
+    work_items = []
     for db in db_list:
         if db["comments"]:
+            msg(f"Processing database: {db['db']} with comments URL base: {db['comments']}")
             for seq in SeqIO.parse(db['db'], "fasta"):
+                locus, allele = str(seq.id).split("_")
+                recordurl = (
+                    f'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef'
+                    f'/loci/{db["comments"]}/alleles/{allele}'
+                )
+                work_items.append((len(work_items), locus, allele, recordurl))
 
-                locus, allele = str(seq.id).split("_") 
-                recordurl = 'https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/' + db["comments"] + '/alleles/' + allele
+    progress_bar = tqdm(total=len(work_items), desc="Downloading comments")
 
-                try:
-                    comms = requests.get(recordurl).text
-                except requests.exceptions.RequestException as e:
-                    raise SystemExit(e)
+    def _fetch(item):
+        idx, locus, allele, url = item
+        auth = _get_thread_auth()
+        try:
+            comms = auth.get_response(url).text
+        except requests.exceptions.RequestException as e:
+            msg(f"Failed to fetch URL: {url} with error: {e}")
+            comms = '{}'
+        comm_dict = json.loads(comms)
+        allele_comm = comm_dict.get("comments", "")
+        return idx, locus, allele, allele_comm
 
-                comm_dict = json.loads(comms)
-                allele_comm = comm_dict.get("comments", "")
+    results = {}
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        futures = {executor.submit(_fetch, item): item for item in work_items}
+        for future in as_completed(futures):
+            idx, locus, allele, allele_comm = future.result()
+            results[idx] = (locus, allele, allele_comm)
+            progress_bar.update(1)
 
-                comms_file.append("\t".join([locus, allele, allele_comm]))
+    progress_bar.close()
 
-    with open(DBpath + "/pubmlst/ngstar/allele_comments.tsv",'w') as f:
-        for line in comms_file:
-            f.write(line + "\n")
+    msg(f"Writing comments to file: {comments_file_path}")
+    os.makedirs(os.path.dirname(comments_file_path), exist_ok=True)
 
+    with open(comments_file_path, 'w') as f:
+        for idx in range(len(work_items)):
+            locus, allele, allele_comm = results[idx]
+            f.write("\t".join([locus, allele, allele_comm]) + "\n")
+
+    msg("Finished download_comments.")
+    
 def load_ngstar_comments(DBpath):
     '''
     Function that returns a list of comment dicts when --comments is set
@@ -190,34 +329,6 @@ def load_ngstar_comments(DBpath):
             ngstar_comments.append(d_comms[a])        
     
     return ngstar_comments
-
-
-# Create mlst database
-def make_mlst_db(DBpath, mkblastdbpath):
-    '''
-    A function to run mlst's mlst-make_blast_db script to create custom ngstar and ngmast databases
-    in the db folder (copy to scripts folder)
-    Has two inputs:
-    DBpath: base directory with blast and pubmlst/ngmast and pubmlst/ngstar folders
-    mkblastdbpath: path to mlst-make_blast_db script
-    '''
-
-    if os.path.exists(mkblastdbpath):
-
-        cpmbdb = os.path.join(os.path.dirname(__file__), 'scripts', 'mlst-make_blast_db')
-
-        try:
-            shutil.copy(mkblastdbpath, cpmbdb)
-        except:
-            err("Could not copy mlst-make_blast_db script to :'{}'".format(cpmbdb))
-
-        try:
-            subprocess.run(cpmbdb, check=True)
-        except subprocess.CalledProcessError as e:
-            err("Could not run mlst-make_blast_db script :'{}'".format(e))
-            
-    else:
-        err('ERROR: Could not find mlst-make_blast_db script in ' + mkblastdbpath + '. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
 
 
 # Match NGSTAR with NGMAST porB sequences
@@ -249,80 +360,163 @@ def match_porb(ngmast_porb, ngstar_porb):
         err('ERROR: porB files for NG-STAR or NG-MAST could not be found. Run ngmaster --update to update PubMLST databases.')
 
 
-def read_ngstar(ngsfile):
-    '''
-    Function that reads the ngstar.txt profile file and returns
-    a dict of NGSTAR 7-allele tuples as keys and STs as value
-    ST  penA    mtrR    porB    ponA    gyrA    parC    23S
-    1   20  10  13  100 100 2   100
-    2   22  14  14  100 100 7   100
-    3   166 1   13  1   5   1   100
-    '''
-    ngstable = {}    
-
-    with open(ngsfile,'r') as f:
+def read_ngstar(ngstar_profile):
+    """Read NG-STAR profiles"""
+    ngstar = {}
+    with open(ngstar_profile) as f:
+        header = f.readline().rstrip().split('\t')
         for line in f:
-            cols = line.rstrip('\n').split("\t")
-            tpl_key = tuple(cols[1:])  
-            st = cols[0]
-            ngstable[tpl_key] = st
+            tokens = line.rstrip().split('\t')
+            if len(tokens) >= 8:  # Require at least the base columns (ST + 7 alleles)
+                st = tokens[0]
+                # Get the alleles
+                alleles = tokens[1:8]
+                # Get CC if present, otherwise empty string
+                cc = tokens[8] if len(tokens) > 8 else ''
+                ngstar["/".join(alleles)] = (st, cc)  # Store CC with ST
+    return ngstar
 
-    return ngstable
-
-
-def convert_ngstar(ngstable, mlstngstar):
-    
-    alleles = tuple(mlstngstar.alleles)
-    st = ngstable.get(alleles, "-")
-
-    converted = MlstRecord(mlstngstar.fname, mlstngstar.scheme, st, mlstngstar.alleles)
-
-    return converted
-
+def convert_ngstar(ngstartbl, rec):
+    """Convert NG-STAR record using profile table"""
+    key = "/".join(rec.alleles)
+    if key in ngstartbl:
+        rec.st = ngstartbl[key][0]  # ST is first element
+        rec.cc = ngstartbl[key][1]  # CC is second element
+    else:
+        rec.st = "-"
+        rec.cc = "-"
+    return rec
 
 def collate_results(ngmast_res, ngstar_res, ttable, ngstartbl):
-
+    
     '''
     A function that collates results from running ngmast mlst and ngstar mlst and returns a combined output
     Has three inputs:
-    ngmast_res: results from running mlst --legacy --scheme ngmast, a dict with filenames as keys and MlstRecord objects as values
-    ngstar_res: results from running mlst --legacy --scheme ngstar, a dict with filenames as keys and MlstRecord objects as values
-    ttable: translation table that matches up short porB sequences from NG-STAR (30nt) to long porB sequences from NG-MAST
-            created by match_porb(), a dict with ngmast / key -> ngstar / value pairs
+    ngmast_res: results from running mlst --legacy --scheme ngmast
+    ngstar_res: results from running mlst --legacy --scheme ngstar
+    ttable: translation table that matches porB sequences
+    ngstartbl: NG-STAR profile table for ST and CC lookup
     '''
-
+    
     combined_res = []
-    # check that keys for both dicts are the same
+    
     if ngmast_res.keys() == ngstar_res.keys():
         for file in ngmast_res:
-
+            
             #msg(f"Post-processing file {file} and creating output ...")
-
+            
             try:
-                ngstar_res[file].alleles[2] = "".join([ngmast_res[file].simil, ttable[ngmast_res[file].porb], ngmast_res[file].part])
-            except TypeError as e:
-                #This gets triggered when porb is a list rather than a single value
-                # Go through all elements and create a multi-allele entry using ttable
+                # Handle porB modification
                 if isinstance(ngmast_res[file].porb, list):
                     porblist = []
                     for pb in ngmast_res[file].porb:
                         porblist.append(ttable[pb])
                     ngstar_res[file].alleles[2] = ",".join(porblist)
                 else:
-                    err(f"Porb allele for record {file} is not list but {type(ngmast_res[file].porb)}. Exiting ...")
+                    ngstar_res[file].alleles[2] = "".join([
+                        ngmast_res[file].simil,
+                        ttable[ngmast_res[file].porb],
+                        ngmast_res[file].part
+                    ])
+
+                # Convert NG-STAR record and get both ST and CC
+                conv_ngs = convert_ngstar(ngstartbl, ngstar_res[file])
+                
+                # Create combined record with CC included
+                ngmastar = MlstRecord(
+                    ngmast_res[file].fname,
+                    "ngmaSTar",
+                    f"{ngmast_res[file].st}/{conv_ngs.st}",
+                    ngmast_res[file].alleles + conv_ngs.alleles
+                )
+                
+                # Set the CC value from the converted NG-STAR record
+                ngmastar.cc = conv_ngs.cc
+                
+                combined_res.append(ngmastar)
+                
+            except TypeError as e:
+                if not isinstance(ngmast_res[file].porb, list):
+                    print(f"Porb allele for record {file} is not list but {type(ngmast_res[file].porb)}. Exiting ...")
                     raise SystemExit
-
-            conv_ngs = convert_ngstar(ngstartbl, ngstar_res[file])
-
-            ngmastar = MlstRecord(ngmast_res[file].fname,
-                "ngmaSTar",
-                ngmast_res[file].st + "/" + conv_ngs.st,
-                ngmast_res[file].alleles + conv_ngs.alleles
-            )
-
-            combined_res.append(ngmastar)
-
+                raise e
     else:
         raise KeyError("Not all files have been successfully processed by mlst (ngstar or ngmast scheme). Cannot collate results from two runs. Exiting.")
-
+        
     return combined_res
+
+def get_db_version(DBpath):
+    """
+    Get database versions for NG-MAST and NG-STAR schemes
+    Returns a formatted string combining both versions
+    """
+    try:
+        # Read NG-MAST version
+        ngmast_version_path = os.path.join(DBpath, 'pubmlst', 'ngmast', 'database_version.txt')
+        with open(ngmast_version_path, 'r') as f:
+            ngmast_version = f.read().strip()
+
+        # Read NG-STAR version
+        ngstar_version_path = os.path.join(DBpath, 'pubmlst', 'ngstar', 'database_version.txt')
+        with open(ngstar_version_path, 'r') as f:
+            ngstar_version = f.read().strip()
+
+        # Format the combined version string
+        return f"ngmast_{ngmast_version}_ngstar_{ngstar_version}"
+    except FileNotFoundError:
+        return "Database version not available. Run --updatedb first"
+    except Exception as e:
+        return f"Error reading database versions: {str(e)}"
+
+def process_duplicate_23s_alleles(rlist):
+    """
+    Process 23S alleles in ngstar scheme to handle duplicates.
+    """
+    if not rlist or len(rlist) < 2:  # No data or just headers
+        return rlist
+        
+    # Get header and find the 23S column
+    header = rlist[0].split("\t")
+    
+    # If no 23S column, nothing to process
+    if "23S" not in header:
+        return rlist
+    
+    # Find the column index for 23S
+    s23_index = header.index("23S")
+    
+    # Process each result row (skip header)
+    for i in range(1, len(rlist)):
+        fields = rlist[i].split("\t")
+        
+        # Skip if row doesn't have enough fields
+        if len(fields) <= s23_index:
+            continue
+            
+        # Get filename for warning message
+        filename = fields[0]
+        
+        # Check if 23S field contains commas (duplicates)
+        s23_value = fields[s23_index]
+        if "," in s23_value:
+            s23_alleles = s23_value.split(",")
+            unique_alleles = list(set(s23_alleles))
+            
+            # If we found duplicates
+            if len(unique_alleles) < len(s23_alleles):
+                # If only one unique value, use that
+                if len(unique_alleles) == 1:
+                    new_value = unique_alleles[0]
+                else:
+                    # Otherwise, join unique values with commas
+                    new_value = ",".join(unique_alleles)
+                
+                # Replace value in the row
+                fields[s23_index] = new_value
+                rlist[i] = "\t".join(fields)
+                
+                # Print warning message
+                msg(f"WARNING: Duplicate 23S alleles detected in {filename} ({s23_value}). "
+                      f"Squashed to {new_value}.")
+    
+    return rlist

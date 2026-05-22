@@ -1,6 +1,10 @@
+[![Tests](https://github.com/MDU-PHL/ngmaster/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/MDU-PHL/ngmaster/actions/workflows/test.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/MDU-PHL/ngmaster)](https://github.com/MDU-PHL/ngmaster/releases)
 ![PyPI - License](https://img.shields.io/pypi/l/ngmaster)
-[![Conda Downloads](https://img.shields.io/conda/dn/bioconda/bohra)](https://anaconda.org/bioconda/bohra)
-![Python](https://img.shields.io/badge/python-3.12-blue.svg)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/ngmaster/badges/version.svg)](https://anaconda.org/bioconda/ngmaster)
+[![Conda Downloads](https://img.shields.io/conda/dn/bioconda/ngmaster)](https://anaconda.org/bioconda/ngmaster)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ngmaster)
+![PyPI](https://img.shields.io/pypi/v/ngmaster)
 [![DOI:10.1099/mgen.0.000076](https://zenodo.org/badge/DOI/10.1099/mgen.0.000076.svg)](https://doi.org/10.1099/mgen.0.000076)
 [![Tests](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml/badge.svg)](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml)
 
@@ -12,29 +16,58 @@ _**N**eisseria **g**onorrhoeae_ **s**equence **t**yping for **a**ntimicrobial **
 ## Synopsis
 ```
 ngmaster gono.fa
-FILE	SCHEME	    NG-MAST/NG-STAR	porB_NG-MAST	tbpB	penA	mtrR	porB_NG-STAR	ponA	gyrA	parC	23S
-gono.fa	ngmaSTar    4186/231            2569            241     23      42      100             100     10      2       100
+FILE     SCHEME      NG-MAST/NG-STAR  porB_NG-MAST  tbpB  penA  mtrR  porB_NG-STAR  ponA  gyrA  parC  23S  CC
+gono.fa  ngmaSTar    4186/231         2569           241   23    42    100           100   10    2     100  231
 ```
+
+## What's New
+
+- **Version and database version info**: `ngmaster --version` now reports both the tool version and the bundled database version. Note: `unauthenticated` database automatically means database pre-dating 2025.
+- **Clonal complex (CC)**: output now includes a `CC` column from the updated NG-STAR database.
+- **Duplicate 23S alleles**: multiple identical 23S alleles detected in a sample are now collapsed into a single call.
+- **Large database fix**: requires `mlst >= 2.25.0`, which fixes alleles going undetected when the BLAST database is large (see [mlst v2.25.0](https://github.com/tseemann/mlst/releases/tag/v2.25.0)).
+- **Database licensing notice**: the bundled database reflects the last freely redistributable snapshot of PubMLST. The PubMLST database after 2024-12-31 is subject to [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) and cannot be redistributed without appropriate licensing. Use `--updatedb` (with authenticated access) to get the latest data. For authenticated access, ensure you are registered with PubMLST and have an API key to access the database update endpoint: `mlstdb connect -d pubmlst`.
+
 
 ## Dependencies
 
 * [Python >= 3.7](https://www.python.org/)
 * [BioPython](http://biopython.org/)
-* [mlst](https://github.com/tseemann/mlst)
+* [mlst >= 2.25.0](https://github.com/tseemann/mlst)
+* [mlstdb](https://github.com/MDU-PHL/mlstdb) — for authenticated database updates
 
 ## Installation
 
 #### PiPy
+
 ```
-# TODO how to integrate mlst dependency
-pip3 install ngmaster
+# mlst must be installed separately via conda
+conda install -c bioconda mlst
+pip install ngmaster
 ```
+
+#### pixi (fast reproducible environment)
+
+```bash
+# Install pixi if not already installed
+curl -fsSL https://pixi.sh/install.sh | bash
+
+# Clone the repo and set up the environment
+git clone https://github.com/MDU-PHL/ngmaster
+cd ngmaster
+pixi install
+pixi run pip install -e .
+```
+
 #### Brew
+
 ```
 # TODO how to integrate mlst dependency
 brew install brewsci/bio/ngmaster
 ```
-#### Conda
+
+#### Conda/Mamba
+
 ```
 conda install -c bioconda ngmaster
 ```
@@ -49,8 +82,8 @@ If everything works, you will see the following:
 
 ```
 Running ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...
-FILE	SCHEME	    NG-MAST/NG-STAR	porB_NG-MAST	tbpB	penA	mtrR	porB_NG-STAR	ponA	gyrA	parC	23S
-test.fa	ngmaSTar    4186/231            2569            241     23      42      100             100     10      2       100
+FILE    SCHEME  NG-MAST/NG-STAR porB_NG-MAST    tbpB    penA    mtrR    porB_NG-STAR    ponA    gyrA    parC 23S      CC
+test.fa     ngmaSTar        4186/231     2569     241     23      42      100     100     10      2       100     231
 ... Test successful.
 ```
 
@@ -77,6 +110,7 @@ test.fa	ngmaSTar    4186/231            2569            241     23      42      
       --db DB          specify custom directory containing allele databases
                        directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)
                        in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)
+                       default: <path/to/ngmaster/package/db>
       --csv            output comma-separated format (CSV) rather than tab-separated
       --printseq FILE  specify filename to save allele sequences to
       --minid MINID    DNA percent identity of full allele to consider 'similar' [~]
@@ -140,6 +174,32 @@ A copy of the old database is saved just in case, but is overwritten with each s
 This will download the database files into the folder ```path/to/folder```.
 This can then be specified when running ngmaster using the ```--db  path/to/folder``` option.
 
+**Check version and database version:**
+
+```bash
+ngmaster --version
+```
+
+## Updating the allele databases
+
+The bundled database is the last freely redistributable snapshot of the PubMLST NG-MAST and NG-STAR schemes. The [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) do not permit redistribution of database content after 2024-12-31 without appropriate licensing.
+
+To update to the latest alleles, you need an authenticated PubMLST account and API credentials via `mlstdb`:
+
+```bash
+# Register and connect to PubMLST (one-time setup)
+mlstdb connect -d pubmlst
+
+# Update the bundled database
+ngmaster --updatedb
+
+# Or update into a custom directory
+ngmaster --updatedb --db path/to/custom/db
+```
+
+> **Warning:** `--updatedb` overwrites existing database files. Back up your current `db/` directory first if needed.
+
+
 ## Creating a custom allele database
 
 To create a custom allele database please follow the instructions for creating a custom ```mlst``` database
@@ -191,19 +251,3 @@ The same can be done for `minor` and `major` numbers.
 This will automatically commit and tag the commit with the new version number.
 It will also update the necessary location in the file.
 
-## Pushing to pypi
-
-**Must be uploaded to maintainer's account.**
-
-```
-bumpversion --new-version <new.version.number> <patch|minor|major>
-git push
-# create distribution
-python3 setup.py sdist bdist_wheel
-# run some checkes
-twine check dist/*
-# upload to test pypi to see if everything works
-twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-# upload to pypi
-twine upload dist/*
-```

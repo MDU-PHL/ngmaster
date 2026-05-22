@@ -5,9 +5,9 @@
 
 # import ngmaster functions
 import ngmaster
-from ngmaster.utils import *
+from ngmaster.utils import * 
+# from utils import * # FLAG: import all functions from the utils.py not the compiled `.pyc` file
 
-#imports
 from argparse import ArgumentParser, RawTextHelpFormatter
 import sys
 import os
@@ -18,6 +18,9 @@ import re
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
+from pathlib import Path
+from mlstdb.core.download import create_blast_db
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 # Define REST API URLs from PubMLST
@@ -32,6 +35,38 @@ ngs_gyra = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG
 ngs_parc = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_parC/alleles_fasta", "comments":"NG_parC"}
 ngs_23S = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/loci/NG_23S/alleles_fasta", "comments":"NG_23S"}
 ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/schemes/67/profiles_csv", "comments":""}
+
+
+def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
+    """Run mlst for a single scheme; returns (scheme, dict[fname -> MlstRecord])."""
+    printseq = []
+    if printseq_arg:
+        printseq = ['--novel', scheme.upper() + "__" + printseq_arg[0]]
+
+    result = subprocess.run(
+        [mlstpath, '--legacy', '-q', '--threads', str(threads),
+         '--datadir', DBpath + '/pubmlst',
+         '--blastdb', DBpath + '/blast/mlst.fa',
+         '--scheme', scheme] + idcov + printseq + fasta,
+        capture_output=True, check=True, text=True
+    )
+    rlist = result.stdout.split("\n")[:-1]  # drop last empty line
+
+    if scheme == 'ngstar':
+        rlist = process_duplicate_23s_alleles(rlist)
+
+    # INFO Checking number of alleles to catch mlst error
+    # Issue #125 https://github.com/tseemann/mlst/issues/125
+    n_allele = len(rlist[0].split("\t")[3:])
+
+    scheme_output = {}
+    for rec in rlist[1:]:  # drop header
+        reclist = rec.split("\t")
+        fname, st = reclist[0], reclist[2]
+        alleles = reclist[3:][:n_allele]
+        scheme_output[fname] = MlstRecord(fname, scheme, st, alleles)
+
+    return scheme, scheme_output
 
 
 def main():
@@ -50,7 +85,8 @@ def main():
     parser.add_argument('fasta', metavar='FASTA', nargs='*', help='input FASTA files eg. fasta1, fasta2, fasta3 ... fastaN')
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
         'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)\n'
-        'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)')
+        'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)\n'
+        f'default: {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
     parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
@@ -59,12 +95,18 @@ def main():
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
     parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments for each allele in output')
-    parser.add_argument('--version', action='version', version=f'%(prog)s {ngmaster.__version__}')
+    parser.add_argument('--threads', metavar='THREADS', type=int, default=1,
+        help='number of threads to use\n'
+             '  --updatedb: concurrent HTTP requests to PubMLST (default 1, recommended 4)\n'
+             '  main analysis: runs NG-MAST and NG-STAR schemes in parallel\n'
+             '                 and passes thread count to the mlst subprocess\n'
+             'default: 1\n')
+    parser.add_argument("--version", action="store_true", help="Show version information")
     args = parser.parse_args()
-    # TODO make sure --db works as expected for running mlst (should be ok), once it has been packaged
 
 
     idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
+    threads = args.threads
 
     # Set separator
     if args.csv:
@@ -76,7 +118,13 @@ def main():
     if args.db:
         DBpath = str(args.db).rstrip('/')
     else:
-        DBpath = os.path.join(os.path.dirname(__file__), 'db')
+        DBpath = str(Path(__file__).parent / 'db')    
+
+    if args.version:
+        print(f"ngmaster version: \n{ngmaster.__version__}")
+        db_version = get_db_version(DBpath)
+        print(f"Database version: \n{db_version}")
+        sys.exit(0)
 
     ngstar_comments = []
     if args.comments:
@@ -113,7 +161,7 @@ def main():
     try:
         checkdep = run(['which', 'mlst'], capture_output=True, text=True, check=True)
         mlstpath = checkdep.stdout.strip()
-        mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
+        # mkblastdbpath = "/".join(mlstpath.split('/')[:-2]) + "/scripts/mlst-make_blast_db"  
     except CalledProcessError as e:
         err('ERROR: Could not find mlst executable. Check mlst (https://github.com/tseemann/mlst) is installed correctly and in $PATH.')
         raise SystemExit(e)
@@ -127,14 +175,18 @@ def main():
         else:
             yn = 'y'
         if yn == 'y':
-            msg("Updating DB files ... ")
-            for db in db_list:
-                update_db(DBpath, db)
-                if not os.path.isfile(db['db']):
-                    err('ERROR: Cannot locate database: "{}"'.format(db['db']))
-                    raise SystemExit(e)
-            download_comments(DBpath, db_list)
-            make_mlst_db(DBpath, mkblastdbpath)
+            msg(f"Updating DB files using {threads} thread(s) ... ")
+            with ThreadPoolExecutor(max_workers=threads) as executor:
+                futures = {executor.submit(update_db, DBpath, db): db for db in db_list}
+                for future in as_completed(futures):
+                    db = futures[future]
+                    future.result()  # re-raise any exception from the worker
+                    if not os.path.isfile(db['db']):
+                        err('ERROR: Cannot locate database: "{}"'.format(db['db']))
+            download_comments(DBpath, db_list, threads=threads)
+            msg("\nCreating BLAST database from downloaded pubMLST schemes...")
+            create_blast_db(DBpath + '/pubmlst', DBpath + '/blast')
+            
         sys.exit(0)
 
     # Translation table to match NG-STAR and NG-MAST results
@@ -145,7 +197,7 @@ def main():
 
     # Run test example
     if args.test:
-        testSEQ = os.path.join(os.path.dirname(__file__),  'test', 'test.fa')
+        testSEQ = str(Path(__file__).parent / 'test' / 'test.fa')
         msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
         print('Test example FASTA file: {}'.format(testSEQ))
@@ -156,36 +208,20 @@ def main():
         err("ERROR: No FASTA file provided")
 
 ################################################
-    
-    output = {"ngmast" : {}, "ngstar" : {}}
-    for scheme in output:
 
-        printseq = []
-        if args.printseq:
-            printseq = ['--novel', scheme.upper() + "__" + args.printseq[0]]
+    output = {"ngmast": {}, "ngstar": {}}
+    with ThreadPoolExecutor(max_workers=min(threads, 2)) as executor:
+        futures = {
+            executor.submit(_run_scheme, scheme, mlstpath, DBpath, idcov, args.printseq, args.fasta, threads): scheme
+            for scheme in output
+        }
+        for future in as_completed(futures):
+            try:
+                scheme, scheme_output = future.result()
+                output[scheme] = scheme_output
+            except CalledProcessError as e:
+                raise SystemExit(e)
 
-        try:
-            result = subprocess.run([mlstpath, '--legacy', '-q', '--threads', '16', '--datadir', DBpath + '/pubmlst', '--blastdb', DBpath + '/blast/mlst.fa', '--scheme', scheme] + idcov + printseq + args.fasta,  capture_output=True, check=True, text=True)
-            rlist = result.stdout.split("\n")[:-1] # drop last empty line
-            
-            # INFO Checking number of alleles to catch mlst error
-            # Issue #125
-            # https://github.com/tseemann/mlst/issues/125
-            n_allele = len(rlist[0].split("\t")[3:])
-
-            for rec in rlist[1:]: # drop header
-                # allele_dct = {}
-                reclist = rec.split("\t")
-                fname, st = reclist[0], reclist[2]
-                alleles = reclist[3:][:n_allele]
-
-                # Add this record to output dict with filename as key
-                output[scheme][fname] = MlstRecord(fname,scheme,st,alleles)
-
-        except CalledProcessError as e:
-            raise SystemExit(e)
-
-    
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
 
@@ -212,22 +248,23 @@ def main():
                 'parC',
                 'parC_comments',
                 '23S',
-                '23S_comments'
+                '23S_comments',
+                'CC'  # Add CC column
                 ]
 
     else:
-        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S']
+        header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S', 'CC']  # Add CC column
 
     print(SEP.join(header))
-    
-    for out in collate_out:
-        print(out.get_record(sep = SEP, comments = ngstar_comments))  
 
+    for out in collate_out: 
+        print(out.get_record(sep = SEP, comments = ngstar_comments))
+    
     if args.test:
         if collate_out[0].st != '4186/231':
             err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
         else:
             msg('\033[92m... Test successful.\033[0m')
-
+            
 if __name__ == "__main__":
     main()

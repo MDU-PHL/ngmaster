@@ -67,12 +67,20 @@ jobs:
           ngmaster --version
 
       # test the package
-      - name: Test the package
+      - name: Test the package (built-in --test)
         shell: bash -l {0}
         run: |
           set -euo pipefail
           conda activate ngmaster
           ngmaster --test
+
+      # run pytest suite (unit tests + integration tests)
+      - name: Run pytest test suite
+        shell: bash -l {0}
+        run: |
+          set -euo pipefail
+          conda activate ngmaster
+          pytest tests/ -v --tb=short
 
       # lint with flake8
       - name: Lint with flake8

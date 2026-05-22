@@ -7,3 +7,5 @@ build
 dist
 *.old
 
+# pixi packaging files
+.pixi/

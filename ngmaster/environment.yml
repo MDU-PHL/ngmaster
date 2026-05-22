@@ -1,0 +1,40 @@
+channels:
+- conda-forge
+- nodefaults
+- bioconda
+- r
+dependencies:
+# core runtime
+- python>=3.9
+- pip>=23
+- setuptools>=67
+- wheel>=0.40
+# ngmaster direct dependencies
+- biopython>=1.81
+- requests>=2.31
+- numpy>=1.24
+# bioinformatics tools
+- any2fasta>=0.4.2
+- blast>=2.16.0
+- blast-legacy>=2.2.26
+- clustalo>=1.2.4
+- clustalw>=2.1
+- csvtk>=0.31
+- entrez-direct>=22.1
+- mafft>=7.525
+- mlst>=2.25.0
+- muscle>=5.1
+- paml>=4.10.6
+- parallel>=20230522
+- poa>=2.0
+- t-coffee>=12.0
+- viennarna>=2.5.1
+- wget>=1.20
+# perl (mlst runtime)
+- perl>=5.32
+- pip:
+  - argparse==1.4.0
+  - beautifulsoup4>=4.12
+  - bs4==0.0.1
+  - soupsieve>=2.4
+name: ngmaster-env
