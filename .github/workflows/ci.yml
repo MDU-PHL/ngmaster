@@ -51,7 +51,7 @@ jobs:
       - name: Create Conda environment with mlst
         shell: bash -el {0}
         run: |
-          mamba create -n ngmaster -c bioconda mlst
+          mamba create -n ngmaster -c bioconda mlst biopython
           conda activate ngmaster
           mlst --version
           # install flake8 and pytest for testing/linting
