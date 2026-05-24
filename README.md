@@ -232,6 +232,7 @@ Please submit via the [GitHub issues page](https://github.com/MDU-PHL/ngmaster/i
 * Anders Gonçalves da Silva (@drandersgs)
 * Mark Schultz (@schultzm)
 * Torsten Seemann (@torstenseemann)
+* Himal Shrestha (@himals2007)
 * Andreas Stroehlein (@stroehleina)
 
 ## Development
