@@ -1,12 +1,9 @@
 [![Tests](https://github.com/MDU-PHL/ngmaster/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/MDU-PHL/ngmaster/actions/workflows/test.yml)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/MDU-PHL/ngmaster)](https://github.com/MDU-PHL/ngmaster/releases)
-![PyPI - License](https://img.shields.io/pypi/l/ngmaster)
-[![Anaconda-Server Badge](https://anaconda.org/bioconda/ngmaster/badges/version.svg)](https://anaconda.org/bioconda/ngmaster)
-[![Conda Downloads](https://img.shields.io/conda/dn/bioconda/ngmaster)](https://anaconda.org/bioconda/ngmaster)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ngmaster)
-![PyPI](https://img.shields.io/pypi/v/ngmaster)
-[![DOI:10.1099/mgen.0.000076](https://zenodo.org/badge/DOI/10.1099/mgen.0.000076.svg)](https://doi.org/10.1099/mgen.0.000076)
 [![Tests](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml/badge.svg)](https://github.com/MDU-PHL/ngmaster/actions/workflows/ci.yml)
+[![GitHub release](https://img.shields.io/github/v/release/MDU-PHL/ngmaster)](https://github.com/MDU-PHL/ngmaster/releases)
+![PyPI - License](https://img.shields.io/pypi/l/ngmaster)
+[![Conda Downloads](https://img.shields.io/conda/dn/bioconda/ngmaster)](https://anaconda.org/bioconda/ngmaster)
+[![DOI:10.1099/mgen.0.000076](https://zenodo.org/badge/DOI/10.1099/mgen.0.000076.svg)](https://doi.org/10.1099/mgen.0.000076)
 
 # ngmaster
 
