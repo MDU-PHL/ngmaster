@@ -19,8 +19,11 @@ wheel = ">=0.40"
 
 # --- ngmaster direct dependencies ---
 biopython = ">=1.81"
-requests = ">=2.31"
-numpy = ">=1.24"
+requests = ">=2.33.0"
+urllib3 = ">=2.7.0"
+certifi = ">=2023.7.22"
+idna = ">=3.15"
+numpy = ">=1.26.5"
 
 # --- bioinformatics tools ---
 any2fasta = ">=0.4.2"
@@ -49,6 +52,4 @@ argparse = "==1.4.0"
 beautifulsoup4 = ">=4.12, <5"
 bs4 = "==0.0.1"
 soupsieve = ">=2.4"
-biopython = "*"
-requests = "*"
 mlstdb = "==1.0.0"
