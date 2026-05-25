@@ -11,8 +11,11 @@ dependencies:
 - wheel>=0.40
 # ngmaster direct dependencies
 - biopython>=1.81
-- requests>=2.31
-- numpy>=1.24
+- requests>=2.33.0
+- numpy>=1.26.5
+- certifi>=2023.7.22
+- idna>=3.15
+- urllib3>=2.7.0
 # bioinformatics tools
 - any2fasta>=0.4.2
 - blast>=2.16.0
