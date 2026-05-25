@@ -5,10 +5,8 @@ on:
       tags:
         - v*
       branches:
-        - 'master'
-        - 'main'
+        - '**'
     pull_request:
-      branches: [ master ]
     workflow_dispatch:
       inputs:
         tags:
@@ -18,8 +16,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       # checkout the repository
@@ -51,7 +50,7 @@ jobs:
       - name: Create Conda environment with mlst
         shell: bash -el {0}
         run: |
-          mamba create -n ngmaster -c bioconda mlst biopython
+          mamba create -n ngmaster python=${{ matrix.python-version }} -c bioconda -c conda-forge mlst biopython
           conda activate ngmaster
           mlst --version
           # install flake8 and pytest for testing/linting
@@ -68,23 +67,21 @@ jobs:
 
       # test the package
       - name: Test the package (built-in --test)
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
-          set -euo pipefail
           conda activate ngmaster
           ngmaster --test
 
       # run pytest suite (unit tests + integration tests)
       - name: Run pytest test suite
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
-          set -euo pipefail
           conda activate ngmaster
           pytest tests/ -v --tb=short
 
       # lint with flake8
       - name: Lint with flake8
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
           conda activate ngmaster
           # stop the build if there are Python syntax errors or undefined names
