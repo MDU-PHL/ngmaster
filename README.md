@@ -46,7 +46,7 @@ pixi run pip install -e .
 ```
 % ngmaster --test
 
-Running ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...
+Running ngmaster on test example (NG-MAST 4186 / NG-STAR 231) ...
 FILE    SCHEME  NG-MAST/NG-STAR porB_NG-MAST    tbpB    penA    mtrR    porB_NG-STAR    ponA    gyrA    parC 23S      CC
 test.fa     ngmaSTar        4186/231     2569     241     23      42      100     100     10      2       100     231
 ... Test successful.
@@ -75,11 +75,13 @@ test.fa     ngmaSTar        4186/231     2569     241     23      42      100   
       --db DB          specify custom directory containing allele databases
                        directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)
                        in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)
-                       default: <path/to/ngmaster/package/db>
+                       overrides $NGMASTER_DB if both are set
+                       default: $NGMASTER_DB if set, otherwise <path/to/ngmaster/package/db>
       --csv            output comma-separated format (CSV) rather than tab-separated
-      --printseq FILE  specify filename to save allele sequences to
-      --minid MINID    DNA percent identity of full allele to consider 'similar' [~]
-      --mincov MINCOV  DNA percent coverage to report partial allele at [?]
+      --printseq FILE  specify filename to save novel allele sequences to
+                       (only alleles marked ~n are written; no file created if all alleles are exact matches)
+      --minid MINID    DNA percent identity of full allele to consider 'similar' [~] (default: 95, range: 0-100)
+      --mincov MINCOV  DNA percent coverage to report partial allele at [?] (default: 50, range: 0-100)
       --updatedb       update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>
       --assumeyes      assume you are certain you wish to update db
       --test           run test example
@@ -95,7 +97,7 @@ test.fa     ngmaSTar        4186/231     2569     241     23      42      100   
 The NG-MAST and NG-STAR results and allele numbers are printed in tab-separated format to `stdout`.
 
 * `ngmaster` reports alleles according to the same rules that are implemented in `mlst`.
-* `mlst`'s arguments `--minid` and `--mincov` are available directly in `ngmaster` 
+* `mlst`'s arguments `--minid` and `--mincov` are available directly in `ngmaster` (defaults: `--minid 95`, `--mincov 50`; valid range: 0–100)
 * For each allele n:
 
 Symbol | Meaning | Length | Identity
@@ -114,11 +116,11 @@ Symbol | Meaning | Length | Identity
 
 `$ ngmaster --csv <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-**To save sequences of the alleles to a file (eg. for uploading "new" sequences to [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/)):**
+**To save novel allele sequences to a file (eg. for uploading to [PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/)):**
 
 `$ ngmaster --printseq [filename] <fasta1> <fasta2> <fasta3> ... <fastaN>`
 
-This will create two files:
+Only alleles marked `~n` (novel) are saved. No file is created if all alleles are exact matches. This will create two files:
 
 1. `NGMAST__filename`
 2. `NGSTAR__filename`
@@ -127,43 +129,13 @@ This will create two files:
 
 ### Updating the allele databases
 
-**To update the allele databases from 
-[PubMLST](https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/):**  
-*Warning: This will overwrite the existing databases so ensure you back them up if you wish to keep them.*
+The bundled database is the last freely redistributable snapshot of the PubMLST NG-MAST and NG-STAR schemes. The [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) do not permit redistribution of database content after 2024-12-31 without appropriate licensing.
 
-    $ ngmaster.py --updatedb
-
-A copy of the old database is saved just in case, but is overwritten with each subsequent   ```--updatedb```.
-
-**To update the allele databases into a different folder (ie. not the /db folder in the ngmaster directory):**
-
-    $ ngmaster.py --updatedb --db path/to/folder
-
-This will download the database files into the folder ```path/to/folder```.
-This can then be specified when running ngmaster using the ```--db  path/to/folder``` option.
-
-**Check version and database version:**
-
-```bash
-ngmaster --version
-```
-
-### Updating the allele databases
-
-The bundled database is the last freely 
-redistributable snapshot of the PubMLST 
-NG-MAST and NG-STAR schemes. 
-The [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) 
-do not permit redistribution of database 
-content after 2024-12-31 without appropriate licensing.
-
-To update to the latest alleles, you need 
-an authenticated PubMLST account and API 
-credentials via `mlstdb`:
+To update to the latest alleles, you need an authenticated PubMLST account and API credentials via `mlstdb`:
 
 ```bash
 # Register and connect to PubMLST (one-time setup)
-mlstdb connect -d pubmlst
+mlstdb connect -d pubmlst --api-key
 
 # Update the bundled database
 ngmaster --updatedb
@@ -173,6 +145,23 @@ ngmaster --updatedb --db path/to/custom/db
 ```
 
 > **Warning:** `--updatedb` overwrites existing database files. Back up your current `db/` directory first if needed.
+
+**Check version and database version:**
+
+```bash
+ngmaster --version
+```
+
+### Shared database (HPC / team use)
+
+Set the `$NGMASTER_DB` environment variable to point to a shared database directory. `ngmaster` will use it automatically without requiring `--db` on every call:
+
+```bash
+export NGMASTER_DB=/shared/path/to/ngmaster_db
+ngmaster <fasta1> <fasta2> ...
+```
+
+`--db` on the command line takes precedence over `$NGMASTER_DB`. If neither is set, the bundled database is used.
 
 ### Creating a custom allele database
 
