@@ -86,11 +86,13 @@ def main():
     parser.add_argument('--db', metavar='DB', help='specify custom directory containing allele databases\n'
         'directory must contain database sequence files (.tfa) and allele profile files (ngmast.txt / ngstar.txt)\n'
         'in mlst format (see <https://github.com/tseemann/mlst#adding-a-new-scheme>)\n'
-        f'default: {Path(__file__).parent / "db"}\n')
+        'overrides $NGMASTER_DB environment variable if both are set\n'
+        f'default: $NGMASTER_DB if set, otherwise {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
-    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
-    parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
-    parser.add_argument('--mincov', metavar='MINCOV', type=int, default=10, help='DNA percent coverage to report partial allele at [?]')
+    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save novel/partial allele sequences to\n'
+        '(only alleles marked ~n or n? are written; no file created if all alleles are exact matches)')
+    parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~] (default: 95, range: 0-100)')
+    parser.add_argument('--mincov', metavar='MINCOV', type=int, default=50, help='DNA percent coverage to report partial allele at [?] (default: 50, range: 0-100)')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
@@ -104,6 +106,13 @@ def main():
     parser.add_argument("--version", action="store_true", help="Show version information")
     args = parser.parse_args()
 
+    if not (0 <= args.minid <= 100):
+        err('ERROR: --minid value must be between 0 and 100')
+    if not (0 <= args.mincov <= 100):
+        err('ERROR: --mincov value must be between 0 and 100')
+    if args.printseq:
+        msg('NOTE: --printseq saves only novel (~n) or partial (n?) allele sequences. '
+            'No output file is created if all alleles are exact matches.')
 
     idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
     threads = args.threads
@@ -117,13 +126,15 @@ def main():
     # Path to database files
     if args.db:
         DBpath = str(args.db).rstrip('/')
+    elif os.environ.get('NGMASTER_DB'):
+        DBpath = os.environ['NGMASTER_DB'].rstrip('/')
     else:
-        DBpath = str(Path(__file__).parent / 'db')    
+        DBpath = str(Path(__file__).parent / 'db')
 
     if args.version:
-        print(f"ngmaster version: \n{ngmaster.__version__}")
+        print(f"ngmaster {ngmaster.__version__}")
         db_version = get_db_version(DBpath)
-        print(f"Database version: \n{db_version}")
+        print(f"Database version: {db_version}")
         sys.exit(0)
 
     ngstar_comments = []
@@ -198,7 +209,7 @@ def main():
     # Run test example
     if args.test:
         testSEQ = str(Path(__file__).parent / 'test' / 'test.fa')
-        msg('\033[94mRunning ngmaster.py on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
+        msg('\033[94mRunning ngmaster on test example (NG-MAST 4186 / NG-STAR 231) ...\033[0m')
         args.fasta = [testSEQ]
         print('Test example FASTA file: {}'.format(testSEQ))
 
@@ -264,7 +275,7 @@ def main():
     
     if args.test:
         if collate_out[0].st != '4186/231':
-            err('ERROR: Test unsucessful. Check allele database is updated: ngmaster.py --updatedb')
+            err('ERROR: Test unsuccessful. Check allele database is updated: ngmaster --updatedb')
         else:
             msg('\033[92m... Test successful.\033[0m')
             
