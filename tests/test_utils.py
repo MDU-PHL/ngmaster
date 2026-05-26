@@ -19,9 +19,11 @@ New features / bug-fixes under test
 
 import pytest
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 from ngmaster.utils import (
     MlstRecord,
+    PubMLSTAuth,
     collate_results,
     convert_ngstar,
     get_db_version,
@@ -454,3 +456,81 @@ class TestMatchPorb:
         """Non-existent porB files must trigger err(), which calls sys.exit()."""
         with pytest.raises(SystemExit):
             match_porb(str(tmp_path / "missing.tfa"), str(tmp_path / "also_missing.tfa"))
+
+
+# ---------------------------------------------------------------------------
+# 9. PubMLSTAuth  :  authentication mode selection and rauth params fix
+# ---------------------------------------------------------------------------
+
+class TestPubMLSTAuth:
+    """
+    Tests for authentication mode selection and rauth params fix.
+
+    All network calls are mocked; no credentials on disk are required.
+    """
+
+    def test_api_key_mode_when_key_stored(self):
+        """Stored API key selects 'api_key' mode and sets X-API-Key header."""
+        with patch("ngmaster.utils.retrieve_api_key", return_value="testkey123"):
+            auth = PubMLSTAuth()
+        assert auth.auth_mode == "api_key"
+        assert auth.session.headers.get("X-API-Key") == "testkey123"
+        assert "ngmaster/" in auth.session.headers.get("User-Agent", "")
+
+    def test_api_key_mode_user_agent_format(self):
+        """User-Agent header must be 'ngmaster/<version>'."""
+        with patch("ngmaster.utils.retrieve_api_key", return_value="testkey123"):
+            auth = PubMLSTAuth()
+        import ngmaster
+        assert auth.session.headers["User-Agent"] == f"ngmaster/{ngmaster.__version__}"
+
+    def test_oauth_mode_when_no_api_key_but_tokens_present(self):
+        """No API key but OAuth tokens present selects 'oauth' mode."""
+        with patch("ngmaster.utils.retrieve_api_key", return_value=None), \
+             patch("ngmaster.utils.get_client_credentials",
+                   return_value=("client_id_24char_padding", "secret_42char_padding_padding_padding_padd")), \
+             patch("ngmaster.utils.retrieve_session_token",
+                   return_value=("sess_token", "sess_secret")):
+            auth = PubMLSTAuth()
+        assert auth.auth_mode == "oauth"
+        assert "ngmaster/" in auth.session.headers.get("User-Agent", "")
+
+    def test_unauthenticated_when_no_credentials(self, capsys):
+        """No API key and no OAuth tokens falls back to unauthenticated."""
+        with patch("ngmaster.utils.retrieve_api_key", return_value=None), \
+             patch("ngmaster.utils.get_client_credentials",
+                   side_effect=ValueError("not found")):
+            auth = PubMLSTAuth()
+        assert auth.auth_mode is None
+        captured = capsys.readouterr()
+        assert "mlstdb connect" in captured.err
+
+    def test_oauth_get_response_passes_params_kwarg(self):
+        """OAuth mode: get_response() calls session.get with params={} to avoid rauth bug."""
+        mock_session = MagicMock()
+        mock_session.get.return_value = MagicMock(status_code=200)
+
+        with patch("ngmaster.utils.retrieve_api_key", return_value=None), \
+             patch("ngmaster.utils.get_client_credentials",
+                   return_value=("client_id_24char_padding", "secret_42char_padding_padding_padding_padd")), \
+             patch("ngmaster.utils.retrieve_session_token",
+                   return_value=("sess_token", "sess_secret")), \
+             patch("ngmaster.utils.OAuth1Session", return_value=mock_session):
+            auth = PubMLSTAuth()
+            auth.get_response("https://example.com/api")
+
+        mock_session.get.assert_called_once_with("https://example.com/api", params={})
+
+    def test_api_key_get_response_no_params_kwarg(self):
+        """API key mode: get_response() calls session.get without params kwarg."""
+        mock_session = MagicMock()
+        mock_session.get.return_value = MagicMock(status_code=200)
+        mock_session.headers = {}
+
+        with patch("ngmaster.utils.retrieve_api_key", return_value="mykey"), \
+             patch("ngmaster.utils.requests") as mock_requests:
+            mock_requests.Session.return_value = mock_session
+            auth = PubMLSTAuth()
+            auth.get_response("https://example.com/api")
+
+        mock_session.get.assert_called_once_with("https://example.com/api")
