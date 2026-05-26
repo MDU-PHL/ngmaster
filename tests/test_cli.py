@@ -356,3 +356,65 @@ class TestRegression:
     def test_builtin_test_no_traceback(self):
         _no_traceback(_run("--test"))
 
+
+# ---------------------------------------------------------------------------
+# 8. Regression: --minid / --mincov flag passing  (issue #39 / #57)
+# ---------------------------------------------------------------------------
+
+class TestMinidMincov:
+    """Regression tests for issue #39 (nargs=1 caused list-as-string to be passed to mlst)
+    and issue #57 (mlst stderr not surfaced on failure).
+    """
+
+    def test_minid_flag_exits_zero(self):
+        """--minid must be accepted as a scalar value and passed correctly to mlst."""
+        result = _run("--minid", "85", _TEST_FA)
+        assert result.returncode == 0, (
+            f"--minid 85 failed.\nstdout: {result.stdout}\nstderr: {result.stderr}"
+        )
+        _no_traceback(result)
+
+    def test_mincov_flag_exits_zero(self):
+        """--mincov must be accepted as a scalar value and passed correctly to mlst."""
+        result = _run("--mincov", "15", _TEST_FA)
+        assert result.returncode == 0, (
+            f"--mincov 15 failed.\nstdout: {result.stdout}\nstderr: {result.stderr}"
+        )
+        _no_traceback(result)
+
+    def test_minid_mincov_combined_exits_zero(self):
+        """Combining --minid and --mincov must produce the correct ST."""
+        result = _run("--minid", "85", "--mincov", "15", _TEST_FA)
+        assert result.returncode == 0, (
+            f"--minid 85 --mincov 15 failed.\nstdout: {result.stdout}\nstderr: {result.stderr}"
+        )
+        _no_traceback(result)
+        assert "4186/231" in result.stdout
+
+    def test_minid_invalid_type_exits_nonzero(self):
+        """Non-integer --minid must exit non-zero with no Python traceback (issue #57)."""
+        result = _run("--minid", "notanumber", _TEST_FA)
+        assert result.returncode != 0
+        _no_traceback(result)
+
+    def test_mincov_invalid_type_exits_nonzero(self):
+        """Non-integer --mincov must exit non-zero with no Python traceback (issue #57)."""
+        result = _run("--mincov", "notanumber", _TEST_FA)
+        assert result.returncode != 0
+        _no_traceback(result)
+
+    def test_mlst_stderr_surfaced_on_failure(self):
+        """When mlst fails, its stderr must appear in ngmaster stderr (issue #57).
+
+        null.fa is an empty file that causes mlst to exit non-zero with a
+        descriptive error message. ngmaster must relay that message to stderr
+        rather than only showing the CalledProcessError exception summary.
+        """
+        result = _run(_NULL_FA)
+        assert result.returncode != 0
+        _no_traceback(result)
+        # mlst writes its own error to stderr; ngmaster must relay it.
+        assert result.stderr.strip() != "", (
+            "Expected mlst error message in stderr, but stderr was empty."
+        )
+
