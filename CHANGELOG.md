@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2026-05-26
+
+### Added
+
+- `$NGMASTER_DB` environment variable support: if set, `ngmaster` uses it as the database path without requiring `--db` on every call. `--db` on the command line takes precedence; if neither is set, the bundled database is used. Closes #56.
+- `--mincov` and `--minid` now validate that the supplied value is within 0–100 and exit with a clear error message if not.
+- `--printseq` now prints an informational message to stderr explaining that only novel (`~n`) allele sequences are saved, and that no file is created when all alleles are exact matches. Closes #42.
+
+### Changed
+
+- Default `--mincov` changed from 10 to 50, matching the `mlst` default.
+- `--mincov` and `--minid` help text now states the default value and valid range (0–100).
+- `--printseq` help text updated to clarify novel/partial-only behaviour.
+- `--db` help text updated to document `$NGMASTER_DB` precedence rules.
+- `--version` output format changed to the standard `ngmaster <version>` on the first line (was multi-line `ngmaster version:\n<version>`), making it machine-parseable. Closes #49.
+
+### Fixed
+
+- Removed duplicate "Updating the allele databases" section from README (one used `ngmaster.py`, the other `ngmaster`); consolidated into a single correct section using `ngmaster`. Closes #54.
+- All remaining `ngmaster.py` references in source code and docs replaced with `ngmaster`.
+- Fixed typo "unsucessful" → "unsuccessful" in test failure message.
+
 ## [2.0.4] - 2026-05-26
 
 ### Fixed
