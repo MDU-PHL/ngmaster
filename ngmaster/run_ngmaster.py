@@ -89,8 +89,8 @@ def main():
         'overrides $NGMASTER_DB environment variable if both are set\n'
         f'default: $NGMASTER_DB if set, otherwise {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
-    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save novel/partial allele sequences to\n'
-        '(only alleles marked ~n or n? are written; no file created if all alleles are exact matches)')
+    parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save novel allele sequences to\n'
+        '(only alleles marked ~n are written; no file created if all alleles are exact matches)')
     parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~] (default: 95, range: 0-100)')
     parser.add_argument('--mincov', metavar='MINCOV', type=int, default=50, help='DNA percent coverage to report partial allele at [?] (default: 50, range: 0-100)')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
@@ -111,7 +111,7 @@ def main():
     if not (0 <= args.mincov <= 100):
         err('ERROR: --mincov value must be between 0 and 100')
     if args.printseq:
-        msg('NOTE: --printseq saves only novel (~n) or partial (n?) allele sequences. '
+        msg('NOTE: --printseq saves only novel (~n) allele sequences. '
             'No output file is created if all alleles are exact matches.')
 
     idcov = ['--minid', str(args.minid), '--mincov', str(args.mincov)]
