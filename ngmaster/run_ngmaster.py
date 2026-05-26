@@ -89,8 +89,8 @@ def main():
         f'default: {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save allele sequences to')
-    parser.add_argument('--minid', metavar='MINID', nargs=1, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
-    parser.add_argument('--mincov', metavar='MINCOV', nargs=1, default=10, help='DNA percent coverage to report partial allele at [?]')
+    parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~]')
+    parser.add_argument('--mincov', metavar='MINCOV', type=int, default=10, help='DNA percent coverage to report partial allele at [?]')
     parser.add_argument('--updatedb', action='store_true', default=False, help='update NG-MAST and NG-STAR allele databases from <https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef>')
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
@@ -220,7 +220,9 @@ def main():
                 scheme, scheme_output = future.result()
                 output[scheme] = scheme_output
             except CalledProcessError as e:
-                raise SystemExit(e)
+                if e.stderr and e.stderr.strip():
+                    msg(e.stderr.strip())
+                err(str(e))
 
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
