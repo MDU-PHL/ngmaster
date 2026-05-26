@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2026-05-26
+
+### Fixed
+
+- Corrected `--minid` and `--mincov` argparse definitions: removed `nargs=1` and added `type=int` so both flags always produce a scalar integer. Previously, `nargs=1` caused argparse to return a list when the user supplied a value (e.g. `--mincov 20` produced `[20]`), which `str()` serialised as `"['20']"`, an argument that mlst rejects with a non-zero exit code (#39).
+- Improved error reporting when an mlst subprocess fails: mlst's own stderr output is now relayed to the user via `msg()` before ngmaster exits, so the root cause is visible rather than just the command-line dump and exit code (#57).
+- Added `TestMinidMincov` integration tests covering scalar value passing, combined flag usage, invalid type rejection, and mlst stderr surfacing.
+
 ## [2.0.2] - 2026-05-25
 
 ### Security
