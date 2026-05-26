@@ -12,8 +12,8 @@ import json
 from pathlib import Path
 import logging
 import tempfile
-from mlstdb.core.auth import get_client_credentials, retrieve_session_token
-from rauth import OAuth1Session, OAuth1Service
+from mlstdb.core.auth import get_client_credentials, retrieve_api_key, retrieve_session_token
+from rauth import OAuth1Session
 from tqdm import tqdm
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -114,62 +114,77 @@ def err(*args, **kwargs):
     sys.exit(1)
 
 
-class PubMLSTAuth: 
-    """Class to handle PubMLST authentication state and requests"""
-    
+class PubMLSTAuth:
+    """Class to handle PubMLST authentication state and requests.
+
+    Auth priority (determined once at construction, no deferred logic):
+      1. Personal API key stored by mlstdb (~/.config/mlstdb/api_keys)
+      2. OAuth session tokens stored by mlstdb
+      3. Unauthenticated (fallback)
+    """
+
     def __init__(self):
-        self.auth_tested = False
-        self.use_auth = False
-    
-    def get_response(self, url):
-        """
-        Get response from URL, using OAuth if possible
-        Falls back to unauthenticated request if OAuth fails
-        """
-        # Test auth only once
-        if not self.auth_tested:
-            try:
-                # Get OAuth credentials from mlstdb
-                client_key, client_secret = get_client_credentials('pubmlst')
-                session_token, session_secret = retrieve_session_token('pubmlst')
-                
-                # Initialize OAuth session
+        self.auth_mode = None  # 'api_key' | 'oauth' | None
+
+        # 1. Try API key first (BIGSdb >= v1.53.0, recommended)
+        api_key = retrieve_api_key('pubmlst')
+        if api_key:
+            self.session = requests.Session()
+            self.session.headers.update({
+                "User-Agent": f"ngmaster/{ngmaster.__version__}",
+                "X-API-Key": api_key,
+            })
+            self.auth_mode = 'api_key'
+            return
+
+        # 2. Try OAuth credentials stored by mlstdb
+        try:
+            client_key, client_secret = get_client_credentials('pubmlst')
+            session_token, session_secret = retrieve_session_token('pubmlst')
+            if session_token and session_secret:
                 self.session = OAuth1Session(
                     consumer_key=client_key,
                     consumer_secret=client_secret,
                     access_token=session_token,
                     access_token_secret=session_secret,
                 )
-                self.session.headers.update({"User-Agent": f"ngmaster v{ngmaster.__version__}"})
-                self.use_auth = True
-                
-            except Exception as e:
-                msg(f"OAuth setup failed: {e}")
-                msg("Please run 'mlstdb fetch' to set up/refresh OAuth credentials")
-                msg("Falling back to unauthenticated requests")
-                
-                self.use_auth = False
-                
-            self.auth_tested = True
-        
+                self.session.headers.update({"User-Agent": f"ngmaster/{ngmaster.__version__}"})
+                self.auth_mode = 'oauth'
+                return
+        except Exception:
+            pass
+
+        # 3. Unauthenticated fallback
+        msg("No authentication credentials found. Falling back to unauthenticated requests.")
+        msg("For authenticated access, run: mlstdb connect --db pubmlst --api-key  (recommended)")
+        msg("                           or: mlstdb connect --db pubmlst  (OAuth)")
+
+    def get_response(self, url):
+        """
+        Get response from URL using the best available authentication.
+        Falls back to unauthenticated on auth failure.
+        """
         try:
-            if self.use_auth:
+            if self.auth_mode == 'api_key':
                 response = self.session.get(url)
+            elif self.auth_mode == 'oauth':
+                # params={} is required to avoid a rauth 0.7.3 bug where
+                # _parse_optional_params raises TypeError when params is None
+                response = self.session.get(url, params={})
             else:
                 response = requests.get(url)
-                
-            # response.raise_for_status()
             return response
-            
+
         except Exception as e:
             msg(f"Request failed: {e}")
-            if self.use_auth:
+            if self.auth_mode in ('api_key', 'oauth'):
                 msg("Retrying without authentication")
-                response = requests.get(url)
-                return response
+                return requests.get(url)
             raise
 
+
 _thread_local = threading.local()
+
 
 def _get_thread_auth():
     """Return a PubMLSTAuth instance local to the current thread."""
@@ -220,7 +235,7 @@ def update_db(db_folder, db):
                 db_version = scheme_data.get('last_added', 'Not found')
                 if db_version is None:
                     db_version = 'No version information available'
-                if auth_handler.use_auth == False:
+                if auth_handler.auth_mode is None:
                     db_version = "2024-12-31_Unauthenticated"
                     
                 print(f"Database version: {db_version}")
