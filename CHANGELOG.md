@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-05-26
+
+### Fixed
+
+- Corrected DB update failure (`argument of type 'NoneType' is not iterable`) caused by a rauth 0.7.3 bug: `OAuth1Session.get()` was called without `params={}`, which triggered a `TypeError` in rauth's `_parse_optional_params`. All OAuth requests now pass `params={}` explicitly (#60).
+- Replaced the deferred "test auth only once" pattern in `PubMLSTAuth` with upfront auth-mode selection: personal API key (stored via `mlstdb connect --db pubmlst --api-key`) is tried first, OAuth session tokens second, unauthenticated last.
+- Fallback messaging now directs users to `mlstdb connect --db pubmlst --api-key` (recommended) or `mlstdb connect --db pubmlst` (OAuth) when no credentials are found.
+- Added `User-Agent: ngmaster/<version>` header to all BIGSdb requests (API key and OAuth modes).
+- Bumped `mlstdb` dependency from `==1.0.0` to `>=1.2.0` to pick up the upstream rauth fix and personal API key support.
+
 ## [2.0.3] - 2026-05-26
 
 ### Fixed
