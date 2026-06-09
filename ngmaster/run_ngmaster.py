@@ -40,8 +40,10 @@ ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/sch
 def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
     """Run mlst for a single scheme; returns (scheme, dict[fname -> MlstRecord])."""
     printseq = []
+    novel_output = None
     if printseq_arg:
-        printseq = ['--novel', scheme.upper() + "__" + printseq_arg[0]]
+        novel_output = scheme.upper() + "__" + printseq_arg[0]
+        printseq = ['--novel', novel_output]
 
     result = subprocess.run(
         [mlstpath, '--legacy', '-q', '--threads', str(threads),
@@ -50,6 +52,11 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
          '--scheme', scheme] + idcov + printseq + fasta,
         capture_output=True, check=True, text=True
     )
+    if novel_output:
+        novel_output_path = Path(novel_output)
+        if novel_output_path.exists() and novel_output_path.stat().st_size == 0:
+            novel_output_path.unlink()
+
     rlist = result.stdout.split("\n")[:-1]  # drop last empty line
 
     if scheme == 'ngstar':
