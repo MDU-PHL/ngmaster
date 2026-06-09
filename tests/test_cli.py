@@ -182,6 +182,24 @@ class TestErrorInputs:
         """FASTA with a header but no sequence must not produce a Python traceback."""
         _no_traceback(_run("--db", _BUNDLED_DB, _NOSEQ_FA))
 
+    def test_empty_fasta_reports_clean_error(self, tmp_path):
+        fasta = tmp_path / "empty.fasta"
+        fasta.touch()
+
+        result = subprocess.run(
+            [sys.executable, "-m", "ngmaster.run_ngmaster", str(fasta)],
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode != 0
+        assert "ERROR: Input FASTA is empty or contains no readable sequence" in result.stderr
+        assert str(fasta) in result.stderr
+        assert "CalledProcessError" not in result.stderr
+        assert "Command '[" not in result.stderr
+        assert "COMMAND FAILED" not in result.stderr
+        assert "Traceback" not in result.stderr
+
 
 # ---------------------------------------------------------------------------
 # 4. Happy path  (exit 0, correct ST, correct structure)
@@ -321,11 +339,12 @@ class TestCustomDb:
 
 
 class TestPrintseq:
-    def test_printseq_creates_allele_files(self, tmp_path):
-        """--printseq must create NGMAST__ and NGSTAR__ prefixed allele files.
+    def test_printseq_exits_zero(self, tmp_path):
+        """--printseq must exit 0 even when all alleles are exact matches.
 
-        mlst prepends NGMAST__/<filename> relative to the process cwd, so we
-        run ngmaster from tmp_path and pass a bare filename (no directory).
+        mlst's --novel flag (used internally) only writes sequences for novel
+        (~n) alleles. When all alleles are exact matches, no output file is
+        created -- this is correct behaviour, not a bug (issue #42).
         """
         result = subprocess.run(
             [sys.executable, "-m", "ngmaster.run_ngmaster",
@@ -333,9 +352,30 @@ class TestPrintseq:
             capture_output=True, text=True, cwd=str(tmp_path),
         )
         assert result.returncode == 0, f"stderr: {result.stderr}"
+        _no_traceback(result)
+
+    def test_printseq_note_in_stderr(self, tmp_path):
+        """--printseq must emit an explanatory NOTE to stderr (issue #42)."""
+        result = subprocess.run(
+            [sys.executable, "-m", "ngmaster.run_ngmaster",
+             "--db", _BUNDLED_DB, "--printseq", "alleles.fa", _TEST_FA],
+            capture_output=True, text=True, cwd=str(tmp_path),
+        )
+        assert "NOTE" in result.stderr, (
+            f"Expected NOTE message in stderr.\nstderr: {result.stderr}"
+        )
+        assert "novel" in result.stderr.lower()
+
+    def test_printseq_no_files_for_exact_alleles(self, tmp_path):
+        """No output files created when all alleles are exact matches (issue #42)."""
+        subprocess.run(
+            [sys.executable, "-m", "ngmaster.run_ngmaster",
+             "--db", _BUNDLED_DB, "--printseq", "alleles.fa", _TEST_FA],
+            capture_output=True, text=True, cwd=str(tmp_path),
+        )
         created = list(tmp_path.iterdir())
-        assert len(created) > 0, (
-            f"No files created in {tmp_path} by --printseq.\nstderr: {result.stderr}"
+        assert len(created) == 0, (
+            f"Expected no files for exact-match alleles, but found: {[f.name for f in created]}"
         )
 
 
@@ -417,4 +457,3 @@ class TestMinidMincov:
         assert result.stderr.strip() != "", (
             "Expected mlst error message in stderr, but stderr was empty."
         )
-

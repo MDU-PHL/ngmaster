@@ -69,6 +69,21 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
     return scheme, scheme_output
 
 
+def _validate_fasta_inputs(fasta):
+    for fname in fasta:
+        path = Path(fname)
+        if not path.is_file() or path.stat().st_size == 0:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
+
+        try:
+            has_sequence = any(len(record.seq) > 0 for record in SeqIO.parse(fname, "fasta"))
+        except Exception:
+            has_sequence = False
+
+        if not has_sequence:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
+
+
 def main():
     # Usage
     parser = ArgumentParser(
@@ -218,6 +233,8 @@ def main():
         parser.print_help()
         err("ERROR: No FASTA file provided")
 
+    _validate_fasta_inputs(args.fasta)
+
 ################################################
 
     output = {"ngmast": {}, "ngstar": {}}
@@ -235,7 +252,7 @@ def main():
             except CalledProcessError as e:
                 if e.stderr and e.stderr.strip():
                     msg(e.stderr.strip())
-                err(str(e))
+                err(f"ERROR: mlst failed while running {futures[future]}")
 
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
