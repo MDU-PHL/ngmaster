@@ -97,12 +97,12 @@ def main():
     parser.add_argument('--assumeyes', action='store_true', default=False, help='assume you are certain you wish to update db')
     parser.add_argument('--test', action='store_true', default=False, help='run test example')
     parser.add_argument('--comments', action='store_true', default=False, help='Include NG-STAR comments for each allele in output')
-    parser.add_argument('--threads', metavar='THREADS', type=int, default=1,
+    parser.add_argument('--threads', metavar='THREADS', type=int, default=2,
         help='number of threads to use\n'
-             '  --updatedb: concurrent HTTP requests to PubMLST (default 1, recommended 4)\n'
+             '  --updatedb: concurrent HTTP requests to PubMLST (default 2, recommended 4)\n'
              '  main analysis: runs NG-MAST and NG-STAR schemes in parallel\n'
              '                 and passes thread count to the mlst subprocess\n'
-             'default: 1\n')
+             'default: 2\n')
     parser.add_argument("--version", action="store_true", help="Show version information")
     args = parser.parse_args()
 
@@ -221,7 +221,9 @@ def main():
 ################################################
 
     output = {"ngmast": {}, "ngstar": {}}
-    with ThreadPoolExecutor(max_workers=min(threads, 2)) as executor:
+    # Always parallelise the two schemes (ngmast, ngstar) with max_workers=2
+    # These are I/O-bound subprocess calls that benefit from parallel execution regardless of user's --threads setting
+    with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             executor.submit(_run_scheme, scheme, mlstpath, DBpath, idcov, args.printseq, args.fasta, threads): scheme
             for scheme in output
