@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] - 2026-06-09
+
+### Fixed
+- Updated `match_porb` to load NG-STAR porB sequences into memory once and break after first match, improving performance by eliminating redundant file I/O and unnecessary iterations. Pre-compiled regex pattern for efficiency. Always parallelise scheme execution regardless of `--threads` setting to leverage concurrent subprocess calls.
+- Parallelis schem scheme execution by default (max_workers=2) to ensure NG-MAST and NG-STAR run concurrently, improving overall runtime for typical use cases.
+- Address issue #50 run time slow.
+
 ## [2.0.5] - 2026-05-26
 
 ### Added
@@ -75,3 +82,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2026-03-24
 
 See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.0).
+
+[#39]: https://github.com/MDU-PHL/ngmaster/issues/39
+[#42]: https://github.com/MDU-PHL/ngmaster/issues/42
+[#49]: https://github.com/MDU-PHL/ngmaster/issues/49
+[#50]: https://github.com/MDU-PHL/ngmaster/issues/50
+[#53]: https://github.com/MDU-PHL/ngmaster/issues/53
+[#54]: https://github.com/MDU-PHL/ngmaster/issues/54
+[#55]: https://github.com/MDU-PHL/ngmaster/issues/55
+[#56]: https://github.com/MDU-PHL/ngmaster/issues/56
+[#57]: https://github.com/MDU-PHL/ngmaster/issues/57
+[#60]: https://github.com/MDU-PHL/ngmaster/issues/60
+
+[2.0.6]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.6
