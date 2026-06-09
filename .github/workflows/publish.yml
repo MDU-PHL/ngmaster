@@ -1,0 +1,30 @@
+name: publish
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - master
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - uses: actions/cache@v3
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+      - name: Install build tools
+        run: pip install build twine
+      - name: Build & publish
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          python -m build
+          twine upload -u __token__ -p $PYPI_TOKEN dist/*

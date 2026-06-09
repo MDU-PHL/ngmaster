@@ -221,7 +221,9 @@ def main():
 ################################################
 
     output = {"ngmast": {}, "ngstar": {}}
-    with ThreadPoolExecutor(max_workers=min(threads, 2)) as executor:
+    # Always parallelise the two schemes (ngmast, ngstar) with max_workers=2
+    # These are I/O-bound subprocess calls that benefit from parallel execution regardless of user's --threads setting
+    with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             executor.submit(_run_scheme, scheme, mlstpath, DBpath, idcov, args.printseq, args.fasta, threads): scheme
             for scheme in output
