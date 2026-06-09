@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] - 2026-06-09
+
+### Fixed
+
+- Added preflight FASTA validation so empty or no-sequence inputs exit with a clear error before calling `mlst`. This removes noisy `any2fasta`/`CalledProcessError` output for empty FASTA files ([#48]).
+
 ## [2.0.6] - 2026-06-09
 
 ### Fixed
@@ -85,6 +91,7 @@ See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/
 
 [#39]: https://github.com/MDU-PHL/ngmaster/issues/39
 [#42]: https://github.com/MDU-PHL/ngmaster/issues/42
+[#48]: https://github.com/MDU-PHL/ngmaster/issues/48
 [#49]: https://github.com/MDU-PHL/ngmaster/issues/49
 [#50]: https://github.com/MDU-PHL/ngmaster/issues/50
 [#53]: https://github.com/MDU-PHL/ngmaster/issues/53
@@ -95,3 +102,4 @@ See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/
 [#60]: https://github.com/MDU-PHL/ngmaster/issues/60
 
 [2.0.6]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.6
+[2.0.7]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.7

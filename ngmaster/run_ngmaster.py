@@ -40,8 +40,10 @@ ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/sch
 def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
     """Run mlst for a single scheme; returns (scheme, dict[fname -> MlstRecord])."""
     printseq = []
+    novel_output = None
     if printseq_arg:
-        printseq = ['--novel', scheme.upper() + "__" + printseq_arg[0]]
+        novel_output = scheme.upper() + "__" + printseq_arg[0]
+        printseq = ['--novel', novel_output]
 
     result = subprocess.run(
         [mlstpath, '--legacy', '-q', '--threads', str(threads),
@@ -50,6 +52,11 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
          '--scheme', scheme] + idcov + printseq + fasta,
         capture_output=True, check=True, text=True
     )
+    if novel_output:
+        novel_output_path = Path(novel_output)
+        if novel_output_path.exists() and novel_output_path.stat().st_size == 0:
+            novel_output_path.unlink()
+
     rlist = result.stdout.split("\n")[:-1]  # drop last empty line
 
     if scheme == 'ngstar':
@@ -67,6 +74,21 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
         scheme_output[fname] = MlstRecord(fname, scheme, st, alleles)
 
     return scheme, scheme_output
+
+
+def _validate_fasta_inputs(fasta):
+    for fname in fasta:
+        path = Path(fname)
+        if not path.is_file() or path.stat().st_size == 0:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
+
+        try:
+            has_sequence = any(len(record.seq) > 0 for record in SeqIO.parse(fname, "fasta"))
+        except Exception:
+            has_sequence = False
+
+        if not has_sequence:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
 
 
 def main():
@@ -218,6 +240,8 @@ def main():
         parser.print_help()
         err("ERROR: No FASTA file provided")
 
+    _validate_fasta_inputs(args.fasta)
+
 ################################################
 
     output = {"ngmast": {}, "ngstar": {}}
@@ -235,7 +259,7 @@ def main():
             except CalledProcessError as e:
                 if e.stderr and e.stderr.strip():
                     msg(e.stderr.strip())
-                err(str(e))
+                err(f"ERROR: mlst failed while running {futures[future]}")
 
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
