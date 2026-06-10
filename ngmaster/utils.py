@@ -62,33 +62,33 @@ class MlstRecord:
         # n,m     multiple alleles         
 
  
-    def get_record(self, sep='\t', comments=None, header=None): # FLAG: modified function to deal with wrong number of fields in output
+    def get_list(self, comments=None, header=None):
         '''
-        Function that returns a comma-separated or tab-separated string of allele IDs
-        (and optionally associated PubMLST comments) for each record
+        Function that returns a list of values for each record
         '''
-        
         ngmast_loci = self.alleles[:2]
         ngstar_loci = self.alleles[2:]
-        # print(f"DEBUG: ngmast_loci: {ngmast_loci}, ngstar_loci: {ngstar_loci}") # FLAG: for debugging
         if comments:
             out = [self.fname, self.scheme, self.st] + self.alleles
             # Interleave alleles and comments
             out_with_comments = []
-            # print(f"DEBUG: out: {out}") # FLAG: for debugging
             for i, allele in enumerate(ngstar_loci):  # Assuming 7 loci
-                # Get the corresponding header if provided
-                column_header = header[3 + 2 * i] if header else f"Allele_{i + 1}"
-                comment_header = header[4 + 2 * i] if header else f"Comment_{i + 1}"
                 comment = comments[i].get(allele, "")
-                # Debugging: Log the header, allele, and comment
-                # print(f"DEBUG: {column_header}: {allele}, {comment_header}: {comment}")
                 out_with_comments.append(allele)
                 out_with_comments.append(comment)
             out = out[:5] + out_with_comments
             out.append(self.cc)  # Add CC to output
         else:
             out = [self.fname, self.scheme, self.st] + self.alleles + [self.cc]  # Add CC to output
+        return out
+
+    def get_record(self, sep='\t', comments=None, header=None): # FLAG: modified function to deal with wrong number of fields in output
+        '''
+        Function that returns a comma-separated or tab-separated string of allele IDs
+        (and optionally associated PubMLST comments) for each record
+        '''
+        
+        out = self.get_list(comments=comments, header=header)
 
         # **Handle special characters for CSV output**
         if sep == ',':
