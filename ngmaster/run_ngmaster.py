@@ -111,6 +111,7 @@ def main():
         'overrides $NGMASTER_DB environment variable if both are set\n'
         f'default: $NGMASTER_DB if set, otherwise {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
+    parser.add_argument('--json', action='store_true', default=False, help='output JSON format rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save novel allele sequences to\n'
         '(only alleles marked ~n are written; no file created if all alleles are exact matches)')
     parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~] (default: 95, range: 0-100)')
@@ -294,10 +295,17 @@ def main():
     else:
         header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S', 'CC']  # Add CC column
 
-    print(SEP.join(header))
-
-    for out in collate_out: 
-        print(out.get_record(sep = SEP, comments = ngstar_comments))
+    if args.json:
+        import json
+        json_out = []
+        for out in collate_out:
+            record_list = out.get_list(comments=ngstar_comments, header=header)
+            json_out.append(dict(zip(header, record_list)))
+        print(json.dumps(json_out, indent=2))
+    else:
+        print(SEP.join(header))
+        for out in collate_out: 
+            print(out.get_record(sep = SEP, comments = ngstar_comments))
     
     if args.test:
         if collate_out[0].st != '4186/231':
