@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.8] - 2026-06-10
+
+### Added
+
+- Added JSON output support with `--json` flag, allowing users to receive results as a structured JSON array of objects instead of TSV strings. The JSON output includes all relevant fields and integrates with `--comments` when specified. Closes ([#47]).
+- Added `TestJsonOutput` integration tests to verify correct JSON generation and field population.
+
+## Changed
+
+- Refactored `MlstRecord.get_record()` to separate list formatting logic into a new `get_list()` method, enabling easier JSON output generation in `run_ngmaster`.
+
 ## [2.0.7] - 2026-06-09
 
 ### Fixed
@@ -91,6 +102,7 @@ See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/
 
 [#39]: https://github.com/MDU-PHL/ngmaster/issues/39
 [#42]: https://github.com/MDU-PHL/ngmaster/issues/42
+[#47]: https://github.com/MDU-PHL/ngmaster/issues/47
 [#48]: https://github.com/MDU-PHL/ngmaster/issues/48
 [#49]: https://github.com/MDU-PHL/ngmaster/issues/49
 [#50]: https://github.com/MDU-PHL/ngmaster/issues/50
@@ -103,3 +115,4 @@ See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/
 
 [2.0.6]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.6
 [2.0.7]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.7
+[2.0.8]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.8
