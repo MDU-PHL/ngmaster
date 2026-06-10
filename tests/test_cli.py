@@ -457,3 +457,30 @@ class TestMinidMincov:
         assert result.stderr.strip() != "", (
             "Expected mlst error message in stderr, but stderr was empty."
         )
+
+# ---------------------------------------------------------------------------
+# 9. JSON Output Format
+# ---------------------------------------------------------------------------
+
+class TestJsonOutput:
+    def test_exits_zero(self):
+        result = _run("--db", _BUNDLED_DB, "--json", _TEST_FA)
+        assert result.returncode == 0
+
+    def test_is_valid_json(self):
+        import json
+        result = _run("--db", _BUNDLED_DB, "--json", _TEST_FA)
+        data = json.loads(result.stdout)
+        assert isinstance(data, list)
+        assert len(data) == 1
+        assert "CC" in data[0]
+        assert data[0]["NG-MAST/NG-STAR"] == "4186/231"
+        assert data[0]["FILE"].endswith("test.fa")
+
+    def test_json_with_comments(self):
+        import json
+        result = _run("--db", _BUNDLED_DB, "--json", "--comments", _TEST_FA)
+        data = json.loads(result.stdout)
+        assert len(data) == 1
+        assert "penA_comments" in data[0]
+        assert "23S_comments" in data[0]
