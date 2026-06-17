@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-06-17
+
+### Added
+
+- Support for decimal allele identifiers in mlst to accommodate penA allele format change in PubMLST database (requires mlst >= 2.34.0)
+
+### Changed
+
+- Updated the URL for fetching penA alleles from PubMLST to the new `NG_penA` endpoint
+- Closed issue [#64].
+
 ## [2.0.8] - 2026-06-10
 
 ### Added
@@ -112,7 +123,10 @@ See the [v2.0.0 release notes](https://github.com/MDU-PHL/ngmaster/releases/tag/
 [#56]: https://github.com/MDU-PHL/ngmaster/issues/56
 [#57]: https://github.com/MDU-PHL/ngmaster/issues/57
 [#60]: https://github.com/MDU-PHL/ngmaster/issues/60
+[#64]: https://github.com/MDU-PHL/ngmaster/issues/64
+
 
 [2.0.6]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.6
 [2.0.7]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.7
 [2.0.8]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.0.8
+[2.1.0]: https://github.com/MDU-PHL/ngmaster/releases/tag/v2.1.0
