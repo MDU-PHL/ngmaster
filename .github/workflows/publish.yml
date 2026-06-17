@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - 'v*.*.*'
-    branches:
-      - master
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,11 +18,11 @@ jobs:
         with:
           key: ${{ github.ref }}
           path: .cache
-      - name: Install hatch
-        run: pip install hatch
+      - name: Install build tools
+        run: pip install build twine
       - name: Build & publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          hatch build
-          hatch publish -u __token__ -a $PYPI_TOKEN
+          python -m build
+          twine upload -u __token__ -p $PYPI_TOKEN dist/*

@@ -62,33 +62,33 @@ class MlstRecord:
         # n,m     multiple alleles         
 
  
-    def get_record(self, sep='\t', comments=None, header=None): # FLAG: modified function to deal with wrong number of fields in output
+    def get_list(self, comments=None, header=None):
         '''
-        Function that returns a comma-separated or tab-separated string of allele IDs
-        (and optionally associated PubMLST comments) for each record
+        Function that returns a list of values for each record
         '''
-        
         ngmast_loci = self.alleles[:2]
         ngstar_loci = self.alleles[2:]
-        # print(f"DEBUG: ngmast_loci: {ngmast_loci}, ngstar_loci: {ngstar_loci}") # FLAG: for debugging
         if comments:
             out = [self.fname, self.scheme, self.st] + self.alleles
             # Interleave alleles and comments
             out_with_comments = []
-            # print(f"DEBUG: out: {out}") # FLAG: for debugging
             for i, allele in enumerate(ngstar_loci):  # Assuming 7 loci
-                # Get the corresponding header if provided
-                column_header = header[3 + 2 * i] if header else f"Allele_{i + 1}"
-                comment_header = header[4 + 2 * i] if header else f"Comment_{i + 1}"
                 comment = comments[i].get(allele, "")
-                # Debugging: Log the header, allele, and comment
-                # print(f"DEBUG: {column_header}: {allele}, {comment_header}: {comment}")
                 out_with_comments.append(allele)
                 out_with_comments.append(comment)
             out = out[:5] + out_with_comments
             out.append(self.cc)  # Add CC to output
         else:
             out = [self.fname, self.scheme, self.st] + self.alleles + [self.cc]  # Add CC to output
+        return out
+
+    def get_record(self, sep='\t', comments=None, header=None): # FLAG: modified function to deal with wrong number of fields in output
+        '''
+        Function that returns a comma-separated or tab-separated string of allele IDs
+        (and optionally associated PubMLST comments) for each record
+        '''
+        
+        out = self.get_list(comments=comments, header=header)
 
         # **Handle special characters for CSV output**
         if sep == ',':
@@ -346,6 +346,9 @@ def load_ngstar_comments(DBpath):
     return ngstar_comments
 
 
+# Pre-compile regex pattern for porB ID cleaning
+_PORB_ID_PATTERN = re.compile(r"^porB_")
+
 # Match NGSTAR with NGMAST porB sequences
 def match_porb(ngmast_porb, ngstar_porb):
     '''
@@ -354,21 +357,31 @@ def match_porb(ngmast_porb, ngstar_porb):
     ngmast_porb: Path to ngmast porB fasta file
     ngstar_porb: Path to ngstar porB fasta file
     Returns a dict with ngmast porB IDs as keys and NGSTAR porB IDs as values: ttable
+    
+    Performance optimisations:
+    - Load NG-STAR sequences into memory once (avoid re-parsing file per iteration)
+    - Add early break after first match found
+    - Pre-compile regex pattern for ID cleaning
     '''
 
     if os.path.isfile(ngmast_porb) and os.path.isfile(ngstar_porb):
         ttable = {}
         ttable["-"] = "-"
+        
+        # Load NG-STAR sequences into memory once before outer loop
+        star_records = list(SeqIO.parse(ngstar_porb, "fasta"))
+        # Pre-compute NG-STAR IDs (use pre-compiled regex)
+        star_ids = [_PORB_ID_PATTERN.sub("", str(star.id)) for star in star_records]
 
         for mast in SeqIO.parse(ngmast_porb, "fasta"):
-            mastid = re.sub(r"^porB_", "", str(mast.id))
+            mastid = _PORB_ID_PATTERN.sub("", str(mast.id))
             ttable[mastid] = "-"
 
-            for star in SeqIO.parse(ngstar_porb, "fasta"):
-                starid = re.sub(r"^porB_", "", str(star.id))
-
-                if not (mast.seq.find(star.seq) == -1):
+            # iterate over in-memory list instead of re-parsing file
+            for star, starid in zip(star_records, star_ids):
+                if star.seq in mast.seq:
                     ttable[mastid] = starid
+                    break  # early break after first match
         return ttable
         
     else:

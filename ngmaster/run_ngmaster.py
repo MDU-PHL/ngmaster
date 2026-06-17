@@ -40,8 +40,10 @@ ngs_profiles = {"url": "https://rest.pubmlst.org/db/pubmlst_neisseria_seqdef/sch
 def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
     """Run mlst for a single scheme; returns (scheme, dict[fname -> MlstRecord])."""
     printseq = []
+    novel_output = None
     if printseq_arg:
-        printseq = ['--novel', scheme.upper() + "__" + printseq_arg[0]]
+        novel_output = scheme.upper() + "__" + printseq_arg[0]
+        printseq = ['--novel', novel_output]
 
     result = subprocess.run(
         [mlstpath, '--legacy', '-q', '--threads', str(threads),
@@ -50,6 +52,11 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
          '--scheme', scheme] + idcov + printseq + fasta,
         capture_output=True, check=True, text=True
     )
+    if novel_output:
+        novel_output_path = Path(novel_output)
+        if novel_output_path.exists() and novel_output_path.stat().st_size == 0:
+            novel_output_path.unlink()
+
     rlist = result.stdout.split("\n")[:-1]  # drop last empty line
 
     if scheme == 'ngstar':
@@ -67,6 +74,21 @@ def _run_scheme(scheme, mlstpath, DBpath, idcov, printseq_arg, fasta, threads):
         scheme_output[fname] = MlstRecord(fname, scheme, st, alleles)
 
     return scheme, scheme_output
+
+
+def _validate_fasta_inputs(fasta):
+    for fname in fasta:
+        path = Path(fname)
+        if not path.is_file() or path.stat().st_size == 0:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
+
+        try:
+            has_sequence = any(len(record.seq) > 0 for record in SeqIO.parse(fname, "fasta"))
+        except Exception:
+            has_sequence = False
+
+        if not has_sequence:
+            err(f"ERROR: Input FASTA is empty or contains no readable sequence: {fname}")
 
 
 def main():
@@ -89,6 +111,7 @@ def main():
         'overrides $NGMASTER_DB environment variable if both are set\n'
         f'default: $NGMASTER_DB if set, otherwise {Path(__file__).parent / "db"}\n')
     parser.add_argument('--csv', action='store_true', default=False, help='output comma-separated format (CSV) rather than tab-separated')
+    parser.add_argument('--json', action='store_true', default=False, help='output JSON format rather than tab-separated')
     parser.add_argument('--printseq', metavar='FILE', nargs=1, help='specify filename to save novel allele sequences to\n'
         '(only alleles marked ~n are written; no file created if all alleles are exact matches)')
     parser.add_argument('--minid', metavar='MINID', type=int, default=95, help='DNA percent identity of full allele to consider \'similar\' [~] (default: 95, range: 0-100)')
@@ -218,10 +241,14 @@ def main():
         parser.print_help()
         err("ERROR: No FASTA file provided")
 
+    _validate_fasta_inputs(args.fasta)
+
 ################################################
 
     output = {"ngmast": {}, "ngstar": {}}
-    with ThreadPoolExecutor(max_workers=min(threads, 2)) as executor:
+    # Always parallelise the two schemes (ngmast, ngstar) with max_workers=2
+    # These are I/O-bound subprocess calls that benefit from parallel execution regardless of user's --threads setting
+    with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {
             executor.submit(_run_scheme, scheme, mlstpath, DBpath, idcov, args.printseq, args.fasta, threads): scheme
             for scheme in output
@@ -233,7 +260,7 @@ def main():
             except CalledProcessError as e:
                 if e.stderr and e.stderr.strip():
                     msg(e.stderr.strip())
-                err(str(e))
+                err(f"ERROR: mlst failed while running {futures[future]}")
 
     # Collate results from two runs
     collate_out = collate_results(output['ngmast'], output['ngstar'], ttable, ngstartbl)
@@ -268,10 +295,17 @@ def main():
     else:
         header = ['FILE', 'SCHEME', 'NG-MAST/NG-STAR', 'porB_NG-MAST', 'tbpB', 'penA', 'mtrR', 'porB_NG-STAR', 'ponA', 'gyrA', 'parC', '23S', 'CC']  # Add CC column
 
-    print(SEP.join(header))
-
-    for out in collate_out: 
-        print(out.get_record(sep = SEP, comments = ngstar_comments))
+    if args.json:
+        import json
+        json_out = []
+        for out in collate_out:
+            record_list = out.get_list(comments=ngstar_comments, header=header)
+            json_out.append(dict(zip(header, record_list)))
+        print(json.dumps(json_out, indent=2))
+    else:
+        print(SEP.join(header))
+        for out in collate_out: 
+            print(out.get_record(sep = SEP, comments = ngstar_comments))
     
     if args.test:
         if collate_out[0].st != '4186/231':
