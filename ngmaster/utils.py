@@ -255,7 +255,7 @@ def update_db(db_folder, db):
         # Clean up names from PubMLST so they work well with mlst's mlst-make_blast_db
         pubmlst = pubmlst.replace('NG-MAST_','')
         pubmlst = pubmlst.replace('NG_','')
-        pubmlst = pubmlst.replace('NEIS1753','penA')
+        pubmlst = pubmlst.replace('NG_penA','penA')
         pubmlst = pubmlst.replace('\'mtrR','mtrR')
         new_db = pubmlst
 

@@ -174,14 +174,14 @@ Usually, this should not be necessary, simply run `ngmaster --update` to update 
 - **Version and database version info**: `ngmaster --version` now reports both the tool version and the bundled database version. Note: `unauthenticated` database automatically means database pre-dating 2025.
 - **Clonal complex (CC)**: output now includes a `CC` column from the updated NG-STAR database.
 - **Duplicate 23S alleles**: multiple identical 23S alleles detected in a sample are now collapsed into a single call.
-- **Large database fix**: requires `mlst >= 2.25.0`, which fixes alleles going undetected when the BLAST database is large (see [mlst v2.25.0](https://github.com/tseemann/mlst/releases/tag/v2.25.0)).
-- **Database licensing notice**: the bundled database reflects the last freely redistributable snapshot of PubMLST. The PubMLST database after 2024-12-31 is subject to [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) and cannot be redistributed without appropriate licensing. Use `--updatedb` (with authenticated access) to get the latest data. For authenticated access, ensure you are registered with PubMLST and have an API key to access the database update endpoint: `mlstdb connect -d pubmlst`.
+- **Large database and decimal allele fix**: requires `mlst >= 2.34.0` with pubMLST database using NG-STAR style decimal allele numbers (eg. `2.002`).
+- **Database licensing notice**: the bundled database reflects the last freely redistributable snapshot of PubMLST. The PubMLST database after 2024-12-31 is subject to [PubMLST terms and conditions](https://pubmlst.org/terms-conditions) and cannot be redistributed without appropriate licensing. Use `--updatedb` (with authenticated access) to get the latest data. For authenticated access, ensure you are registered with PubMLST and have an API key to access the database update endpoint: `mlstdb connect -d pubmlst --api-key`.
 
 ## Dependencies
 
 * [Python >= 3.7](https://www.python.org/)
 * [BioPython](http://biopython.org/)
-* [mlst >= 2.25.0](https://github.com/tseemann/mlst)
+* [mlst >= 2.34.0](https://github.com/tseemann/mlst)
 * [mlstdb](https://github.com/MDU-PHL/mlstdb) — for authenticated database updates
 
 ## Citation
